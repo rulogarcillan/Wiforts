@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:id="@+id/subtoolbar"
+        android:background="@color/colorPrimary"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+
+            android:padding="8dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:gravity="left"
+                android:text="Nexus 5"
+                android:id="@+id/txtVersion"
+                android:textColor="@android:color/white"
+                android:layout_gravity="right"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Android 6.0"
+                android:textColor="@android:color/white"
+                android:gravity="right"
+                android:id="@+id/txtModelo"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="LTE"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:id="@+id/txtTipo"
+                android:textColor="@android:color/white"
+                android:layout_gravity="center_horizontal"
+                android:textAlignment="center"
+                android:singleLine="true"
+                android:textSize="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+               android:textSize="28dp"
+                android:text="pepephone"
+                android:id="@+id/txtRed"
+                android:textColor="@android:color/white"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:layout_centerInParent="true"
+                android:singleLine="true" />
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+    <android.support.design.widget.FloatingActionButton android:id="@+id/fab"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin" app:layout_anchor="@id/subtoolbar"
+        app:layout_anchorGravity="bottom|end" android:src="@drawable/ic_wifi_ac" />
+
+
+</android.support.design.widget.CoordinatorLayout>
