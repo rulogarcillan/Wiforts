@@ -3,6 +3,7 @@
     package="com.r.raul.tools" >
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"

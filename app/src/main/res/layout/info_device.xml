@@ -1,92 +1,154 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".ScrollingActivity">
 
-
-
-    <LinearLayout
-        android:orientation="vertical"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:id="@+id/subtoolbar"
-        android:background="@color/colorPrimary"
-        android:layout_height="wrap_content">
+        android:layout_height="154dp"
+        android:fitsSystemWindows="true"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/toolbar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <LinearLayout
+                android:id="@+id/subtoolbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="horizontal"
+                    android:paddingLeft="32dp"
+                    android:paddingRight="32dp"
+                    android:paddingTop="8dp">
+
+                    <TextView
+                        android:id="@+id/txtModelo"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:text="Nexus 5"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@android:color/white" />
+
+                    <TextView
+                        android:id="@+id/txtVersion"
+
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:text="Android 6.0"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@android:color/white" />
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/txtRed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_gravity="center_horizontal"
+                            android:singleLine="true"
+                            android:text="LTE"
+                            android:textAlignment="center"
+                            android:textColor="@android:color/white"
+                            android:textSize="16dp" />
+
+                        <TextView
+                            android:id="@+id/txtTipo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_gravity="center_horizontal"
+
+                            android:singleLine="true"
+                            android:text="pepephone"
+                            android:textAlignment="center"
+                            android:textColor="@android:color/white"
+                            android:textSize="28dp" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+
+            </LinearLayout>
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="4dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".ScrollingActivity"
+        tools:showIn="@layout/activity_scrolling">
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-
-            android:padding="8dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:gravity="left"
-                android:text="Nexus 5"
-                android:id="@+id/txtVersion"
-                android:textColor="@android:color/white"
-                android:layout_gravity="right"
-                android:layout_weight="1" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Android 6.0"
-                android:textColor="@android:color/white"
+                android:layout_weight="1"
                 android:gravity="right"
-                android:id="@+id/txtModelo"
-                android:layout_weight="1" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
+                android:paddingRight="4dp"
+                android:text="Ip publica:"></TextView>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="LTE"
-                android:layout_centerInParent="true"
-                android:gravity="center"
-                android:id="@+id/txtTipo"
-                android:textColor="@android:color/white"
-                android:layout_gravity="center_horizontal"
-                android:textAlignment="center"
-                android:singleLine="true"
-                android:textSize="16dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-               android:textSize="28dp"
-                android:text="pepephone"
-                android:id="@+id/txtRed"
-                android:textColor="@android:color/white"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:textAlignment="center"
-                android:layout_centerInParent="true"
-                android:singleLine="true" />
-
+                android:layout_weight="1"
+                android:gravity="left"
+                android:paddingLeft="4dp"
+                android:text="192.168.1.1"></TextView>
         </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
 
-
-    </LinearLayout>
-
-
-    <android.support.design.widget.FloatingActionButton android:id="@+id/fab"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin" app:layout_anchor="@id/subtoolbar"
-        app:layout_anchorGravity="bottom|end" android:src="@drawable/ic_wifi_ac" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/ic_wifi_ac"
+        app:layout_anchor="@id/app_bar"
+        app:layout_anchorGravity="bottom|end" />
 
 
 </android.support.design.widget.CoordinatorLayout>
