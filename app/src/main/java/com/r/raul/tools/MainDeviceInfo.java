@@ -38,17 +38,18 @@ import java.util.TimerTask;
  */
 public class MainDeviceInfo extends Fragment {
 
-	//vistas
-    TextView txtNombreRed, txtTipoRed, txtModelo, txtVersion, txtIpPublic, txtIpLocal, txtSeñal, txtGateway, txtMasSubred, txtDns1, txtDns2;     
-    FloatingActionButton fab;
-	
-	//servicios
-	Connectivity con; //esta es mi clase
-    TelephonyManager tlfMan;
-	NetworkInfo info;
-	
-	//
-	MyPhoneStateListener MyListener;
+    //vistas
+    private TextView txtNombreRed, txtTipoRed, txtModelo, txtVersion, txtIpPublic, txtIpLocal, txtSeñal, txtGateway, txtMasSubred, txtDns1, txtDns2;
+    private FloatingActionButton fab;
+
+    //servicios
+    private Connectivity con; //esta es mi clase
+    private TelephonyManager tlfMan;
+    private NetworkInfo info;
+
+
+    //
+    private MyPhoneStateListener MyListener;
 
 
     public static MainDeviceInfo newInstance() {
@@ -58,35 +59,38 @@ public class MainDeviceInfo extends Fragment {
 
     public MainDeviceInfo() {
     }
-		
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+
         View rootView = inflater.inflate(R.layout.info_device, container, false);
 
-        TextView txtNombreRed = (TextView) rootView.findViewById(R.id.txtNombreRed);
-        TextView txtTipoRed = (TextView) rootView.findViewById(R.id.txtRed);
-        TextView txtModelo = (TextView) rootView.findViewById(R.id.txtModelo);
-        TextView txtVersion = (TextView) rootView.findViewById(R.id.txtVersion);
-		TextView txtIpPublic = (TextView) rootView.findViewById(R.id.txtIpPublic);
-		TextView txtIpLocal = (TextView) rootView.findViewById(R.id.txtIpLocal);
-		TextView txtSeñal = (TextView) rootView.findViewById(R.id.txtSeñal);
-		
-		TextView txtDns1 = (TextView) rootView.findViewById(R.id.txtDns1);
-		TextView txtDns2 = (TextView) rootView.findViewById(R.id.txtDns2);
-		TextView txtMasSubred = (TextView) rootView.findViewById(R.id.txtMasSubred);
-		TextView txtGateway = (TextView) rootView.findViewById(R.id.txtGateway);
-		
-        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-		
-		
-		//datos de telefonía. 
-		tlfMan = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-		tlfMan = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);		
-		MyListener = new MyPhoneStateListener();
-		tlfMan.listen(MyListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
+         txtNombreRed = (TextView) rootView.findViewById(R.id.txtNombreRed);
+         txtTipoRed = (TextView) rootView.findViewById(R.id.txtRed);
+         txtModelo = (TextView) rootView.findViewById(R.id.txtModelo);
+         txtVersion = (TextView) rootView.findViewById(R.id.txtVersion);
+         txtIpPublic = (TextView) rootView.findViewById(R.id.txtIpPublic);
+         txtIpLocal = (TextView) rootView.findViewById(R.id.txtIpLocal);
+         txtSeñal = (TextView) rootView.findViewById(R.id.txtSeñal);
+
+         txtDns1 = (TextView) rootView.findViewById(R.id.txtDns1);
+         txtDns2 = (TextView) rootView.findViewById(R.id.txtDns2);
+         txtMasSubred = (TextView) rootView.findViewById(R.id.txtMasSubred);
+         txtGateway = (TextView) rootView.findViewById(R.id.txtGateway);
+
+         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        //datos de telefonía.
+        tlfMan = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+
+        MyListener = new MyPhoneStateListener();
+        tlfMan.listen(MyListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
+
+
+
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,76 +107,79 @@ public class MainDeviceInfo extends Fragment {
                 }
             }
         });
-		
-		printData();
-		// callAsynchronousTask();
-		return rootView;
-	}   
-	
-	
-	
-	private class MyPhoneStateListener extends PhoneStateListener {
-		
-		private String gsmStrength = "";
-
-		@Override
-		public void onSignalStrengthsChanged(SignalStrength signalStrength) {
-			super.onSignalStrengthsChanged(signalStrength);
-				gsmStrength = String
-					.valueOf(signalStrength.getGsmSignalStrength() * 2 - 113);
-			llamada
-		}
-
-		public String getStrength() {
-			return gsmStrength;
-		}
-
-	}
-	
-
-	@Override
-	public void onResume() {
-	super.onResume(); 
-	
-		Tel.listen(MyListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
-		
-	}
-
-	@Override
-	public void onPause() {
-	super.onPause(); 
-		Tel.listen(MyListener, PhoneStateListener.LISTEN_NONE);
 
 
-	}
+        printData();
+        // callAsynchronousTask();
+        return rootView;
+    }
 
-	@Override
-	public void onStop() {
-	super.onStop();  
 
+    private class MyPhoneStateListener extends PhoneStateListener {
 
-	}	
-	
-	private void printData(){		
-		
-		info = con.getNetworkInfo(getContext());       
+        private String gsmStrength = "";
 
-        if (con.isConnectedWifi(getContext())) {
-            fab.setImageResource(R.drawable.ic_wifi_ac);
-            txtNombreRed.setText(info.getExtraInfo());
-        }
-        if (con.isConnectedMobile(getContext())) {
-            fab.setImageResource(R.drawable.ic_antenna_ac);
-            txtNombreRed.setText(tlfMan.getNetworkOperatorName());
+        @Override
+        public void onSignalStrengthsChanged(SignalStrength signalStrength) {
+            super.onSignalStrengthsChanged(signalStrength);
+            gsmStrength = String
+                    .valueOf(signalStrength.getGsmSignalStrength() * 2 - 113);
+            printData();
         }
 
-        txtTipoRed.setText(con.getType(info.getType(), info.getSubtype()));
-        txtVersion.setText("Android " + Build.VERSION.RELEASE);
-        txtModelo.setText(Build.MODEL);		
-		
-		txtSeñal.setText(MyListener.getStrength() + "dBm");
-		
-	}
+        public String getStrength() {
+            return gsmStrength;
+        }
+
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        tlfMan.listen(MyListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        tlfMan.listen(MyListener, PhoneStateListener.LISTEN_NONE);
+
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+
+    }
+
+    private void printData() {
+
+
+       // if (getActivity() != null) {
+            info = Connectivity.getNetworkInfo(getActivity());
+
+
+            if (con.isConnectedWifi(getContext())) {
+                fab.setImageResource(R.drawable.ic_wifi_ac);
+                txtNombreRed.setText(info.getExtraInfo());
+            }
+            if (con.isConnectedMobile(getContext())) {
+                fab.setImageResource(R.drawable.ic_antenna_ac);
+                txtNombreRed.setText(tlfMan.getNetworkOperatorName());
+            }
+
+            txtTipoRed.setText(con.getType(info.getType(), info.getSubtype()));
+            txtVersion.setText("Android " + Build.VERSION.RELEASE);
+            txtModelo.setText(Build.MODEL);
+
+            txtSeñal.setText(MyListener.getStrength() + "dBm");
+       // }
+    }
 
 
   /*  public void callAsynchronousTask() {

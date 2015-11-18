@@ -1,5 +1,6 @@
 package com.r.raul.tools;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -19,7 +20,7 @@ public class MainActivity extends AppCompatActivity
 
     FragmentManager fragmentManager;
 
-    MainDeviceInfo fragmentD = new MainDeviceInfo();
+    MainDeviceInfo fragmentD;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +28,15 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        LanzarDeviceInfo();
+
+        fragmentD = new MainDeviceInfo();
+
+        if (savedInstanceState==null)
+            fragmentD = new MainDeviceInfo();
+        else
+            fragmentD = (MainDeviceInfo) getSupportFragmentManager().getFragment(savedInstanceState, "crearplanfragment");
+
+
 
       /*  FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -46,6 +55,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(R.id.nav_device);
+        LanzarDeviceInfo();
     }
 
     @Override
@@ -108,11 +119,23 @@ public class MainActivity extends AppCompatActivity
 
     private void LanzarDeviceInfo() {
 
-        fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, fragmentD, "DEVICE")
+       fragmentManager = getSupportFragmentManager();
+     /*   fragmentManager.beginTransaction()
+                .replace(R.id.container, new MainDeviceInfo(), "DEVICE")
                 .commit();
-        getSupportActionBar().setTitle(R.string.devide_m);
+        getSupportActionBar().setTitle(R.string.devide_m);*/
 
+
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, fragmentD, "LISTADO")
+                //.addToBackStack("LISTADO")
+                .commit();
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        getSupportFragmentManager().putFragment(outState, "crearplanfragment", fragmentD);
     }
 }
