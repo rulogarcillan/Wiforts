@@ -38,10 +38,17 @@ import java.util.TimerTask;
  */
 public class MainDeviceInfo extends Fragment {
 
-    TextView txtInfo, txtInfo2, txtModelo, txtVersion;
-    Connectivity con;
+	//vistas
+    TextView txtNombreRed, txtTipoRed, txtModelo, txtVersion;    
     FloatingActionButton fab;
+	
+	//servicios
+	Connectivity con; //esta es mi clase
     TelephonyManager tlfMan;
+	NetworkInfo info;
+	
+	//
+	MyPhoneStateListener MyListener;
 
 
     public static MainDeviceInfo newInstance() {
@@ -51,7 +58,7 @@ public class MainDeviceInfo extends Fragment {
 
     public MainDeviceInfo() {
     }
-
+		
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -59,12 +66,18 @@ public class MainDeviceInfo extends Fragment {
         super.onCreate(savedInstanceState);
         View rootView = inflater.inflate(R.layout.info_device, container, false);
 
-        TextView txtInfo = (TextView) rootView.findViewById(R.id.txtTipo);
-        TextView txtInfo2 = (TextView) rootView.findViewById(R.id.txtRed);
+        TextView txtNombreRed = (TextView) rootView.findViewById(R.id.txtTipo);
+        TextView txtTipoRed = (TextView) rootView.findViewById(R.id.txtRed);
         TextView txtModelo = (TextView) rootView.findViewById(R.id.txtModelo);
         TextView txtVersion = (TextView) rootView.findViewById(R.id.txtVersion);
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-
+		
+		
+		//datos de telefonía. 
+		tlfMan = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+		tlfMan = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);		
+		MyListener = new MyPhoneStateListener();
+		tlfMan.listen(MyListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,65 +94,79 @@ public class MainDeviceInfo extends Fragment {
                 }
             }
         });
+		
+		printData();
+		// callAsynchronousTask();
+		return rootView;
+	}   
+	
+	
+	
+	private class MyPhoneStateListener extends PhoneStateListener {
+		
+		private String gsmStrength = "";
 
-        NetworkInfo info = Connectivity.getNetworkInfo(getContext());
-        tlfMan = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+		@Override
+		public void onSignalStrengthsChanged(SignalStrength signalStrength) {
+			super.onSignalStrengthsChanged(signalStrength);
+				gsmStrength = String
+					.valueOf(signalStrength.getGsmSignalStrength() * 2 - 113);
+			llamada
+		}
+
+		public String getStrength() {
+			return gsmStrength;
+		}
+
+	}
+	
+
+	@Override
+	public void onResume() {
+	super.onResume(); 
+	
+		Tel.listen(MyListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
+		
+	}
+
+	@Override
+	public void onPause() {
+	super.onPause(); 
+		Tel.listen(MyListener, PhoneStateListener.LISTEN_NONE);
+
+
+	}
+
+	@Override
+	public void onStop() {
+	super.onStop();  
+
+
+	}	
+	
+	private void printData(){		
+		
+		info = con.getNetworkInfo(getContext());       
 
         if (con.isConnectedWifi(getContext())) {
             fab.setImageResource(R.drawable.ic_wifi_ac);
-            txtInfo.setText(info.getExtraInfo());
+            txtNombreRed.setText(info.getExtraInfo());
         }
         if (con.isConnectedMobile(getContext())) {
             fab.setImageResource(R.drawable.ic_antenna_ac);
-            txtInfo.setText(tlfMan.getNetworkOperatorName());
+            txtNombreRed.setText(tlfMan.getNetworkOperatorName());
         }
 
-        txtInfo2.setText(con.getType(info.getType(), info.getSubtype()));
+        txtTipoRed.setText(con.getType(info.getType(), info.getSubtype()));
         txtVersion.setText("Android " + Build.VERSION.RELEASE);
-        txtModelo.setText(Build.MODEL);
+        txtModelo.setText(Build.MODEL);		
+		
+		txtNombreRed.setText(MyListener.getStrength() + "dBm");
+		
+	}
 
 
-       // callAsynchronousTask();
-        return rootView;
-    }
-
-
-    public void carga() {
-
-
-        try {
-
-
-            NetworkInfo info = Connectivity.getNetworkInfo(getContext());
-            tlfMan = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-
-            if (con.isConnectedWifi(getContext())) {
-                fab.setImageResource(R.drawable.ic_wifi_ac);
-                txtInfo.setText(info.getExtraInfo());
-            }
-            if (con.isConnectedMobile(getContext())) {
-                fab.setImageResource(R.drawable.ic_antenna_ac);
-                txtInfo.setText(tlfMan.getNetworkOperatorName());
-            }
-
-            txtInfo2.setText(con.getType(info.getType(), info.getSubtype()));
-            txtVersion.setText("Android " + Build.VERSION.RELEASE);
-            txtModelo.setText(Build.MODEL);
-
-            txtInfo2.postInvalidate();
-            txtInfo.postInvalidate();
-            Toast.makeText(getActivity(), "Tarea finalizada!",
-                    Toast.LENGTH_SHORT).show();
-
-        } catch (Exception e) {
-
-        }
-
-
-    }
-
-
-    public void callAsynchronousTask() {
+  /*  public void callAsynchronousTask() {
         final Handler handler = new Handler();
         Timer timer = new Timer();
         TimerTask doAsynchronousTask = new TimerTask() {
@@ -197,13 +224,7 @@ public class MainDeviceInfo extends Fragment {
             // Toast.makeText(getActivity(), "Tarea cancelada!", Toast.LENGTH_SHORT).show();
             carga();
         }
-    }
+    }*/
 
 
 }
-
-
-
-
-
-
