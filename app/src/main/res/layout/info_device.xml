@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -88,7 +86,7 @@
                             android:textSize="16dp" />
 
                         <TextView
-                            android:id="@+id/txtTipo"
+                            android:id="@+id/txtNombreRed"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
@@ -113,11 +111,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="4dp"
+		android:paddingTop="16dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context=".ScrollingActivity"
         tools:showIn="@layout/activity_scrolling">
 
-        <LinearLayout
+		<LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
@@ -128,16 +127,169 @@
                 android:layout_weight="1"
                 android:gravity="right"
                 android:paddingRight="4dp"
-                android:text="Ip publica:"></TextView>
+                android:text="Intensidad de señal:"/>
 
             <TextView
+			    android:id="@+id/txtSeñal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
                 android:paddingLeft="4dp"
-                android:text="192.168.1.1"></TextView>
+                android:text="90%"/>
         </LinearLayout>
+		
+       <View android:background="#ffffff" 
+			 android:layout_width = "fill_parent"
+			 android:marginTop = "1dp"
+			 android:marginBottom= "1dp"
+			 android:marginRigth = "32dp"
+			 android:marginBottom = "32dp"
+		     android:layout_height="1dip"/>
+		
+		
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+			
+			
+
+            <TextView
+			    
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:paddingRight="4dp"
+                android:text="Ip publica:"/>
+
+            <TextView
+			    android:id="@+id/txtIpPublic"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:paddingLeft="4dp"
+                android:text="87.13.45.117"/>
+        </LinearLayout>
+		
+		<LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:paddingRight="4dp"
+                android:text="Ip Local:"/>
+
+            <TextView
+			    android:id="@+id/txtIpLocal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:paddingLeft="4dp"
+                android:text="192.168.1.15"/>
+        </LinearLayout>
+		
+		<LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:paddingRight="4dp"
+                android:text="Gateway:"/>
+
+            <TextView
+			    android:id="@+id/txtGateway"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:paddingLeft="4dp"
+                android:text="192.168.1.1"/>
+        </LinearLayout>
+		
+		<LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:paddingRight="4dp"
+                android:text="Mascara de subred:"/>
+
+            <TextView
+			    android:id="@+id/txtMasSubred"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:paddingLeft="4dp"
+                android:text="255.255.255.0"/>
+        </LinearLayout>
+		
+		<LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:paddingRight="4dp"
+                android:text="DNS 1:"/>
+
+            <TextView
+			    android:id="@+id/txtDns1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:paddingLeft="4dp"
+                android:text="8.8.8.8"/>
+        </LinearLayout>
+		
+		<LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:paddingRight="4dp"
+                android:text="DNS 2:"/>
+
+            <TextView
+			    android:id="@+id/txtDns2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:paddingLeft="4dp"
+                android:text="8.8.4.4"/>
+        </LinearLayout>
+		
+		
     </android.support.v4.widget.NestedScrollView>
 
 
