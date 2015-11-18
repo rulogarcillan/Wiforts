@@ -39,7 +39,7 @@ import java.util.TimerTask;
 public class MainDeviceInfo extends Fragment {
 
 	//vistas
-    TextView txtNombreRed, txtTipoRed, txtModelo, txtVersion;    
+    TextView txtNombreRed, txtTipoRed, txtModelo, txtVersion, txtIpPublic, txtIpLocal, txtSeñal, txtGateway, txtMasSubred, txtDns1, txtDns2;     
     FloatingActionButton fab;
 	
 	//servicios
@@ -66,10 +66,19 @@ public class MainDeviceInfo extends Fragment {
         super.onCreate(savedInstanceState);
         View rootView = inflater.inflate(R.layout.info_device, container, false);
 
-        TextView txtNombreRed = (TextView) rootView.findViewById(R.id.txtTipo);
+        TextView txtNombreRed = (TextView) rootView.findViewById(R.id.txtNombreRed);
         TextView txtTipoRed = (TextView) rootView.findViewById(R.id.txtRed);
         TextView txtModelo = (TextView) rootView.findViewById(R.id.txtModelo);
         TextView txtVersion = (TextView) rootView.findViewById(R.id.txtVersion);
+		TextView txtIpPublic = (TextView) rootView.findViewById(R.id.txtIpPublic);
+		TextView txtIpLocal = (TextView) rootView.findViewById(R.id.txtIpLocal);
+		TextView txtSeñal = (TextView) rootView.findViewById(R.id.txtSeñal);
+		
+		TextView txtDns1 = (TextView) rootView.findViewById(R.id.txtDns1);
+		TextView txtDns2 = (TextView) rootView.findViewById(R.id.txtDns2);
+		TextView txtMasSubred = (TextView) rootView.findViewById(R.id.txtMasSubred);
+		TextView txtGateway = (TextView) rootView.findViewById(R.id.txtGateway);
+		
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
 		
 		
@@ -161,7 +170,7 @@ public class MainDeviceInfo extends Fragment {
         txtVersion.setText("Android " + Build.VERSION.RELEASE);
         txtModelo.setText(Build.MODEL);		
 		
-		txtNombreRed.setText(MyListener.getStrength() + "dBm");
+		txtSeñal.setText(MyListener.getStrength() + "dBm");
 		
 	}
 
