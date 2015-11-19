@@ -151,26 +151,26 @@ public class MainDeviceInfo extends Fragment {
                 cobertura = a2.getDbm();
             }*/
 
-            try {
-                final TelephonyManager tm = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-                for (final CellInfo info : tm.getAllCellInfo()) {
+
+
+                TelephonyManager tm = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+                for (CellInfo info : tm.getAllCellInfo()) {
                     if (info instanceof CellInfoGsm) {
-                        final CellSignalStrengthGsm gsm = ((CellInfoGsm) info).getCellSignalStrength();
+                        CellSignalStrengthGsm gsm = ((CellInfoGsm) info).getCellSignalStrength();
                         // do what you need
                         gsmStrength = String.valueOf(gsm.getDbm());
                     } else if (info instanceof CellInfoCdma) {
-                        final CellSignalStrengthCdma cdma = ((CellInfoCdma) info).getCellSignalStrength();
+                        CellSignalStrengthCdma cdma = ((CellInfoCdma) info).getCellSignalStrength();
                         gsmStrength = String.valueOf(cdma.getDbm());
                     } else if (info instanceof CellInfoLte) {
-                        final CellSignalStrengthLte lte = ((CellInfoLte) info).getCellSignalStrength();
+                        CellSignalStrengthLte lte = ((CellInfoLte) info).getCellSignalStrength();
                         gsmStrength = String.valueOf(lte.getDbm());
                     } else {
                         gsmStrength = String.valueOf("Uknow");
                     }
                 }
-            } catch (Exception e) {
 
-            }
+
 
             printData();
         }
