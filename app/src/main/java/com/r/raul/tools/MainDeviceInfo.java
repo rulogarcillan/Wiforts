@@ -19,6 +19,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.net.ConnectivityManagerCompat;
 import android.support.v7.widget.Toolbar;
+
+import android.telephony.CellInfo;
+import android.telephony.CellInfoCdma;
+import android.telephony.CellInfoGsm;
+import android.telephony.CellInfoLte;
+import android.telephony.CellSignalStrengthCdma;
+import android.telephony.CellSignalStrengthGsm;
+import android.telephony.CellSignalStrengthLte;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
@@ -69,26 +77,25 @@ public class MainDeviceInfo extends Fragment {
 
         View rootView = inflater.inflate(R.layout.info_device, container, false);
 
-         txtNombreRed = (TextView) rootView.findViewById(R.id.txtNombreRed);
-         txtTipoRed = (TextView) rootView.findViewById(R.id.txtRed);
-         txtModelo = (TextView) rootView.findViewById(R.id.txtModelo);
-         txtVersion = (TextView) rootView.findViewById(R.id.txtVersion);
-         txtIpPublic = (TextView) rootView.findViewById(R.id.txtIpPublic);
-         txtIpLocal = (TextView) rootView.findViewById(R.id.txtIpLocal);
-         txtSeñal = (TextView) rootView.findViewById(R.id.txtSeñal);
+        txtNombreRed = (TextView) rootView.findViewById(R.id.txtNombreRed);
+        txtTipoRed = (TextView) rootView.findViewById(R.id.txtRed);
+        txtModelo = (TextView) rootView.findViewById(R.id.txtModelo);
+        txtVersion = (TextView) rootView.findViewById(R.id.txtVersion);
+        txtIpPublic = (TextView) rootView.findViewById(R.id.txtIpPublic);
+        txtIpLocal = (TextView) rootView.findViewById(R.id.txtIpLocal);
+        txtSeñal = (TextView) rootView.findViewById(R.id.txtSeñal);
 
-         txtDns1 = (TextView) rootView.findViewById(R.id.txtDns1);
-         txtDns2 = (TextView) rootView.findViewById(R.id.txtDns2);
-         txtMasSubred = (TextView) rootView.findViewById(R.id.txtMasSubred);
-         txtGateway = (TextView) rootView.findViewById(R.id.txtGateway);
+        txtDns1 = (TextView) rootView.findViewById(R.id.txtDns1);
+        txtDns2 = (TextView) rootView.findViewById(R.id.txtDns2);
+        txtMasSubred = (TextView) rootView.findViewById(R.id.txtMasSubred);
+        txtGateway = (TextView) rootView.findViewById(R.id.txtGateway);
 
-         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         //datos de telefonía.
         tlfMan = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
 
         MyListener = new MyPhoneStateListener();
         tlfMan.listen(MyListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
-
 
 
 
@@ -110,20 +117,61 @@ public class MainDeviceInfo extends Fragment {
 
 
         printData();
-        // callAsynchronousTask();
+
         return rootView;
     }
 
 
     private class MyPhoneStateListener extends PhoneStateListener {
 
+
         private String gsmStrength = "";
+        private int cobertura = 0;
 
         @Override
         public void onSignalStrengthsChanged(SignalStrength signalStrength) {
             super.onSignalStrengthsChanged(signalStrength);
-            gsmStrength = String
-                    .valueOf(signalStrength.getGsmSignalStrength() * 2 - 113);
+
+           /* gsmStrength = String.valueOf(signalStrength.getGsmSignalStrength() * 2 - 113);
+
+
+            CellSignalStrengthLte a1 = new CellSignalStrengthLte(signalStrength);
+            a1.initialize(signalStrength, 1);
+            cobertura = a1.getDbm();
+
+            if (cobertura > 0) {
+                CellSignalStrengthGsm a3 = new CellSignalStrengthGsm();
+                a3.initialize(signalStrength.getGsmSignalStrength(), 1);
+                cobertura = a3.getDbm();
+            }
+
+            if (cobertura > 0) {
+                CellSignalStrengthCdma a2 = new CellSignalStrengthCdma();
+                a2.initialize(signalStrength.getCdmaDbm(), signalStrength.getCdmaEcio(), signalStrength.getEvdoDbm(), signalStrength.getEvdoEcio(), signalStrength.getEvdoSnr());
+                cobertura = a2.getDbm();
+            }*/
+
+            try {
+                final TelephonyManager tm = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+                for (final CellInfo info : tm.getAllCellInfo()) {
+                    if (info instanceof CellInfoGsm) {
+                        final CellSignalStrengthGsm gsm = ((CellInfoGsm) info).getCellSignalStrength();
+                        // do what you need
+                        gsmStrength = String.valueOf(gsm.getDbm());
+                    } else if (info instanceof CellInfoCdma) {
+                        final CellSignalStrengthCdma cdma = ((CellInfoCdma) info).getCellSignalStrength();
+                        gsmStrength = String.valueOf(cdma.getDbm());
+                    } else if (info instanceof CellInfoLte) {
+                        final CellSignalStrengthLte lte = ((CellInfoLte) info).getCellSignalStrength();
+                        gsmStrength = String.valueOf(lte.getDbm());
+                    } else {
+                        gsmStrength = String.valueOf("Uknow");
+                    }
+                }
+            } catch (Exception e) {
+
+            }
+
             printData();
         }
 
@@ -131,6 +179,9 @@ public class MainDeviceInfo extends Fragment {
             return gsmStrength;
         }
 
+        public String getCobertura() {
+            return String.valueOf(cobertura);
+        }
     }
 
 
@@ -160,26 +211,40 @@ public class MainDeviceInfo extends Fragment {
     private void printData() {
 
 
-       // if (getActivity() != null) {
-            info = Connectivity.getNetworkInfo(getActivity());
+        info = Connectivity.getNetworkInfo(getActivity());
 
+        if (con.isConnectedWifi(getContext())) {
+            fab.setImageResource(R.drawable.ic_wifi_ac);
 
-            if (con.isConnectedWifi(getContext())) {
-                fab.setImageResource(R.drawable.ic_wifi_ac);
-                txtNombreRed.setText(info.getExtraInfo());
-            }
-            if (con.isConnectedMobile(getContext())) {
-                fab.setImageResource(R.drawable.ic_antenna_ac);
-                txtNombreRed.setText(tlfMan.getNetworkOperatorName());
-            }
-
+            txtNombreRed.setText(info.getExtraInfo());
             txtTipoRed.setText(con.getType(info.getType(), info.getSubtype()));
-            txtVersion.setText("Android " + Build.VERSION.RELEASE);
-            txtModelo.setText(Build.MODEL);
+
+            txtSeñal.setText("wifi dBm");
+
+        } else if (con.isConnectedMobile(getContext())) {
+            fab.setImageResource(R.drawable.ic_antenna_ac);
+
+            txtNombreRed.setText(tlfMan.getNetworkOperatorName());
+            txtTipoRed.setText(con.getType(info.getType(), info.getSubtype()));
 
             txtSeñal.setText(MyListener.getStrength() + "dBm");
-       // }
+            txtIpPublic.setText(MyListener.getStrength());
+        } else {
+            fab.setImageResource(R.drawable.ic_antenna_ac);
+
+            txtNombreRed.setText(tlfMan.getNetworkOperatorName());
+            txtTipoRed.setText("-");
+            txtSeñal.setText("-");
+            txtSeñal.setText(MyListener.getStrength() + "dBm");
+            txtIpPublic.setText(MyListener.getStrength());
+        }
+
+        txtVersion.setText("Android " + Build.VERSION.RELEASE);
+        txtModelo.setText(Build.MODEL);
+
     }
+
+ 
 
 
   /*  public void callAsynchronousTask() {
@@ -191,7 +256,6 @@ public class MainDeviceInfo extends Fragment {
                 handler.post(new Runnable() {
                     public void run() {
                         try {
-
                             carga();
                         } catch (Exception e) {
                             // TODO Auto-generated catch block
@@ -199,42 +263,25 @@ public class MainDeviceInfo extends Fragment {
                     }
                 });
             }
-
         };
         timer.schedule(doAsynchronousTask, 0, 1000 * 10); //execute in every 50000 ms
-
-
     }
-
-
     class Señales extends AsyncTask<Void, Integer, Boolean> {
-
         @Override
         protected Boolean doInBackground(Void... params) {
-
-
             return true;
         }
-
         @Override
         protected void onProgressUpdate(Integer... values) {
             int progreso = values[0].intValue();
-
-
         }
-
         @Override
         protected void onPreExecute() {
-
         }
-
         @Override
         protected void onPostExecute(Boolean result) {
-
-
            carga();
         }
-
         @Override
         protected void onCancelled() {
             // Toast.makeText(getActivity(), "Tarea cancelada!", Toast.LENGTH_SHORT).show();
