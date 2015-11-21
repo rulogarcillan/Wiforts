@@ -133,7 +133,7 @@
                 android:layout_weight="1"
                 android:gravity="right"
                 android:paddingRight="4dp"
-                android:text="Intensidad de señal:"/>
+                android:text="@string/intensidad_red"/>
 
             <TextView
 			    android:id="@+id/txtSeñal"

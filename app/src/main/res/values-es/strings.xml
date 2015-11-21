@@ -5,4 +5,5 @@
     <string name="wifi_m">Analizar wifi</string>
     <string name="ports_m">Analizar puertos</string>
     <string name="test_m">Test de velocidad</string>
+    <string name="intensidad_red">Intensidad de señal:</string>
 </resources>

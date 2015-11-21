@@ -24,9 +24,11 @@ import android.telephony.CellInfo;
 import android.telephony.CellInfoCdma;
 import android.telephony.CellInfoGsm;
 import android.telephony.CellInfoLte;
+import android.telephony.CellInfoWcdma;
 import android.telephony.CellSignalStrengthCdma;
 import android.telephony.CellSignalStrengthGsm;
 import android.telephony.CellSignalStrengthLte;
+import android.telephony.CellSignalStrengthWcdma;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
@@ -98,7 +100,6 @@ public class MainDeviceInfo extends Fragment {
         tlfMan.listen(MyListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
 
 
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,13 +127,13 @@ public class MainDeviceInfo extends Fragment {
 
 
         private String gsmStrength = "";
-        private int cobertura = 0;
+        private int tipoIcono ;
 
         @Override
         public void onSignalStrengthsChanged(SignalStrength signalStrength) {
             super.onSignalStrengthsChanged(signalStrength);
 
-           /* gsmStrength = String.valueOf(signalStrength.getGsmSignalStrength() * 2 - 113);
+           /* ;
 
 
             CellSignalStrengthLte a1 = new CellSignalStrengthLte(signalStrength);
@@ -153,24 +154,40 @@ public class MainDeviceInfo extends Fragment {
 
 
 
-                TelephonyManager tm = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-                for (CellInfo info : tm.getAllCellInfo()) {
+            try {
+
+
+                for (CellInfo info : tlfMan.getAllCellInfo()) {
                     if (info instanceof CellInfoGsm) {
                         CellSignalStrengthGsm gsm = ((CellInfoGsm) info).getCellSignalStrength();
-                        // do what you need
-                        gsmStrength = String.valueOf(gsm.getDbm());
+                        icono(gsm.getLevel());
+                        gsmStrength = String.valueOf(gsm.getDbm())+" dBm";
                     } else if (info instanceof CellInfoCdma) {
                         CellSignalStrengthCdma cdma = ((CellInfoCdma) info).getCellSignalStrength();
-                        gsmStrength = String.valueOf(cdma.getDbm());
+                        icono(cdma.getLevel());
+                        gsmStrength = String.valueOf(cdma.getDbm())+" dBm";
                     } else if (info instanceof CellInfoLte) {
                         CellSignalStrengthLte lte = ((CellInfoLte) info).getCellSignalStrength();
-                        gsmStrength = String.valueOf(lte.getDbm());
+                        icono(lte.getLevel());
+                        gsmStrength = String.valueOf(lte.getDbm())+" dBm";
+                    } else if (info instanceof CellInfoWcdma) {
+                        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                            final CellSignalStrengthWcdma wcdma = ((CellInfoWcdma) info).getCellSignalStrength();
+                            gsmStrength = String.valueOf(wcdma.getDbm()) +" dBm";
+                            icono(wcdma.getLevel());
+                        } else {
+
+                            gsmStrength = String.valueOf(signalStrength.getGsmSignalStrength() * 2 - 113) +" dBm";
+                        }
+
                     } else {
                         gsmStrength = String.valueOf("Uknow");
+                        icono(-1);
                     }
                 }
-
-
+            } catch (Exception e) {
+                LogUtils.LOG(e.getMessage());
+            }
 
             printData();
         }
@@ -179,8 +196,32 @@ public class MainDeviceInfo extends Fragment {
             return gsmStrength;
         }
 
-        public String getCobertura() {
-            return String.valueOf(cobertura);
+        public void icono(int percent){
+            switch (percent){
+                case -1:
+                    tipoIcono = R.drawable.ic_sigmobile0;
+                    break;
+                case 1:
+                    tipoIcono = R.drawable.ic_sigmobile2;
+                    break;
+                case 2:
+                    tipoIcono = R.drawable.ic_sigmobile3;
+                    break;
+                case 3:
+                    tipoIcono = R.drawable.ic_sigmobile4;
+                    break;
+                case 4:
+                    tipoIcono = R.drawable.ic_sigmobile5;
+                    break;
+                case 0:
+                    tipoIcono = R.drawable.ic_sigmobile1;
+                    break;
+            }
+
+        }
+
+        public int getTipoIcono() {
+            return tipoIcono;
         }
     }
 
@@ -222,22 +263,23 @@ public class MainDeviceInfo extends Fragment {
             txtSeñal.setText("wifi dBm");
 
         } else if (con.isConnectedMobile(getContext())) {
-            fab.setImageResource(R.drawable.ic_antenna_ac);
+            fab.setImageResource(MyListener.getTipoIcono());
 
             txtNombreRed.setText(tlfMan.getNetworkOperatorName());
             txtTipoRed.setText(con.getType(info.getType(), info.getSubtype()));
 
-            txtSeñal.setText(MyListener.getStrength() + "dBm");
-            txtIpPublic.setText(MyListener.getStrength());
+            txtSeñal.setText(MyListener.getStrength());
+
         } else {
-            fab.setImageResource(R.drawable.ic_antenna_ac);
+            fab.setImageResource(R.drawable.ic_sigmobile0);
 
             txtNombreRed.setText(tlfMan.getNetworkOperatorName());
             txtTipoRed.setText("-");
             txtSeñal.setText("-");
-            txtSeñal.setText(MyListener.getStrength() + "dBm");
-            txtIpPublic.setText(MyListener.getStrength());
+            txtSeñal.setText(MyListener.getStrength());
+
         }
+        txtIpLocal.setText( tlfMan.getCellLocation().toString());
 
         txtVersion.setText("Android " + Build.VERSION.RELEASE);
         txtModelo.setText(Build.MODEL);
