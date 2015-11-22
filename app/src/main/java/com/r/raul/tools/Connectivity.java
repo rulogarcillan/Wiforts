@@ -4,11 +4,14 @@ package com.r.raul.tools;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
+
+import java.util.List;
 
 
 public class Connectivity {
-
 
 
     public static NetworkInfo getNetworkInfo(Context context) {
@@ -36,45 +39,46 @@ public class Connectivity {
 
 
 
+
     public static String getType(int type, int subType) {
         if (type == ConnectivityManager.TYPE_WIFI) {
             return "WIFI";
         } else if (type == ConnectivityManager.TYPE_MOBILE) {
             switch (subType) {
                 case TelephonyManager.NETWORK_TYPE_1xRTT:
-                    return "1xRTT"; // ~ 50-100 kbps
+                    return "2G | 1xRTT"; // ~ 50-100 kbps
                 case TelephonyManager.NETWORK_TYPE_CDMA:
-                    return "CDMA";  // ~ 14-64 kbps
+                    return "2G | CDMA";  // ~ 14-64 kbps
                 case TelephonyManager.NETWORK_TYPE_EDGE:
-                    return "EDGE";  // ~ 50-100 kbps
+                    return "2G | EDGE";  // ~ 50-100 kbps
                 case TelephonyManager.NETWORK_TYPE_EVDO_0:
-                    return "EVDO rev. 0";  // ~ 400-1000 kbps
+                    return "3G | EVDO rev. 0";  // ~ 400-1000 kbps
                 case TelephonyManager.NETWORK_TYPE_EVDO_A:
-                    return "EVDO rev. A"; // ~ 600-1400 kbps
+                    return "3G | EVDO rev. A"; // ~ 600-1400 kbps
                 case TelephonyManager.NETWORK_TYPE_GPRS:
-                    return "GPRS"; // ~ 100 kbps
+                    return "2G | GPRS"; // ~ 100 kbps
                 case TelephonyManager.NETWORK_TYPE_HSDPA:
-                    return "HSDPA"; // ~ 2-14 Mbps
+                    return "3G | HSDPA"; // ~ 2-14 Mbps
                 case TelephonyManager.NETWORK_TYPE_HSPA:
-                    return "HSPA";  // ~ 700-1700 kbps
+                    return "3G | HSPA";  // ~ 700-1700 kbps
                 case TelephonyManager.NETWORK_TYPE_HSUPA:
-                    return "HSUPA";  // ~ 1-23 Mbps
+                    return "3G | HSUPA";  // ~ 1-23 Mbps
                 case TelephonyManager.NETWORK_TYPE_UMTS:
-                    return "UMTS";   // ~ 400-7000 kbps
+                    return "3G | UMTS";   // ~ 400-7000 kbps
             /*
-			 * Above API level 7, make sure to set android:targetSdkVersion
+             * Above API level 7, make sure to set android:targetSdkVersion
 			 * to appropriate level to use these
 			 */
                 case TelephonyManager.NETWORK_TYPE_EHRPD: // API level 11
-                    return "EHRPD";  // ~ 1-2 Mbps
+                    return "3G | EHRPD";  // ~ 1-2 Mbps
                 case TelephonyManager.NETWORK_TYPE_EVDO_B: // API level 9
-                    return "EVDO_B"; // ~ 5 Mbps
+                    return "3G | EVDO_B"; // ~ 5 Mbps
                 case TelephonyManager.NETWORK_TYPE_HSPAP: // API level 13
-                    return "HSPAP"; // ~ 10-20 Mbps
+                    return "3G | HSPAP"; // ~ 10-20 Mbps
                 case TelephonyManager.NETWORK_TYPE_IDEN: // API level 8
-                    return "iDen"; // ~25 kbps
+                    return "2G | iDen"; // ~25 kbps
                 case TelephonyManager.NETWORK_TYPE_LTE: // API level 11
-                    return "LTE"; // ~ 10+ Mbps
+                    return "4G | LTE"; // ~ 10+ Mbps
                 // Unknown
                 case TelephonyManager.NETWORK_TYPE_UNKNOWN:
                 default:
