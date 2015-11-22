@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="action_settings"></string>
+    <string name="action_settings">Opciones</string>
     <string name="devide_m">Información del dispositivo</string>
     <string name="wifi_m">Analizar wifi</string>
     <string name="ports_m">Analizar puertos</string>
     <string name="test_m">Test de velocidad</string>
     <string name="intensidad_red">Intensidad de señal:</string>
+    <string name="ippublica">IP pública:</string>
+    <string name="iplocal">IP local:</string>
+    <string name="gateway">Puerta de enlace:</string>
+    <string name="masacarasubred">Máscara de subred:</string>
+    <string name="desconocido">Desconocido</string>
+    <string name="nodisponible">No disponible</string>
 </resources>

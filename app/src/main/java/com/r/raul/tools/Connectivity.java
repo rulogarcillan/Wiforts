@@ -1,6 +1,7 @@
 package com.r.raul.tools;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -40,7 +41,7 @@ public class Connectivity {
 
 
 
-    public static String getType(int type, int subType) {
+    public static String getType(int type, int subType, Activity a) {
         if (type == ConnectivityManager.TYPE_WIFI) {
             return "WIFI";
         } else if (type == ConnectivityManager.TYPE_MOBILE) {
@@ -82,10 +83,10 @@ public class Connectivity {
                 // Unknown
                 case TelephonyManager.NETWORK_TYPE_UNKNOWN:
                 default:
-                    return "UNKNOWN";
+                    return a.getString(R.string.desconocido);
             }
         } else {
-            return "";
+            return a.getString(R.string.nodisponible);
         }
     }
 

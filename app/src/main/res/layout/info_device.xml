@@ -169,7 +169,7 @@
                 android:layout_weight="1"
                 android:gravity="right"
                 android:paddingRight="4dp"
-                android:text="Ip publica:"/>
+                android:text="@string/ippublica"/>
 
             <TextView
 			    android:id="@+id/txtIpPublic"
@@ -192,7 +192,7 @@
                 android:layout_weight="1"
                 android:gravity="right"
                 android:paddingRight="4dp"
-                android:text="Ip Local:"/>
+                android:text="@string/iplocal"/>
 
             <TextView
 			    android:id="@+id/txtIpLocal"
@@ -215,7 +215,7 @@
                 android:layout_weight="1"
                 android:gravity="right"
                 android:paddingRight="4dp"
-                android:text="Gateway:"/>
+                android:text="@string/gateway"/>
 
             <TextView
 			    android:id="@+id/txtGateway"
@@ -238,7 +238,7 @@
                 android:layout_weight="1"
                 android:gravity="right"
                 android:paddingRight="4dp"
-                android:text="Mascara de subred:"/>
+                android:text="@string/masacarasubred"/>
 
             <TextView
 			    android:id="@+id/txtMasSubred"

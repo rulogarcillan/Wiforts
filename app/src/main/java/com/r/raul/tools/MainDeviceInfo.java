@@ -40,6 +40,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.net.InetAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -108,14 +114,13 @@ public class MainDeviceInfo extends Fragment {
             public void onClick(View v) {
                 if (con.isConnectedWifi(getContext())) {
                     startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-                }
-                else if (con.isConnectedMobile(getContext())) {
+                } else if (con.isConnectedMobile(getContext())) {
                     Intent intent = new Intent(Intent.ACTION_MAIN);
                     intent.setComponent(new ComponentName("com.android.settings",
                             "com.android.settings.Settings$DataUsageSummaryActivity"));
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
-                }else {
+                } else {
                     Intent intent = new Intent(Intent.ACTION_MAIN);
                     intent.setComponent(new ComponentName("com.android.settings",
                             "com.android.settings.Settings$DataUsageSummaryActivity"));
@@ -150,35 +155,35 @@ public class MainDeviceInfo extends Fragment {
 
                     tlfMan = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
                     for (CellInfo info2 : tlfMan.getAllCellInfo()) {
-                        if (info2 instanceof CellInfoGsm && con.getType(info.getType(), info.getSubtype()) != "4G | LTE") {
+                        if (info2 instanceof CellInfoGsm && con.getType(info.getType(), info.getSubtype(), getActivity()) != "4G | LTE") {
                             CellSignalStrengthGsm gsm = ((CellInfoGsm) info2).getCellSignalStrength();
                             iconoGsm(gsm.getLevel());
 
                             gsmStrength = String.valueOf(gsm.getDbm()) + " dBm";
-                            LogUtils.LOG("GSM " + gsmStrength);
+                            // LogUtils.LOG("GSM " + gsmStrength);
                         } else if (info2 instanceof CellInfoCdma) {
                             CellSignalStrengthCdma cdma = ((CellInfoCdma) info2).getCellSignalStrength();
                             iconoGsm(cdma.getLevel());
                             gsmStrength = String.valueOf(cdma.getDbm()) + " dBm";
-                            LogUtils.LOG("cdma " + gsmStrength);
+                            // LogUtils.LOG("cdma " + gsmStrength);
                         } else if (info2 instanceof CellInfoLte) {
                             CellSignalStrengthLte lte = ((CellInfoLte) info2).getCellSignalStrength();
                             gsmStrength = String.valueOf(lte.getDbm()) + " dBm";
                             iconoGsm(lte.getLevel());
-                            LogUtils.LOG("lte " + gsmStrength);
+                            // LogUtils.LOG("lte " + gsmStrength);
                         } else if (info2 instanceof CellInfoWcdma) {
                             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                                 final CellSignalStrengthWcdma wcdma = ((CellInfoWcdma) info2).getCellSignalStrength();
                                 gsmStrength = String.valueOf(wcdma.getDbm()) + " dBm";
                                 iconoGsm(wcdma.getLevel());
-                                LogUtils.LOG("cdma " + gsmStrength);
+                                //  LogUtils.LOG("cdma " + gsmStrength);
                             } else {
 
                                 gsmStrength = String.valueOf(signalStrength.getGsmSignalStrength() * 2 - 113) + " dBm";
                             }
 
                         } else {
-                            if (con.getType(info.getType(), info.getSubtype()) == "4G | LTE") {
+                            if (con.getType(info.getType(), info.getSubtype(), getActivity()) == "4G | LTE") {
 
                             } else {
                                 gsmStrength = String.valueOf("Uknow");
@@ -231,7 +236,7 @@ public class MainDeviceInfo extends Fragment {
 
             }
 
-             wifiStrength = rssi + " dBm";
+            wifiStrength = rssi + " dBm";
         }
 
         public String getGsmStrength() {
@@ -295,29 +300,98 @@ public class MainDeviceInfo extends Fragment {
 
         if (con.isConnectedWifi(getContext())) {
 
-
-            txtNombreRed.setText(info.getExtraInfo());
-            txtTipoRed.setText(con.getType(info.getType(), info.getSubtype()));
-            txtSeñal.setText(MyListener.getWifiStrength());
             fab.setImageResource(MyListener.getTipoIcono());
+            txtNombreRed.setText(info.getExtraInfo());
+            txtTipoRed.setText(con.getType(info.getType(), info.getSubtype(), getActivity()));
+            txtSeñal.setText(MyListener.getWifiStrength());
+            //ips y red
+
+            new cargaIps().execute();
+
+
+            txtIpPublic.setText(R.string.nodisponible);
+            txtDns1.setText(R.string.nodisponible);
+            txtDns2.setText(R.string.nodisponible);
+            txtMasSubred.setText(R.string.nodisponible);
+            txtGateway.setText(R.string.nodisponible);
 
         } else if (con.isConnectedMobile(getContext())) {
-
-            txtNombreRed.setText(tlfMan.getNetworkOperatorName());
-            txtTipoRed.setText(con.getType(info.getType(), info.getSubtype()));
-            txtSeñal.setText(MyListener.getGsmStrength());
             fab.setImageResource(MyListener.getTipoIcono());
+            txtNombreRed.setText(tlfMan.getNetworkOperatorName());
+            txtTipoRed.setText(con.getType(info.getType(), info.getSubtype(), getActivity()));
+            txtSeñal.setText(MyListener.getGsmStrength());
+            //ips y red
+            new cargaIps().execute();
+            txtIpPublic.setText(R.string.nodisponible);
+            txtDns1.setText(R.string.nodisponible);
+            txtDns2.setText(R.string.nodisponible);
+            txtMasSubred.setText(R.string.nodisponible);
+            txtGateway.setText(R.string.nodisponible);
 
         } else {
-            fab.setImageResource(R.drawable.ic_wifi1); //cambiar
+            //red y señal
+            fab.setImageResource(R.drawable.ic_sigmobile0); //cambiar
             txtNombreRed.setText(tlfMan.getNetworkOperatorName());
-            txtTipoRed.setText("-");
-            txtSeñal.setText("-");
-            txtSeñal.setText("-");
+            txtTipoRed.setText(R.string.nodisponible);
+            txtSeñal.setText(R.string.nodisponible);
+
+            //ips y red
+            txtIpLocal.setText(R.string.nodisponible);
+            txtIpPublic.setText(R.string.nodisponible);
+            txtDns1.setText(R.string.nodisponible);
+            txtDns2.setText(R.string.nodisponible);
+            txtMasSubred.setText(R.string.nodisponible);
+            txtGateway.setText(R.string.nodisponible);
+
+
         }
 
         txtVersion.setText("Android " + Build.VERSION.RELEASE);
         txtModelo.setText(Build.MODEL);
+    }
+
+    public class cargaIps extends AsyncTask<Void, Void, String> {
+        @Override
+        protected String doInBackground(Void... params) {
+
+            String retorno;
+            InetAddress IP = null;
+            try {
+                IP = InetAddress.getLocalHost();
+
+
+                retorno = getLocalAddress().getHostAddress();
+
+
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+                retorno = getActivity().getString(R.string.nodisponible);
+            }
+
+
+            return retorno;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            txtIpLocal.setText(result);
+        }
+
+        private InetAddress getLocalAddress() {
+            try {
+                Enumeration<NetworkInterface> b = NetworkInterface.getNetworkInterfaces();
+                while (b.hasMoreElements()) {
+                    for (InterfaceAddress f : b.nextElement().getInterfaceAddresses())
+                        if (f.getAddress().isSiteLocalAddress())
+                            return f.getAddress();
+                }
+            } catch (SocketException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
     }
 
 }
