@@ -109,7 +109,13 @@ public class MainDeviceInfo extends Fragment {
                 if (con.isConnectedWifi(getContext())) {
                     startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
                 }
-                if (con.isConnectedMobile(getContext())) {
+                else if (con.isConnectedMobile(getContext())) {
+                    Intent intent = new Intent(Intent.ACTION_MAIN);
+                    intent.setComponent(new ComponentName("com.android.settings",
+                            "com.android.settings.Settings$DataUsageSummaryActivity"));
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }else {
                     Intent intent = new Intent(Intent.ACTION_MAIN);
                     intent.setComponent(new ComponentName("com.android.settings",
                             "com.android.settings.Settings$DataUsageSummaryActivity"));
@@ -287,33 +293,31 @@ public class MainDeviceInfo extends Fragment {
 
         info = Connectivity.getNetworkInfo(getActivity());
 
-        txtTipoRed.setText(con.getType(info.getType(), info.getSubtype()));
-        fab.setImageResource(MyListener.getTipoIcono());
-        txtVersion.setText("Android " + Build.VERSION.RELEASE);
-        txtModelo.setText(Build.MODEL);
-
         if (con.isConnectedWifi(getContext())) {
 
 
             txtNombreRed.setText(info.getExtraInfo());
-
+            txtTipoRed.setText(con.getType(info.getType(), info.getSubtype()));
             txtSeñal.setText(MyListener.getWifiStrength());
+            fab.setImageResource(MyListener.getTipoIcono());
 
         } else if (con.isConnectedMobile(getContext())) {
 
             txtNombreRed.setText(tlfMan.getNetworkOperatorName());
-
+            txtTipoRed.setText(con.getType(info.getType(), info.getSubtype()));
             txtSeñal.setText(MyListener.getGsmStrength());
+            fab.setImageResource(MyListener.getTipoIcono());
 
         } else {
-            fab.setImageResource(R.drawable.ic_sigmobile0); //cambiar
+            fab.setImageResource(R.drawable.ic_wifi1); //cambiar
             txtNombreRed.setText(tlfMan.getNetworkOperatorName());
             txtTipoRed.setText("-");
             txtSeñal.setText("-");
             txtSeñal.setText("-");
         }
 
-
+        txtVersion.setText("Android " + Build.VERSION.RELEASE);
+        txtModelo.setText(Build.MODEL);
     }
 
 }
