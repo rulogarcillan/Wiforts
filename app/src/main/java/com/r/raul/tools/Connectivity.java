@@ -89,6 +89,4 @@ public class Connectivity {
             return a.getString(R.string.nodisponible);
         }
     }
-
-
 }
