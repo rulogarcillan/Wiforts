@@ -38,9 +38,6 @@ public class Connectivity {
         return (info != null && info.isConnected() && info.getType() == ConnectivityManager.TYPE_MOBILE);
     }
 
-
-
-
     public static String getType(int type, int subType, Activity a) {
         if (type == ConnectivityManager.TYPE_WIFI) {
             return "WIFI";

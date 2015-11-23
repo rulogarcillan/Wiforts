@@ -1,26 +1,17 @@
 package com.r.raul.tools;
 
-import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.Network;
 import android.net.NetworkInfo;
-import android.net.wifi.ScanResult;
-import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.net.ConnectivityManagerCompat;
-import android.support.v7.widget.Toolbar;
-
 import android.telephony.CellInfo;
 import android.telephony.CellInfoCdma;
 import android.telephony.CellInfoGsm;
@@ -33,12 +24,16 @@ import android.telephony.CellSignalStrengthWcdma;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.github.pwittchen.networkevents.library.BusWrapper;
+import com.github.pwittchen.networkevents.library.NetworkEvents;
+import com.github.pwittchen.networkevents.library.event.ConnectivityChanged;
+import com.github.pwittchen.networkevents.library.event.WifiSignalStrengthChanged;
+import com.squareup.otto.Subscribe;
 
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
@@ -46,9 +41,8 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+
+import de.greenrobot.event.EventBus;
 
 
 /**
@@ -65,9 +59,13 @@ public class MainDeviceInfo extends Fragment {
     private TelephonyManager tlfMan;
     private NetworkInfo info;
 
+    private BusWrapper busWrapper;
+    private NetworkEvents networkEvents;
 
     //
     private MyPhoneStateListener MyListener;
+    private String wifiStrength = "";
+    private int tipoIcono;
 
 
     public static MainDeviceInfo newInstance() {
@@ -78,6 +76,51 @@ public class MainDeviceInfo extends Fragment {
     public MainDeviceInfo() {
     }
 
+
+    @Subscribe
+    @SuppressWarnings("unused")
+    public void onEvent(ConnectivityChanged event) {
+        if (con.isConnectedWifi(getContext())) {
+            getLevelWifi(getContext());
+            printData();
+        } else if (!con.isConnected(getActivity())) {
+            printData();
+        }
+    }
+
+    @Subscribe
+    @SuppressWarnings("unused")
+    public void onEvent(WifiSignalStrengthChanged event) {
+
+        if (con.isConnectedWifi(getContext())) {
+            getLevelWifi(getContext());
+            printData();
+        }
+
+
+    }
+
+    @NonNull
+    private BusWrapper getGreenRobotBusWrapper(final EventBus bus) {
+        return new BusWrapper() {
+            @Override
+            public void register(Object object) {
+                bus.register(object);
+            }
+
+            @Override
+            public void unregister(Object object) {
+                bus.unregister(object);
+            }
+
+            @Override
+            public void post(Object event) {
+                bus.post(event);
+            }
+        };
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -86,6 +129,12 @@ public class MainDeviceInfo extends Fragment {
 
 
         View rootView = inflater.inflate(R.layout.info_device, container, false);
+
+        EventBus bus = new EventBus();
+
+        busWrapper = getGreenRobotBusWrapper(bus);
+        networkEvents = new NetworkEvents(getActivity(), busWrapper).enableWifiScan();
+
 
         txtNombreRed = (TextView) rootView.findViewById(R.id.txtNombreRed);
         txtTipoRed = (TextView) rootView.findViewById(R.id.txtRed);
@@ -140,17 +189,14 @@ public class MainDeviceInfo extends Fragment {
     private class MyPhoneStateListener extends PhoneStateListener {
 
         private String gsmStrength = "";
-        private String wifiStrength = "";
+
         private int tipoIcono;
 
         @Override
         public void onSignalStrengthsChanged(SignalStrength signalStrength) {
             super.onSignalStrengthsChanged(signalStrength);
 
-            if (con.isConnectedWifi(getContext())) {
-                getLevelWifi(getContext());
-
-            } else if (con.isConnectedMobile(getContext())) {
+            if (con.isConnectedMobile(getContext())) {
                 try {
 
                     tlfMan = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
@@ -196,47 +242,8 @@ public class MainDeviceInfo extends Fragment {
                     LogUtils.LOG(e.getMessage());
                 }
 
-            } else {
-
-                //nada
+                printData();
             }
-
-
-            printData();
-        }
-
-
-        public void getLevelWifi(Context context) {
-
-            WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-            List<ScanResult> wifiList = wifiManager.getScanResults();
-            for (ScanResult scanResult : wifiList) {
-                int level = WifiManager.calculateSignalLevel(scanResult.level, 5);
-            }
-
-            int rssi = wifiManager.getConnectionInfo().getRssi();
-            int level = WifiManager.calculateSignalLevel(rssi, 5);
-
-            switch (level) {
-                case 0:
-                    tipoIcono = R.drawable.ic_wifi1;
-                    break;
-                case 1:
-                    tipoIcono = R.drawable.ic_wifi2;
-                    break;
-                case 2:
-                    tipoIcono = R.drawable.ic_wifi3;
-                    break;
-                case 3:
-                    tipoIcono = R.drawable.ic_wifi4;
-                    break;
-                case 4:
-                    tipoIcono = R.drawable.ic_wifi5;
-                    break;
-
-            }
-
-            wifiStrength = rssi + " dBm";
         }
 
         public String getGsmStrength() {
@@ -280,18 +287,32 @@ public class MainDeviceInfo extends Fragment {
     public void onResume() {
         super.onResume();
         tlfMan.listen(MyListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
+        busWrapper.register(this);
+        networkEvents.register();
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+    }
+
 
     @Override
     public void onPause() {
         super.onPause();
         tlfMan.listen(MyListener, PhoneStateListener.LISTEN_NONE);
+        busWrapper.unregister(this);
+        networkEvents.unregister();
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
 
     private void printData() {
 
@@ -300,10 +321,10 @@ public class MainDeviceInfo extends Fragment {
 
         if (con.isConnectedWifi(getContext())) {
 
-            fab.setImageResource(MyListener.getTipoIcono());
+            fab.setImageResource(tipoIcono);
             txtNombreRed.setText(info.getExtraInfo());
             txtTipoRed.setText(con.getType(info.getType(), info.getSubtype(), getActivity()));
-            txtSeñal.setText(MyListener.getWifiStrength());
+            txtSeñal.setText(wifiStrength);
             //ips y red
 
             new cargaIps().execute();
@@ -390,6 +411,39 @@ public class MainDeviceInfo extends Fragment {
         }
 
 
+    }
+
+    public void getLevelWifi(Context context) {
+
+        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        /*List<ScanResult> wifiList = wifiManager.getScanResults();
+        for (ScanResult scanResult : wifiList) {
+            int level = WifiManager.calculateSignalLevel(scanResult.level, 5);
+        }*/
+
+        int rssi = wifiManager.getConnectionInfo().getRssi();
+        int level = WifiManager.calculateSignalLevel(rssi, 5);
+
+        switch (level) {
+            case 0:
+                tipoIcono = R.drawable.ic_wifi1;
+                break;
+            case 1:
+                tipoIcono = R.drawable.ic_wifi2;
+                break;
+            case 2:
+                tipoIcono = R.drawable.ic_wifi3;
+                break;
+            case 3:
+                tipoIcono = R.drawable.ic_wifi4;
+                break;
+            case 4:
+                tipoIcono = R.drawable.ic_wifi5;
+                break;
+
+        }
+
+        wifiStrength = rssi + " dBm";
     }
 
 }
