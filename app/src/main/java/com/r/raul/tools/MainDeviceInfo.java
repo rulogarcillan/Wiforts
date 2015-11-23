@@ -35,10 +35,15 @@ import com.github.pwittchen.networkevents.library.event.ConnectivityChanged;
 import com.github.pwittchen.networkevents.library.event.WifiSignalStrengthChanged;
 import com.squareup.otto.Subscribe;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
+import java.net.MalformedURLException;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
 
@@ -330,7 +335,7 @@ public class MainDeviceInfo extends Fragment {
             new cargaIps().execute();
 
 
-            txtIpPublic.setText(R.string.nodisponible);
+         //   txtIpPublic.setText(getIp());
             txtDns1.setText(R.string.nodisponible);
             txtDns2.setText(R.string.nodisponible);
             txtMasSubred.setText(R.string.nodisponible);
@@ -343,7 +348,7 @@ public class MainDeviceInfo extends Fragment {
             txtSeñal.setText(MyListener.getGsmStrength());
             //ips y red
             new cargaIps().execute();
-            txtIpPublic.setText(R.string.nodisponible);
+           // txtIpPublic.setText(getIp());
             txtDns1.setText(R.string.nodisponible);
             txtDns2.setText(R.string.nodisponible);
             txtMasSubred.setText(R.string.nodisponible);
@@ -371,29 +376,30 @@ public class MainDeviceInfo extends Fragment {
         txtModelo.setText(Build.MODEL);
     }
 
-    public class cargaIps extends AsyncTask<Void, Void, String> {
+    public class cargaIps extends AsyncTask<Void, Void, String[]> {
         @Override
-        protected String doInBackground(Void... params) {
+        protected String[] doInBackground(Void... params) {
 
-            String retorno;
+            String retorno[] = new String[2];
             InetAddress IP = null;
             try {
                 IP = InetAddress.getLocalHost();
-                retorno = getLocalAddress().getHostAddress();
+                retorno[0] = getLocalAddress().getHostAddress();
 
 
             } catch (UnknownHostException e) {
                 e.printStackTrace();
-                retorno = getActivity().getString(R.string.nodisponible);
+                retorno[0] = getActivity().getString(R.string.nodisponible);
             }
-
+            retorno[1]=getIp();
 
             return retorno;
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            txtIpLocal.setText(result);
+        protected void onPostExecute(String result[]) {
+            txtIpLocal.setText(result[0]);
+            txtIpPublic.setText(result[1]);
         }
 
         private InetAddress getLocalAddress() {
@@ -408,6 +414,33 @@ public class MainDeviceInfo extends Fragment {
                 e.printStackTrace();
             }
             return null;
+        }
+
+        public  String getIp() {
+            URL whatismyip = null;
+            try {
+                whatismyip = new URL("http://checkip.amazonaws.com");
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            BufferedReader in = null;
+            try {
+                in = new BufferedReader(new InputStreamReader(
+                        whatismyip.openStream()));
+                String ip = in.readLine();
+                return ip;
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (in != null) {
+                    try {
+                        in.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return "";
         }
 
 
@@ -445,5 +478,7 @@ public class MainDeviceInfo extends Fragment {
 
         wifiStrength = rssi + " dBm";
     }
+
+
 
 }
