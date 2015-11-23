@@ -1,4 +1,4 @@
-package com.r.raul.tools;
+package es.caser.campanaretencion.base.campana.test;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -250,16 +250,16 @@ public class DataDeviceInfo extends AsyncTask<Void, Void, Boolean> {
 							}else if (cobertura > -71){
 								iconoDataMovil(4);
 							}
-						}								
-					}
+						}		
+					
 
 				} else {
 					if (con.getType(info.getType(), info.getSubtype(), activity) != "4G | LTE") {
 						txtSeñal = String.valueOf("Uknow");
 						iconoDataMovil(-1);
 					}
-				}
-				
+				}			
+			}
 		} catch (Exception e) {
 			LogUtils.LOG(e.getMessage());
 		}			
@@ -274,6 +274,31 @@ public class DataDeviceInfo extends AsyncTask<Void, Void, Boolean> {
 	}
 	
 	public void ActualizaDatosWifi(){
+		
+		txtVersion = "Android " + Build.VERSION.RELEASE;
+		txtModelo = Build.MODEL;
+		txtTipoRed = con.getType(info.getType(), info.getSubtype(), activity);
+		txtNombreRed = info.getExtraInfo();		
+		
+		
+		WifiManager wifiManager = (WifiManager) activity.getSystemService(Context.WIFI_SERVICE);
+            /*List<ScanResult> wifiList = wifiManager.getScanResults();
+            for (ScanResult scanResult : wifiList) {
+                int level = WifiManager.calculateSignalLevel(scanResult.level, 5);
+            }*/
+        int rssi = wifiManager.getConnectionInfo().getRssi();
+        txtSeñal = rssi + " dBm";	
+		iconoDataWifi(WifiManager.calculateSignalLevel(rssi, 5));           
+		
+		
+	    txtIpPublic = R.string.nodisponible;
+		txtIpLocal = getLocalAddress();
+		txtGateway = R.string.nodisponible;	
+		txtMasSubred = R.string.nodisponible;
+		txtDns1 = R.string.nodisponible;
+		txtDns2 = R.string.nodisponible;   
+		
+		
 	}
 	
 	public void ActualizaDatosSincon(){
@@ -292,12 +317,15 @@ public class DataDeviceInfo extends AsyncTask<Void, Void, Boolean> {
 		txtDns2 = R.string.nodisponible; 
 	}
 	
-	private void iconoDataMovil(int percent) {
+	private void iconoDataMovil(int level) {
             
-			switch (percent) {
+			switch (level) {
                 case -1:
                     tipoIcono = R.drawable.ic_sigmobile0;
                     break;
+				case 0:
+					tipoIcono = R.drawable.ic_sigmobile1;
+					break;
                 case 1:
                     tipoIcono = R.drawable.ic_sigmobile2;
                     break;
@@ -310,11 +338,30 @@ public class DataDeviceInfo extends AsyncTask<Void, Void, Boolean> {
                 case 4:
                     tipoIcono = R.drawable.ic_sigmobile5;
                     break;
-                case 0:
-                    tipoIcono = R.drawable.ic_sigmobile1;
-                    break;
+                
             }
         }	
+		
+	private void iconoDataWifi(int level) {
+            
+			switch (level) {
+                case 0:
+                    tipoIcono = R.drawable.ic_wifi1;
+                    break;
+                case 1:
+                    tipoIcono = R.drawable.ic_wifi2;
+                    break;
+                case 2:
+                    tipoIcono = R.drawable.ic_wifi3;
+                    break;
+                case 3:
+                    tipoIcono = R.drawable.ic_wifi4;
+                    break;
+                case 4:
+                    tipoIcono = R.drawable.ic_wifi5;
+                    break;
+            }
+        }
 	
 	
 	//Obtiene ip local
