@@ -232,8 +232,15 @@ public class MainDeviceInfo extends Fragment {
 		fab.setImageResource(dataDeviceInfo.getTipoIcono());
 		txtSeñal.setText(dataDeviceInfo.getTxtSeñal());
 
-		new cargaIps().execute();
-
+		new cargaIps(){
+			@Override
+			protected void onPostExecute() {
+				txtIpPublic.setText(dataDeviceInfo.getTxtIpPublic());
+				txtIpLocal.setText(dataDeviceInfo.getTxtIpLocal());
+			}
+		}
+		.execute();
+		
 		txtGateway.setText(dataDeviceInfo.getTxtGateway());
 		txtMasSubred.setText(dataDeviceInfo.getTxtMasSubred());
 		txtDns1.setText(dataDeviceInfo.getTTxtDns1());
@@ -382,10 +389,8 @@ public class MainDeviceInfo extends Fragment {
 
 		getLevelMobile(signalStrength); // dbm e icono
 
-		dataDeviceInfo.setTxtIpPublic(getActivity().getString(
-				R.string.nodisponible));
-		dataDeviceInfo.setTxtIpLocal(getActivity().getString(
-				R.string.nodisponible));
+		//dataDeviceInfo.setTxtIpPublic(getActivity().getString(R.string.nodisponible));
+		//dataDeviceInfo.setTxtIpLocal(getActivity().getString(R.string.nodisponible));
 		dataDeviceInfo.setTxtGateway(getActivity().getString(
 				R.string.nodisponible));
 		dataDeviceInfo.setTxtMasSubred(getActivity().getString(
@@ -408,8 +413,8 @@ public class MainDeviceInfo extends Fragment {
 					
 			getLevelWifi(); //dbm e icono						
 			
-			dataDeviceInfo.setTxtIpPublic (getActivity().getString(R.string.nodisponible));
-			dataDeviceInfo.setTxtIpLocal (getActivity().getString(R.string.nodisponible));			
+			//dataDeviceInfo.setTxtIpPublic(getActivity().getString(R.string.nodisponible));
+		        //dataDeviceInfo.setTxtIpLocal(getActivity().getString(R.string.nodisponible));			
 			dataDeviceInfo.setTxtGateway (getActivity().getString(R.string.nodisponible));
 			dataDeviceInfo.setTxtMasSubred (getActivity().getString(R.string.nodisponible));
 			dataDeviceInfo.setTxtDns1 (getActivity().getString(R.string.nodisponible));
@@ -417,72 +422,23 @@ public class MainDeviceInfo extends Fragment {
 			
 	}
 
-	public class cargaIps extends AsyncTask<Void, Void, String[]> {
+	public class cargaIps extends AsyncTask<Void, Void, Void> {
 		@Override
-		protected String[] doInBackground(Void... params) {
-
-			String retorno[] = new String[2];
-			InetAddress IP = null;
+		protected void doInBackground(Void... params) {
+			
 			try {
-				IP = InetAddress.getLocalHost();
-				retorno[0] = getLocalAddress().getHostAddress();
+				dataDeviceInfo.setTxtIpLocal = getLocalAddress().getHostAddress();
 
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
-				retorno[0] = getActivity().getString(R.string.nodisponible);
+				dataDeviceInfo.setTxtIpLocal = getActivity().getString(R.string.nodisponible);
 			}
-			retorno[1] = getIp();
-
-			return retorno;
+			dataDeviceInfo.setTxtIpPublic = getIp();
 		}
 
 		@Override
-		protected void onPostExecute(String result[]) {
-			txtIpLocal.setText(result[0]);
-			txtIpPublic.setText(result[1]);
-		}
-
-		private InetAddress getLocalAddress() {
-			try {
-				Enumeration<NetworkInterface> b = NetworkInterface
-						.getNetworkInterfaces();
-				while (b.hasMoreElements()) {
-					for (InterfaceAddress f : b.nextElement()
-							.getInterfaceAddresses())
-						if (f.getAddress().isSiteLocalAddress())
-							return f.getAddress();
-				}
-			} catch (SocketException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		public String getIp() {
-			URL whatismyip = null;
-			try {
-				whatismyip = new URL("http://checkip.amazonaws.com");
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			}
-			BufferedReader in = null;
-			try {
-				in = new BufferedReader(new InputStreamReader(whatismyip
-						.openStream()));
-				String ip = in.readLine();
-				return ip;
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				if (in != null) {
-					try {
-						in.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-			return "";
+		protected void onPostExecute() {
+			
 		}
 
 	}
