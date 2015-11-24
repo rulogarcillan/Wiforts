@@ -64,6 +64,7 @@ public class DataDeviceInfo {
 	private String txtDns1;
 	private String txtDns2;
 	private int tipoIcono;
+	private int dBm;
 
 	/* Constructor */
 	public DataDeviceInfo() {
@@ -167,6 +168,16 @@ public class DataDeviceInfo {
 		this.tipoIcono = tipoIcono;
 	}
 
+	public int getdBm() {
+		return dBm;
+	}
+
+	public void setdBm(int dBm) {
+		this.txtSeñal =  dBm + " dBm";
+		this.dBm = dBm;
+	}
+	
+	
 	private void iconoDataMovil(int level) {
 
 		switch (level) {
@@ -212,5 +223,4 @@ public class DataDeviceInfo {
 			break;
 		}
 	}
-
 }
