@@ -427,7 +427,7 @@ public class MainDeviceInfo extends Fragment {
 		protected void doInBackground(Void... params) {
 			
 			try {
-				dataDeviceInfo.setTxtIpLocal = getLocalAddress().getHostAddress();
+				dataDeviceInfo.setTxtIpLocal = con.getLocalAddress().getHostAddress();
 
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
