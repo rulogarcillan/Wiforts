@@ -106,4 +106,20 @@ public class Connectivity {
         in.close();
         return ip;
     }
+    
+    	 public static InetAddress getLocalAddress() {
+			try {
+				Enumeration<NetworkInterface> b = NetworkInterface
+						.getNetworkInterfaces();
+				while (b.hasMoreElements()) {
+					for (InterfaceAddress f : b.nextElement()
+							.getInterfaceAddresses())
+						if (f.getAddress().isSiteLocalAddress())
+							return f.getAddress();
+				}
+			} catch (SocketException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
 }
