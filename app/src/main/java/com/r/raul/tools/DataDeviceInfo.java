@@ -1,55 +1,5 @@
 package com.r.raul.tools;
 
-import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.Network;
-import android.net.NetworkInfo;
-import android.net.wifi.ScanResult;
-import android.net.wifi.SupplicantState;
-import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.provider.Settings;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.net.ConnectivityManagerCompat;
-import android.support.v7.widget.Toolbar;
-
-import android.telephony.CellInfo;
-import android.telephony.CellInfoCdma;
-import android.telephony.CellInfoGsm;
-import android.telephony.CellInfoLte;
-import android.telephony.CellInfoWcdma;
-import android.telephony.CellSignalStrengthCdma;
-import android.telephony.CellSignalStrengthGsm;
-import android.telephony.CellSignalStrengthLte;
-import android.telephony.CellSignalStrengthWcdma;
-import android.telephony.PhoneStateListener;
-import android.telephony.SignalStrength;
-import android.telephony.TelephonyManager;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import java.net.InetAddress;
-import java.net.InterfaceAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class DataDeviceInfo {
 
 	private String txtNombreRed;
@@ -178,7 +128,7 @@ public class DataDeviceInfo {
 	}
 	
 	
-	private void iconoDataMovil(int level) {
+	public void iconoDataMovil(int level) {
 
 		switch (level) {
 		case -1:
@@ -203,7 +153,7 @@ public class DataDeviceInfo {
 		}
 	}
 
-	private void iconoDataWifi(int level) {
+	public void iconoDataWifi(int level) {
 
 		switch (level) {
 		case 0:
