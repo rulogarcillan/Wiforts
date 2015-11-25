@@ -4,6 +4,8 @@ package com.r.raul.tools;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.DhcpInfo;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -30,6 +32,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LimitLine;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.pwittchen.networkevents.library.BusWrapper;
 import com.github.pwittchen.networkevents.library.NetworkEvents;
 import com.github.pwittchen.networkevents.library.event.ConnectivityChanged;
@@ -37,8 +48,13 @@ import com.github.pwittchen.networkevents.library.event.WifiSignalStrengthChange
 import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import de.greenrobot.event.EventBus;
+
+import static java.math.BigInteger.*;
 
 /**
  * Created by Rulo on 15/11/2015.
@@ -51,6 +67,7 @@ public class MainDeviceInfo extends Fragment {
             txtDns1, txtDns2;
     private FloatingActionButton fab;
     private LineChart chart;
+    private Boolean flag = false;
 
     // servicios
     private Connectivity con; // clase de conexion
@@ -115,7 +132,7 @@ public class MainDeviceInfo extends Fragment {
         txtDns2 = (TextView) rootView.findViewById(R.id.txtDns2);
         txtMasSubred = (TextView) rootView.findViewById(R.id.txtMasSubred);
         txtGateway = (TextView) rootView.findViewById(R.id.txtGateway);
-        chart = (LineChart) findViewById(R.id.chart);
+        chart = (LineChart) rootView.findViewById(R.id.chart);
 
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         // datos de telefonía.
@@ -153,10 +170,160 @@ public class MainDeviceInfo extends Fragment {
             }
         });
 
-        // printData();
 
+        chart.setDescription("");
+        chart.setTouchEnabled(false);
+        // enable scaling and dragging
+        chart.setDragEnabled(false);
+        chart.setScaleEnabled(false);
+        chart.setDrawGridBackground(false);
+        chart.setWillNotDraw(false);
+        chart.setPinchZoom(false);
+        // x-axis limit line
+        LimitLine llXAxis = new LimitLine(10f, "Index 10");
+        llXAxis.setLineWidth(4f);
+        llXAxis.enableDashedLine(10f, 10f, 0f);
+        llXAxis.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
+        llXAxis.setTextSize(10f);
+
+        XAxis xAxis = chart.getXAxis();
+        //xAxis.setValueFormatter(new MyCustomXAxisValueFormatter());
+        //xAxis.addLimitLine(llXAxis); // add x-axis limit line
+
+
+
+      /*  LimitLine ll1 = new LimitLine(130f, "Upper Limit");
+        ll1.setLineWidth(4f);
+        ll1.enableDashedLine(10f, 10f, 0f);
+        ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+        ll1.setTextSize(10f);
+
+
+        LimitLine ll2 = new LimitLine(-30f, "Lower Limit");
+        ll2.setLineWidth(4f);
+        ll2.enableDashedLine(10f, 10f, 0f);
+        ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
+        ll2.setTextSize(10f);*/
+
+
+        YAxis leftAxis = chart.getAxisLeft();
+        leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
+        //  leftAxis.addLimitLine(ll1);
+        //  leftAxis.addLimitLine(ll2);
+        leftAxis.setAxisMaxValue(0f);
+        leftAxis.setAxisMinValue(-150f);
+        leftAxis.setStartAtZero(false);
+
+        //leftAxis.setYOffset(20f);
+        // leftAxis.enableGridDashedLine(10f, 10f, 0f);
+
+        // limit lines are drawn behind data (and not on top)
+        // leftAxis.setDrawLimitLinesBehindData(true);
+
+        chart.getAxisRight().setEnabled(false);
+
+
+        LineData data = new LineData();
+        data.setValueTextColor(Color.GREEN);
+
+        Legend l = chart.getLegend();
+
+        // modify the legend ...
+        // l.setPosition(LegendPosition.LEFT_OF_CHART);
+        l.setForm(Legend.LegendForm.CIRCLE);
+
+        chart.setData(data);
+       // feedMultiple();
         return rootView;
     }
+
+
+    private void addEntry() {
+
+        LineData data = chart.getData();
+
+        if (data != null) {
+
+            LineDataSet set = data.getDataSetByIndex(0);
+            // set.addEntry(...); // can be called as well
+
+            if (set == null) {
+                set = createSet();
+                data.addDataSet(set);
+            }
+
+            // add a new x-value first
+            data.addXValue("");
+
+
+            data.addEntry(new Entry(dataDeviceInfo.getdBm(), set.getEntryCount()), 0);
+
+
+            // let the chart know it's data has changed
+            chart.notifyDataSetChanged();
+
+
+            // limit the number of visible entries
+            chart.setVisibleXRangeMaximum(50);
+            //chart.setVisibleYRange(30, YAxis.AxisDependency.LEFT);
+
+            // move to the latest entry
+            chart.moveViewToX(data.getXValCount() - 51);
+
+
+
+
+
+            // this automatically refreshes the chart (calls invalidate())
+            // mChart.moveViewTo(data.getXValCount()-7, 55f,
+            // AxisDependency.LEFT);
+        }
+    }
+
+    private LineDataSet createSet() {
+
+        LineDataSet set = new LineDataSet(null, "Intensidad de señal");
+        set.setAxisDependency(YAxis.AxisDependency.LEFT);
+        set.setColor(ColorTemplate.getHoloBlue());
+
+        set.setLineWidth(2f);
+        set.setDrawCircles(false);
+
+        set.setFillAlpha(65);
+        set.setFillColor(ColorTemplate.getHoloBlue());
+        set.setHighLightColor(Color.rgb(244, 117, 117));
+        set.setValueTextColor(Color.WHITE);
+        set.setValueTextSize(9f);
+        set.setDrawValues(false);
+        return set;
+    }
+
+   /* private void feedMultiple() {
+
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                for(int i = 0; i < 500; i++) {
+
+                    getActivity().runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            addEntry();
+                        }
+                    });
+
+                    try {
+                        Thread.sleep(35);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+    }*/
 
     @Subscribe
     @SuppressWarnings("unused")
@@ -216,6 +383,14 @@ public class MainDeviceInfo extends Fragment {
 
     private void printData() {
 
+
+        if (!flag) {
+            for (int i = 0; i < 50; i++) {
+                addEntry();
+            }
+            flag = true;
+        }
+        addEntry();
         txtVersion.setText(dataDeviceInfo.getTxtVersion());
         txtModelo.setText(dataDeviceInfo.getTxtModelo());
         txtNombreRed.setText(dataDeviceInfo.getTxtNombreRed());
@@ -250,18 +425,18 @@ public class MainDeviceInfo extends Fragment {
 
         WifiManager wifiManager = (WifiManager) getActivity().getSystemService(
                 Context.WIFI_SERVICE);
-	DhcpInfo info = wifiManager.getDhcpInfo();
+	    DhcpInfo info = wifiManager.getDhcpInfo();
 
         int rssi = wifiManager.getConnectionInfo().getRssi();
         int level = WifiManager.calculateSignalLevel(rssi, 5);
 
         dataDeviceInfo.iconoDataWifi(level);
         dataDeviceInfo.setdBm(rssi);
-        
+
         dataDeviceInfo.setTxtGateway(parseIP(info.gateway));
-        dataDeviceInfo.setTxtMasSubred(getActivity().getString(parseIP(info.netmask)));
-        dataDeviceInfo.setTxtDns1(getActivity().getString(parseIP(info.dns1)));
-        dataDeviceInfo.setTxtDns2(getActivity().getString(parseIP(info.dns2)));
+        dataDeviceInfo.setTxtMasSubred(parseIP(info.netmask));
+        dataDeviceInfo.setTxtDns1(parseIP(info.dns1));
+        dataDeviceInfo.setTxtDns2(parseIP(info.dns2));
 
 		/*
          * List<ScanResult> wifiList = wifiManager.getScanResults(); for
@@ -270,13 +445,19 @@ public class MainDeviceInfo extends Fragment {
 		 */
 
     }
-    
-    public String parseIP(int ip){
-    	
-    	byte[] bytes = BigInteger.valueOf(ip).toByteArray();
-	InetAddress address = InetAddress.getByAddress(bytes);
-	return address.ToString()
-    	
+
+
+    public  String parseIP(int hostAddress) {
+        byte[] addressBytes = { (byte)(0xff & hostAddress),
+                (byte)(0xff & (hostAddress >> 8)),
+                (byte)(0xff & (hostAddress >> 16)),
+                (byte)(0xff & (hostAddress >> 24)) };
+
+        try {
+            return String.valueOf(InetAddress.getByAddress(addressBytes)).replace("/","");
+        } catch (UnknownHostException e) {
+            throw new AssertionError();
+        }
     }
 
     public void getLevelMobile(SignalStrength signalStrength) {
@@ -335,7 +516,7 @@ public class MainDeviceInfo extends Fragment {
                 } else {
                     if (con.getType(info.getType(), info.getSubtype(),
                             getActivity()) != "4G | LTE") {
-                        dBm = 0;
+                        dBm = -150;
                         dataDeviceInfo.setTxtSeñal(getActivity().getString(
                                 R.string.nodisponible));
                         level = -1;
@@ -368,7 +549,7 @@ public class MainDeviceInfo extends Fragment {
         dataDeviceInfo.setTxtTipoRed(getActivity().getString(R.string.nodisponible));
 
         dataDeviceInfo.setTipoIcono(R.drawable.ic_sigmobile0); // modifica
-        dataDeviceInfo.setdBm(0);
+        dataDeviceInfo.setdBm(-150);
         dataDeviceInfo.setTxtSeñal(getActivity().getString(R.string.nodisponible));
 
         dataDeviceInfo.setTxtIpPublic(getActivity().getString(R.string.nodisponible));
