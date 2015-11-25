@@ -408,18 +408,20 @@ public class MainDeviceInfo extends Fragment {
         @Override
         protected Boolean doInBackground(Void... params) {
 
+		if (con.isConnected(getActivity())) {
+			
+		   dataDeviceInfo.setTxtIpLocal(con.getLocalAddress().getHostAddress());
 
-            dataDeviceInfo.setTxtIpLocal(con.getLocalAddress().getHostAddress());
-
-
-            try {
-                String ip = con.getPublicIp();
-                if (ip != dataDeviceInfo.getTxtIpPublic())
-                    dataDeviceInfo.setTxtIpPublic(ip);
-                return true;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+	            try {
+	                String ip = con.getPublicIp();
+	                if (ip != dataDeviceInfo.getTxtIpPublic())
+	                    dataDeviceInfo.setTxtIpPublic(ip);
+	                return true;
+	            } catch (IOException e) {
+	                e.printStackTrace();
+	            }
+			
+		}
 
             return false;
         }
