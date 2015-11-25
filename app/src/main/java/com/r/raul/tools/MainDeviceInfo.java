@@ -377,10 +377,10 @@ public class MainDeviceInfo extends Fragment {
 
         //dataDeviceInfo.setTxtIpPublic(getActivity().getString(R.string.nodisponible));
         //dataDeviceInfo.setTxtIpLocal(getActivity().getString(R.string.nodisponible));
-        dataDeviceInfo.setTxtGateway(getActivity().getString(R.string.nodisponible));
-        dataDeviceInfo.setTxtMasSubred(getActivity().getString(R.string.nodisponible));
-        dataDeviceInfo.setTxtDns1(getActivity().getString(R.string.nodisponible));
-        dataDeviceInfo.setTxtDns2(getActivity().getString(R.string.nodisponible));
+        dataDeviceInfo.setTxtGateway(getActivity().getString(R.string.desconocido));
+        dataDeviceInfo.setTxtMasSubred(getActivity().getString(R.string.desconocido));
+        dataDeviceInfo.setTxtDns1(getActivity().getString(R.string.desconocido));
+        dataDeviceInfo.setTxtDns2(getActivity().getString(R.string.desconocido));
 
     }
 
