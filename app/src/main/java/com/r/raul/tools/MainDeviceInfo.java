@@ -248,12 +248,18 @@ public class MainDeviceInfo extends Fragment {
 
         WifiManager wifiManager = (WifiManager) getActivity().getSystemService(
                 Context.WIFI_SERVICE);
+	DhcpInfo info = wifiManager.getDhcpInfo();
 
         int rssi = wifiManager.getConnectionInfo().getRssi();
         int level = WifiManager.calculateSignalLevel(rssi, 5);
 
         dataDeviceInfo.iconoDataWifi(level);
         dataDeviceInfo.setdBm(rssi);
+        
+        dataDeviceInfo.setTxtGateway(parseIP(info.gateway));
+        dataDeviceInfo.setTxtMasSubred(getActivity().getString(parseIP(info.netmask)));
+        dataDeviceInfo.setTxtDns1(getActivity().getString(parseIP(info.dns1)));
+        dataDeviceInfo.setTxtDns2(getActivity().getString(parseIP(info.dns2)));
 
 		/*
          * List<ScanResult> wifiList = wifiManager.getScanResults(); for
@@ -261,6 +267,14 @@ public class MainDeviceInfo extends Fragment {
 		 * WifiManager.calculateSignalLevel(scanResult.level, 5); }
 		 */
 
+    }
+    
+    public String parseIP(int ip){
+    	
+    	byte[] bytes = BigInteger.valueOf(ip).toByteArray();
+	InetAddress address = InetAddress.getByAddress(bytes);
+	return address.ToString()
+    	
     }
 
     public void getLevelMobile(SignalStrength signalStrength) {
@@ -397,10 +411,10 @@ public class MainDeviceInfo extends Fragment {
 
         //dataDeviceInfo.setTxtIpPublic(getActivity().getString(R.string.nodisponible));
         //dataDeviceInfo.setTxtIpLocal(getActivity().getString(R.string.nodisponible));
-        dataDeviceInfo.setTxtGateway(getActivity().getString(R.string.nodisponible));
-        dataDeviceInfo.setTxtMasSubred(getActivity().getString(R.string.nodisponible));
-        dataDeviceInfo.setTxtDns1(getActivity().getString(R.string.nodisponible));
-        dataDeviceInfo.setTxtDns2(getActivity().getString(R.string.nodisponible));
+        //dataDeviceInfo.setTxtGateway(getActivity().getString(R.string.nodisponible));
+        //dataDeviceInfo.setTxtMasSubred(getActivity().getString(R.string.nodisponible));
+        //dataDeviceInfo.setTxtDns1(getActivity().getString(R.string.nodisponible));
+        //dataDeviceInfo.setTxtDns2(getActivity().getString(R.string.nodisponible));
 
     }
 
