@@ -238,8 +238,10 @@ public class MainDeviceInfo extends Fragment {
             // add a new x-value first
             data.addXValue("");
 
-
-            data.addEntry(new Entry(dataDeviceInfo.getdBm(), set.getEntryCount()), 0);
+            if (!flag)
+                data.addEntry(new Entry(-200, set.getEntryCount()), 0);
+            else
+                data.addEntry(new Entry(dataDeviceInfo.getdBm(), set.getEntryCount()), 0);
 
 
             // let the chart know it's data has changed
@@ -278,33 +280,6 @@ public class MainDeviceInfo extends Fragment {
         set.setDrawValues(false);
         return set;
     }
-
-   /* private void feedMultiple() {
-
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                for(int i = 0; i < 500; i++) {
-
-                    getActivity().runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            addEntry();
-                        }
-                    });
-
-                    try {
-                        Thread.sleep(35);
-                    } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
-    }*/
 
     @Subscribe
     @SuppressWarnings("unused")
