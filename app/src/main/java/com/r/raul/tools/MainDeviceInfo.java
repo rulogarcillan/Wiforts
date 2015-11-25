@@ -50,6 +50,7 @@ public class MainDeviceInfo extends Fragment {
             txtIpPublic, txtIpLocal, txtSeñal, txtGateway, txtMasSubred,
             txtDns1, txtDns2;
     private FloatingActionButton fab;
+    private LineChart chart;
 
     // servicios
     private Connectivity con; // clase de conexion
@@ -114,6 +115,7 @@ public class MainDeviceInfo extends Fragment {
         txtDns2 = (TextView) rootView.findViewById(R.id.txtDns2);
         txtMasSubred = (TextView) rootView.findViewById(R.id.txtMasSubred);
         txtGateway = (TextView) rootView.findViewById(R.id.txtGateway);
+        chart = (LineChart) findViewById(R.id.chart);
 
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         // datos de telefonía.
