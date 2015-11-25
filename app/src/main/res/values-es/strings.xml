@@ -12,4 +12,12 @@
     <string name="masacarasubred">Máscara de subred:</string>
     <string name="desconocido">Desconocido</string>
     <string name="nodisponible">No disponible</string>
+    <string name="country">País:</string>
+    <string name="countrycode">Código de país:</string>
+    <string name="city">Ciudad:</string>
+    <string name="regioncode">Código de región:</string>
+    <string name="regionname">Región:</string>
+    <string name="zip">Código postal:</string>
+    <string name="latitude">Latitud:</string>
+    <string name="longitude">Longitud:</string>
 </resources>

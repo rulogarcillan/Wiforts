@@ -16,4 +16,13 @@
     <string name="masacarasubred">Subnet Mask:</string>
     <string name="desconocido">Unknown</string>
     <string name="nodisponible">Not available</string>
+    <string name="isp" translatable="false">ISP:</string>
+    <string name="country">Country:</string>
+    <string name="countrycode">Country code:</string>
+    <string name="city">City:</string>
+    <string name="regioncode">Region code:</string>
+    <string name="regionname">Region:</string>
+    <string name="zip">Zip Code:</string>
+    <string name="latitude">Latitude:</string>
+    <string name="longitude">Longitude:</string>
 </resources>

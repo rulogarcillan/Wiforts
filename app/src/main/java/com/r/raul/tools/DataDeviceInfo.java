@@ -16,6 +16,90 @@ public class DataDeviceInfo {
 	private int tipoIcono;
 	private int dBm;
 
+
+	private String txtIsp;
+	private String txtCountry;
+	private String txtCountryCode;
+	private String txtCity;
+	private String txtRegion;
+	private String txtRegionName;
+	private String txtZip;
+	private String txtLat;
+	private String txtLon;
+
+
+	public String getTxtIsp() {
+		return txtIsp;
+	}
+
+	public void setTxtIsp(String txtIsp) {
+		this.txtIsp = txtIsp;
+	}
+
+	public String getTxtCountry() {
+		return txtCountry;
+	}
+
+	public void setTxtCountry(String txtCountry) {
+		this.txtCountry = txtCountry;
+	}
+
+	public String getTxtCountryCode() {
+		return txtCountryCode;
+	}
+
+	public void setTxtCountryCode(String txtCountryCode) {
+		this.txtCountryCode = txtCountryCode;
+	}
+
+	public String getTxtCity() {
+		return txtCity;
+	}
+
+	public void setTxtCity(String txtCity) {
+		this.txtCity = txtCity;
+	}
+
+	public String getTxtRegion() {
+		return txtRegion;
+	}
+
+	public void setTxtRegion(String txtRegion) {
+		this.txtRegion = txtRegion;
+	}
+
+	public String getTxtRegionName() {
+		return txtRegionName;
+	}
+
+	public void setTxtRegionName(String txtRegionName) {
+		this.txtRegionName = txtRegionName;
+	}
+
+	public String getTxtZip() {
+		return txtZip;
+	}
+
+	public void setTxtZip(String txtZip) {
+		this.txtZip = txtZip;
+	}
+
+	public String getTxtLat() {
+		return txtLat;
+	}
+
+	public void setTxtLat(String txtLat) {
+		this.txtLat = txtLat;
+	}
+
+	public String getTxtLon() {
+		return txtLon;
+	}
+
+	public void setTxtLon(String txtLon) {
+		this.txtLon = txtLon;
+	}
+
 	/* Constructor */
 	public DataDeviceInfo() {
 
