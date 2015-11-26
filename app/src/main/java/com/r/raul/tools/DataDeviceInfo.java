@@ -14,7 +14,7 @@ public class DataDeviceInfo {
 	private String txtDns1;
 	private String txtDns2;
 	private int tipoIcono;
-	private int dBm;
+	private int dBm = -200;
 
 
 	private String txtIsp;
@@ -26,6 +26,17 @@ public class DataDeviceInfo {
 	private String txtZip;
 	private String txtLat;
 	private String txtLon;
+	private int iconSubeBaja;
+
+
+
+	public int getIconSubeBaja() {
+		return iconSubeBaja;
+	}
+
+	public void setIconSubeBaja(int iconSubeBaja) {
+		this.iconSubeBaja = iconSubeBaja;
+	}
 
 
 	public String getTxtIsp() {
@@ -207,8 +218,17 @@ public class DataDeviceInfo {
 	}
 
 	public void setdBm(int dBm) {
+	
+		if (dBm > this.iconSubeBaja)
+			this.iconSubeBaja=0; //up
+		else if (dBm <this.iconSubeBaja)
+			this.iconSubeBaja=0; //down
+		else
+			this.iconSubeBaja=0; //equals
+	
 		this.txtSeñal =  dBm + " dBm";
 		this.dBm = dBm;
+	
 	}
 	
 	
