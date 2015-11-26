@@ -55,6 +55,9 @@ import de.greenrobot.event.EventBus;
  * Created by Rulo on 15/11/2015.
  */
 public class MainDeviceInfo extends Fragment {
+	
+	
+	public static final int SIGNAL_STRENGTH_OUT = -150;
 
     // vistas
     private TextView txtNombreRed, txtTipoRed, txtModelo, txtVersion,
@@ -178,47 +181,43 @@ public class MainDeviceInfo extends Fragment {
             }
         });
 
+		configureChar();
 
+        return rootView;
+    }
+	
+	private void configureChar(){
+		
+		
+		//especificaciones del chart
         chart.setDescription("");
         chart.setTouchEnabled(false);
-        // enable scaling and dragging
         chart.setDragEnabled(false);
         chart.setScaleEnabled(false);
         chart.setDrawGridBackground(false);
         chart.setWillNotDraw(false);
         chart.setPinchZoom(false);
 
-
+		//Limites del eje Y
         YAxis leftAxis = chart.getAxisLeft();
-        leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
-        //  leftAxis.addLimitLine(ll1);
-        //  leftAxis.addLimitLine(ll2);
+        leftAxis.removeAllLimitLines(); 
         leftAxis.setAxisMaxValue(0f);
         leftAxis.setAxisMinValue(-150f);
         leftAxis.setStartAtZero(false);
-
-        //leftAxis.setYOffset(20f);
-        // leftAxis.enableGridDashedLine(10f, 10f, 0f);
-
-        // limit lines are drawn behind data (and not on top)
-        // leftAxis.setDrawLimitLinesBehindData(true);
-
         chart.getAxisRight().setEnabled(false);
-
-
-        LineData data = new LineData();
-        data.setValueTextColor(Color.GREEN);
-
+		
+		//Leyenda
         Legend l = chart.getLegend();
-
-        // modify the legend ...
-        // l.setPosition(LegendPosition.LEFT_OF_CHART);
         l.setForm(Legend.LegendForm.CIRCLE);
 
+		
+		//Añado data
+        LineData data = new LineData();
+        data.setValueTextColor(Color.GREEN);
         chart.setData(data);
-        // feedMultiple();
-        return rootView;
-    }
+		
+		
+	}
 
 
     private void addEntry() {
@@ -243,36 +242,32 @@ public class MainDeviceInfo extends Fragment {
             else
                 data.addEntry(new Entry(dataDeviceInfo.getdBm(), set.getEntryCount()), 0);
 
-
             // let the chart know it's data has changed
             chart.notifyDataSetChanged();
 
-
             // limit the number of visible entries
-            chart.setVisibleXRangeMaximum(50);
-            //chart.setVisibleYRange(30, YAxis.AxisDependency.LEFT);
-
+            chart.setVisibleXRangeMaximum(50);       
             // move to the latest entry
             chart.moveViewToX(data.getXValCount() - 51);
 
-
-            // this automatically refreshes the chart (calls invalidate())
-            // mChart.moveViewTo(data.getXValCount()-7, 55f,
-            // AxisDependency.LEFT);
         }
     }
 
     private LineDataSet createSet() {
 
-        LineDataSet set = new LineDataSet(null, getActivity().getString(R.string.intensidad_red));
+        LineDataSet set = new LineDataSet(null, replace(getActivity().getString(R.string.intensidad_red),":",""));
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
         set.setColor((int) (Long.decode("#FF4081") + 4278190080L));
 
         set.setLineWidth(2f);
         set.setDrawCircles(false);
+		set.setDrawCubic(true);
+		set.setCubicIntensity(0.2f);
         //set.setDrawFilled(true);
         set.setFillAlpha(65);
 
+		 //set.setDrawHorizontalHighlightIndicator(false);
+		
         set.setFillColor((int) (Long.decode("#FF4081") + 4278190080L));
         set.setHighLightColor(Color.rgb(244, 117, 117));
         set.setValueTextColor(Color.WHITE);
@@ -420,7 +415,7 @@ public class MainDeviceInfo extends Fragment {
 
     public void getLevelMobile(SignalStrength signalStrength) {
         int level = 0;
-        int dBm = 0;
+        int dBm = SIGNAL_STRENGTH_OUT;
 
         try {
             tlfMan = (TelephonyManager) getActivity().getSystemService(
@@ -474,7 +469,7 @@ public class MainDeviceInfo extends Fragment {
                 } else {
                     if (con.getType(info.getType(), info.getSubtype(),
                             getActivity()) != "4G | LTE") {
-                        dBm = -150;
+                        dBm = SIGNAL_STRENGTH_OUT;
                         dataDeviceInfo.setTxtSeñal(getActivity().getString(
                                 R.string.nodisponible));
                         level = -1;
@@ -490,7 +485,7 @@ public class MainDeviceInfo extends Fragment {
 
             LogUtils.LOG(e.getMessage());
             dataDeviceInfo.setTipoIcono(R.drawable.ic_sigmobile0); // modificar
-            dataDeviceInfo.setdBm(-150);
+            dataDeviceInfo.setdBm(SIGNAL_STRENGTH_OUT);
             dataDeviceInfo.setTxtSeñal(getActivity().getString(
                     R.string.nodisponible));
 
@@ -507,7 +502,7 @@ public class MainDeviceInfo extends Fragment {
         dataDeviceInfo.setTxtTipoRed(getActivity().getString(R.string.nodisponible));
 
         dataDeviceInfo.setTipoIcono(R.drawable.ic_sigmobile0); // modifica
-        dataDeviceInfo.setdBm(-150);
+        dataDeviceInfo.setdBm(SIGNAL_STRENGTH_OUT);
         dataDeviceInfo.setTxtSeñal(getActivity().getString(R.string.nodisponible));
 
         dataDeviceInfo.setTxtIpPublic(getActivity().getString(R.string.nodisponible));
