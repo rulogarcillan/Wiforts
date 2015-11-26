@@ -9,7 +9,7 @@
     <string name="wifi_m">Wifi analizer</string>
     <string name="ports_m">Ports analizer</string>
     <string name="test_m">Speed test</string>
-    <string name="intensidad_red">Signal strength:</string>
+    <string name="intensidad_red">Signal strength</string>
     <string name="ippublica">Public IP:</string>
     <string name="iplocal">Local IP:</string>
     <string name="gateway">Gateway:</string>
@@ -25,4 +25,6 @@
     <string name="zip">Zip Code:</string>
     <string name="latitude">Latitude:</string>
     <string name="longitude">Longitude:</string>
+    <string name="infonet">Network info</string>
+    <string name="infoip">IP info</string>
 </resources>

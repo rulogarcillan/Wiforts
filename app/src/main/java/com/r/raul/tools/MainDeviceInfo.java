@@ -255,7 +255,7 @@ public class MainDeviceInfo extends Fragment {
 
     private LineDataSet createSet() {
 
-        LineDataSet set = new LineDataSet(null, replace(getActivity().getString(R.string.intensidad_red),":",""));
+        LineDataSet set = new LineDataSet(null, (getActivity().getString(R.string.intensidad_red).replace(":","")));
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
         set.setColor((int) (Long.decode("#FF4081") + 4278190080L));
 
@@ -429,25 +429,25 @@ public class MainDeviceInfo extends Fragment {
                     level = gsm.getLevel();
 
                     dBm = gsm.getDbm();
-                    // LogUtils.LOG("GSM " + gsmStrength);
+                     LogUtils.LOG("GSM " + dBm);
                 } else if (info2 instanceof CellInfoCdma) {
                     CellSignalStrengthCdma cdma = ((CellInfoCdma) info2).getCellSignalStrength();
 
                     level = cdma.getLevel();
                     dBm = cdma.getDbm();
-                    // LogUtils.LOG("cdma " + gsmStrength);
+                     LogUtils.LOG("cdma " + dBm);
                 } else if (info2 instanceof CellInfoLte) {
                     CellSignalStrengthLte lte = ((CellInfoLte) info2).getCellSignalStrength();
                     dBm = lte.getDbm();
                     level = lte.getLevel();
-                    // LogUtils.LOG("lte " + gsmStrength);
+                     LogUtils.LOG("lte " + dBm);
                 } else if (info2 instanceof CellInfoWcdma) {
                     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                         final CellSignalStrengthWcdma wcdma = ((CellInfoWcdma) info2)
                                 .getCellSignalStrength();
                         dBm = wcdma.getDbm();
                         level = wcdma.getLevel();
-                        // LogUtils.LOG("cdma " + gsmStrength);
+                         LogUtils.LOG("cdma " + dBm);
                     } else {
                         dBm = signalStrength.getGsmSignalStrength() * 2 - 113;
 
@@ -473,6 +473,7 @@ public class MainDeviceInfo extends Fragment {
                         dataDeviceInfo.setTxtSeñal(getActivity().getString(
                                 R.string.nodisponible));
                         level = -1;
+                        LogUtils.LOG("out " + dBm);
                     }
 
                 }
@@ -573,7 +574,7 @@ public class MainDeviceInfo extends Fragment {
                             listdata = con.readJsonFromUrl(url);
                             if (!listdata.isEmpty()) {
 
-
+                            try {
                                 dataDeviceInfo.setTxtIsp(listdata.get(0).isEmpty() ? getActivity().getString(R.string.desconocido) : listdata.get(0));
                                 dataDeviceInfo.setTxtCountry(listdata.get(1).isEmpty() ? getActivity().getString(R.string.desconocido) : listdata.get(1));
                                 dataDeviceInfo.setTxtCountryCode(listdata.get(2).isEmpty() ? getActivity().getString(R.string.desconocido) : listdata.get(2));
@@ -583,6 +584,10 @@ public class MainDeviceInfo extends Fragment {
                                 dataDeviceInfo.setTxtZip(listdata.get(6).isEmpty() ? getActivity().getString(R.string.desconocido) : listdata.get(6));
                                 dataDeviceInfo.setTxtLat(listdata.get(7).isEmpty() ? getActivity().getString(R.string.desconocido) : listdata.get(7));
                                 dataDeviceInfo.setTxtLon(listdata.get(8).isEmpty() ? getActivity().getString(R.string.desconocido) : listdata.get(8));
+                            }catch (Exception e){
+                                LogUtils.LOG(e.getMessage());
+                            }
+
 
                             } else {
 

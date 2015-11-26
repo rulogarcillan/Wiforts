@@ -5,7 +5,7 @@
     <string name="wifi_m">Analizar wifi</string>
     <string name="ports_m">Analizar puertos</string>
     <string name="test_m">Test de velocidad</string>
-    <string name="intensidad_red">Intensidad de señal:</string>
+    <string name="intensidad_red">Intensidad de señal</string>
     <string name="ippublica">IP pública:</string>
     <string name="iplocal">IP local:</string>
     <string name="gateway">Puerta de enlace:</string>
@@ -20,4 +20,6 @@
     <string name="zip">Código postal:</string>
     <string name="latitude">Latitud:</string>
     <string name="longitude">Longitud:</string>
+    <string name="infonet">Información de red</string>
+    <string name="infoip">Información de IP</string>
 </resources>
