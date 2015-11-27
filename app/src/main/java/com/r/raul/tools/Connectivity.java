@@ -32,7 +32,14 @@ public class Connectivity {
 
 
     public static NetworkInfo getNetworkInfo(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        ConnectivityManager cm = null;
+        if (context != null){
+           cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        }else {
+            LogUtils.LOGE("Ativity nula");
+            return null;
+        }
         return cm.getActiveNetworkInfo();
     }
 
@@ -157,13 +164,13 @@ public class Connectivity {
     }
     public static ArrayList<String> readJsonFromUrl(String url) throws IOException, JSONException {
         InputStream is = new URL(url).openStream();
+        ArrayList<String> listdata = new ArrayList<String>();
+
         try {
             BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
             String jsonText = readAll(rd);
 
             JSONObject json = new JSONObject(jsonText);
-
-            ArrayList<String> listdata = new ArrayList<String>();
 
             listdata.add(0,json.getString("isp"));
             listdata.add(1,json.getString("country"));
@@ -175,9 +182,21 @@ public class Connectivity {
             listdata.add(7,json.getString("lat"));
             listdata.add(8,json.getString("lon"));
 
+            LogUtils.LOG(String.valueOf(listdata.size()));
 
             return listdata;
         } finally {
+          /*  listdata.add(0,"");
+            listdata.add(1,"");
+            listdata.add(2,"");
+            listdata.add(3,"");
+            listdata.add(4,"");
+            listdata.add(5,"");
+            listdata.add(6,"");
+            listdata.add(7,"");
+            listdata.add(8,"");*/
+
+            LogUtils.LOG(String.valueOf(listdata.size()));
             is.close();
         }
     }

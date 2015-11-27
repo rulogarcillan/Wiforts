@@ -1,12 +1,12 @@
 package com.r.raul.tools;
 
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.DhcpInfo;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -15,6 +15,8 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.CardView;
 import android.telephony.CellInfo;
 import android.telephony.CellInfoCdma;
 import android.telephony.CellInfoGsm;
@@ -42,6 +44,12 @@ import com.github.pwittchen.networkevents.library.BusWrapper;
 import com.github.pwittchen.networkevents.library.NetworkEvents;
 import com.github.pwittchen.networkevents.library.event.ConnectivityChanged;
 import com.github.pwittchen.networkevents.library.event.WifiSignalStrengthChanged;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
@@ -55,9 +63,10 @@ import de.greenrobot.event.EventBus;
  * Created by Rulo on 15/11/2015.
  */
 public class MainDeviceInfo extends Fragment {
-	
-	
-	public static final int SIGNAL_STRENGTH_OUT = -150;
+
+    public static final int SIGNAL_STRENGTH_OUT = -150;
+    private GoogleMap mMap;
+    SupportMapFragment fragment;
 
     // vistas
     private TextView txtNombreRed, txtTipoRed, txtModelo, txtVersion,
@@ -181,15 +190,50 @@ public class MainDeviceInfo extends Fragment {
             }
         });
 
-		configureChar();
+        CardView cardIp = (CardView) rootView.findViewById(R.id.cardIp);
+        cardIp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lanzaMaps();
+            }
+        });
+
+        android.support.v4.app.FragmentManager fm = getChildFragmentManager();
+        fragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
+
+
+
+        if (fragment == null) {
+            fragment = SupportMapFragment.newInstance();
+            fm.beginTransaction().replace(R.id.map, fragment).commit();
+        }
+
+        this.mMap = fragment.getMap();
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                lanzaMaps();
+            }
+        });
+        configureMaps();
+        configureChar();
 
         return rootView;
     }
-	
-	private void configureChar(){
-		
-		
-		//especificaciones del chart
+
+
+    private void configureMaps() {
+        mMap.getUiSettings().setZoomControlsEnabled(false);
+        mMap.getUiSettings().setAllGesturesEnabled(false);
+        mMap.getUiSettings().setCompassEnabled(false);
+
+    }
+
+    private void configureChar() {
+
+
+        //especificaciones del chart
         chart.setDescription("");
         chart.setTouchEnabled(false);
         chart.setDragEnabled(false);
@@ -198,26 +242,26 @@ public class MainDeviceInfo extends Fragment {
         chart.setWillNotDraw(false);
         chart.setPinchZoom(false);
 
-		//Limites del eje Y
+        //Limites del eje Y
         YAxis leftAxis = chart.getAxisLeft();
-        leftAxis.removeAllLimitLines(); 
+        leftAxis.removeAllLimitLines();
         leftAxis.setAxisMaxValue(0f);
         leftAxis.setAxisMinValue(-150f);
         leftAxis.setStartAtZero(false);
         chart.getAxisRight().setEnabled(false);
-		
-		//Leyenda
+
+        //Leyenda
         Legend l = chart.getLegend();
         l.setForm(Legend.LegendForm.CIRCLE);
 
-		
-		//Añado data
+
+        //Añado data
         LineData data = new LineData();
         data.setValueTextColor(Color.GREEN);
         chart.setData(data);
-		
-		
-	}
+
+
+    }
 
 
     private void addEntry() {
@@ -246,7 +290,7 @@ public class MainDeviceInfo extends Fragment {
             chart.notifyDataSetChanged();
 
             // limit the number of visible entries
-            chart.setVisibleXRangeMaximum(50);       
+            chart.setVisibleXRangeMaximum(50);
             // move to the latest entry
             chart.moveViewToX(data.getXValCount() - 51);
 
@@ -255,19 +299,19 @@ public class MainDeviceInfo extends Fragment {
 
     private LineDataSet createSet() {
 
-        LineDataSet set = new LineDataSet(null, (getActivity().getString(R.string.intensidad_red).replace(":","")));
+        LineDataSet set = new LineDataSet(null, (getActivity().getString(R.string.intensidad_red).replace(":", "")));
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
         set.setColor((int) (Long.decode("#FF4081") + 4278190080L));
 
         set.setLineWidth(2f);
         set.setDrawCircles(false);
-		set.setDrawCubic(true);
-		set.setCubicIntensity(0.2f);
+        set.setDrawCubic(true);
+        set.setCubicIntensity(0.2f);
         //set.setDrawFilled(true);
         set.setFillAlpha(65);
 
-		 //set.setDrawHorizontalHighlightIndicator(false);
-		
+        //set.setDrawHorizontalHighlightIndicator(false);
+
         set.setFillColor((int) (Long.decode("#FF4081") + 4278190080L));
         set.setHighLightColor(Color.rgb(244, 117, 117));
         set.setValueTextColor(Color.WHITE);
@@ -297,6 +341,7 @@ public class MainDeviceInfo extends Fragment {
             printData();
         }
     }
+
 
     private class MyPhoneStateListener extends PhoneStateListener {
 
@@ -335,6 +380,24 @@ public class MainDeviceInfo extends Fragment {
         };
     }
 
+    public void showHideFragment(final Fragment fragment, Boolean esconder) {
+
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+
+        if (esconder) {
+            ft.hide(fragment);
+
+        } else {
+            ft.show(fragment);
+        }
+        try {
+            ft.commit();
+        } catch (Exception e) {
+
+        }
+
+    }
+
     private void printData() {
 
 
@@ -354,8 +417,6 @@ public class MainDeviceInfo extends Fragment {
         txtSeñal.setText(dataDeviceInfo.getTxtSeñal());
 
         new cargaIps() {
-
-
             @Override
             protected void onPostExecute(Boolean aVoid) {
                 super.onPostExecute(aVoid);
@@ -372,13 +433,29 @@ public class MainDeviceInfo extends Fragment {
                     txtLat.setText(dataDeviceInfo.getTxtLat());
                     txtLon.setText(dataDeviceInfo.getTxtLon());
 
+                    if (dataDeviceInfo.getTxtLat().equals(getActivity().getString(R.string.nodisponible)) || dataDeviceInfo.getTxtLat().equals(getActivity().getString(R.string.desconocido))) {
+                        showHideFragment(fragment, true);
+                    } else {
+                        showHideFragment(fragment, false);
+                        if (con.isConnected(getActivity())) {
 
+                            LatLng position = new LatLng(Double.parseDouble(dataDeviceInfo.getTxtLat()), Double.parseDouble(dataDeviceInfo.getTxtLon()));
+                            mMap.addMarker(new MarkerOptions().position(position).title(dataDeviceInfo.getTxtIpPublic())).showInfoWindow();
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 16));
+                            mMap.addCircle(new CircleOptions()
+                                    .center(position)
+                                    .radius(100)
+                                    .strokeWidth((float) 0.5)
+                                    .strokeColor(getResources().getColor(R.color.colorAccentTra))
+                                    .fillColor(getResources().getColor(R.color.colorAccentTra)));
+
+                        }
+                    }
                 }
                 txtIpLocal.setText(dataDeviceInfo.getTxtIpLocal());
             }
 
-        }
-                .execute();
+        }.execute();
 
         txtGateway.setText(dataDeviceInfo.getTxtGateway());
         txtMasSubred.setText(dataDeviceInfo.getTxtMasSubred());
@@ -420,35 +497,40 @@ public class MainDeviceInfo extends Fragment {
         try {
             tlfMan = (TelephonyManager) getActivity().getSystemService(
                     Context.TELEPHONY_SERVICE);
+
             for (CellInfo info2 : tlfMan.getAllCellInfo()) {
-                if (info2 instanceof CellInfoGsm
-                        && con.getType(info.getType(), info.getSubtype(),
-                        getActivity()) != "4G | LTE") {
+                if (info2 instanceof CellInfoGsm) {
 
                     CellSignalStrengthGsm gsm = ((CellInfoGsm) info2).getCellSignalStrength();
                     level = gsm.getLevel();
-
                     dBm = gsm.getDbm();
-                     LogUtils.LOG("GSM " + dBm);
+                    LogUtils.LOG("GSM " + dBm);
+
                 } else if (info2 instanceof CellInfoCdma) {
                     CellSignalStrengthCdma cdma = ((CellInfoCdma) info2).getCellSignalStrength();
 
                     level = cdma.getLevel();
                     dBm = cdma.getDbm();
-                     LogUtils.LOG("cdma " + dBm);
+                    LogUtils.LOG("cdma1 " + dBm);
+
                 } else if (info2 instanceof CellInfoLte) {
+
                     CellSignalStrengthLte lte = ((CellInfoLte) info2).getCellSignalStrength();
                     dBm = lte.getDbm();
                     level = lte.getLevel();
-                     LogUtils.LOG("lte " + dBm);
+                    LogUtils.LOG("lte " + dBm);
+
                 } else if (info2 instanceof CellInfoWcdma) {
                     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                         final CellSignalStrengthWcdma wcdma = ((CellInfoWcdma) info2)
                                 .getCellSignalStrength();
+
                         dBm = wcdma.getDbm();
                         level = wcdma.getLevel();
-                         LogUtils.LOG("cdma " + dBm);
+                        LogUtils.LOG("cdma2 " + dBm);
+
                     } else {
+
                         dBm = signalStrength.getGsmSignalStrength() * 2 - 113;
 
                         if (dBm <= -113) {
@@ -464,23 +546,22 @@ public class MainDeviceInfo extends Fragment {
                         } else if (dBm > -71) {
                             level = 4;
                         }
+                        LogUtils.LOG("cdma2 api < " + dBm);
                     }
 
                 } else {
-                    if (con.getType(info.getType(), info.getSubtype(),
-                            getActivity()) != "4G | LTE") {
-                        dBm = SIGNAL_STRENGTH_OUT;
-                        dataDeviceInfo.setTxtSeñal(getActivity().getString(
-                                R.string.nodisponible));
-                        level = -1;
-                        LogUtils.LOG("out " + dBm);
-                    }
 
+                    dBm = SIGNAL_STRENGTH_OUT;
+                    dataDeviceInfo.setTxtSeñal(getActivity().getString(
+                            R.string.nodisponible));
+                    level = -1;
+                    LogUtils.LOG("Red desconocida " + dBm);
                 }
             }
-
-            dataDeviceInfo.iconoDataMovil(level);
-            dataDeviceInfo.setdBm(dBm);
+            if (dBm != -113) {
+                dataDeviceInfo.iconoDataMovil(level);
+                dataDeviceInfo.setdBm(dBm);
+            }
 
         } catch (Exception e) {
 
@@ -512,6 +593,17 @@ public class MainDeviceInfo extends Fragment {
         dataDeviceInfo.setTxtMasSubred(getActivity().getString(R.string.nodisponible));
         dataDeviceInfo.setTxtDns1(getActivity().getString(R.string.nodisponible));
         dataDeviceInfo.setTxtDns2(getActivity().getString(R.string.nodisponible));
+
+
+        dataDeviceInfo.setTxtIsp(getActivity().getString(R.string.nodisponible));
+        dataDeviceInfo.setTxtCountry(getActivity().getString(R.string.nodisponible));
+        dataDeviceInfo.setTxtCountryCode(getActivity().getString(R.string.nodisponible));
+        dataDeviceInfo.setTxtCity(getActivity().getString(R.string.nodisponible));
+        dataDeviceInfo.setTxtRegion(getActivity().getString(R.string.nodisponible));
+        dataDeviceInfo.setTxtRegionName(getActivity().getString(R.string.nodisponible));
+        dataDeviceInfo.setTxtZip(getActivity().getString(R.string.nodisponible));
+        dataDeviceInfo.setTxtLat(getActivity().getString(R.string.nodisponible));
+        dataDeviceInfo.setTxtLon(getActivity().getString(R.string.nodisponible));
 
     }
 
@@ -574,20 +666,19 @@ public class MainDeviceInfo extends Fragment {
                             listdata = con.readJsonFromUrl(url);
                             if (!listdata.isEmpty()) {
 
-                            try {
-                                dataDeviceInfo.setTxtIsp(listdata.get(0).isEmpty() ? getActivity().getString(R.string.desconocido) : listdata.get(0));
-                                dataDeviceInfo.setTxtCountry(listdata.get(1).isEmpty() ? getActivity().getString(R.string.desconocido) : listdata.get(1));
-                                dataDeviceInfo.setTxtCountryCode(listdata.get(2).isEmpty() ? getActivity().getString(R.string.desconocido) : listdata.get(2));
-                                dataDeviceInfo.setTxtCity(listdata.get(3).isEmpty() ? getActivity().getString(R.string.desconocido) : listdata.get(3));
-                                dataDeviceInfo.setTxtRegion(listdata.get(4).isEmpty() ? getActivity().getString(R.string.desconocido) : listdata.get(4));
-                                dataDeviceInfo.setTxtRegionName(listdata.get(5).isEmpty() ? getActivity().getString(R.string.desconocido) : listdata.get(5));
-                                dataDeviceInfo.setTxtZip(listdata.get(6).isEmpty() ? getActivity().getString(R.string.desconocido) : listdata.get(6));
-                                dataDeviceInfo.setTxtLat(listdata.get(7).isEmpty() ? getActivity().getString(R.string.desconocido) : listdata.get(7));
-                                dataDeviceInfo.setTxtLon(listdata.get(8).isEmpty() ? getActivity().getString(R.string.desconocido) : listdata.get(8));
-                            }catch (Exception e){
-                                LogUtils.LOG(e.getMessage());
-                            }
-
+                                try {
+                                    dataDeviceInfo.setTxtIsp(listdata.get(0).isEmpty() ? getActivity().getString(R.string.desconocido) : listdata.get(0));
+                                    dataDeviceInfo.setTxtCountry(listdata.get(1).isEmpty() ? getActivity().getString(R.string.desconocido) : listdata.get(1));
+                                    dataDeviceInfo.setTxtCountryCode(listdata.get(2).isEmpty() ? getActivity().getString(R.string.desconocido) : listdata.get(2));
+                                    dataDeviceInfo.setTxtCity(listdata.get(3).isEmpty() ? getActivity().getString(R.string.desconocido) : listdata.get(3));
+                                    dataDeviceInfo.setTxtRegion(listdata.get(4).isEmpty() ? getActivity().getString(R.string.desconocido) : listdata.get(4));
+                                    dataDeviceInfo.setTxtRegionName(listdata.get(5).isEmpty() ? getActivity().getString(R.string.desconocido) : listdata.get(5));
+                                    dataDeviceInfo.setTxtZip(listdata.get(6).isEmpty() ? getActivity().getString(R.string.desconocido) : listdata.get(6));
+                                    dataDeviceInfo.setTxtLat(listdata.get(7).isEmpty() ? getActivity().getString(R.string.desconocido) : listdata.get(7));
+                                    dataDeviceInfo.setTxtLon(listdata.get(8).isEmpty() ? getActivity().getString(R.string.desconocido) : listdata.get(8));
+                                } catch (Exception e) {
+                                    LogUtils.LOG(e.getMessage());
+                                }
 
                             } else {
 
@@ -614,6 +705,8 @@ public class MainDeviceInfo extends Fragment {
                     e.printStackTrace();
                 }
 
+            } else {
+                return true;
             }
 
             return false;
@@ -622,6 +715,18 @@ public class MainDeviceInfo extends Fragment {
         @Override
         protected void onPostExecute(Boolean actualiza) {
             super.onPostExecute(actualiza);
+        }
+    }
+
+
+    private void lanzaMaps() {
+
+
+        Uri gmmIntentUri = Uri.parse("geo:" + dataDeviceInfo.getTxtLat() + "," + dataDeviceInfo.getTxtLon() + "?q=" + dataDeviceInfo.getTxtLat() + "," + dataDeviceInfo.getTxtLon() );
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivity(mapIntent);
         }
     }
 

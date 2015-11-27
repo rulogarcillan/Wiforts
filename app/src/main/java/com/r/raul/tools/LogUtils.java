@@ -6,38 +6,37 @@ import android.util.Log;
 
 public class LogUtils {
 
-    static final String TAG = "DEBUG_WIFORTS: ";
+    static final String TAG = "myNetworks: ";
 
-    public static void LOGD(final String tag, String message) {
+    public static void LOGD(String message) {
         if (BuildConfig.DEBUG) {
-            Log.e(TAG + tag, message);
+            Log.d(TAG, message);
         }
     }
 
-    public static void LOGV(final String tag, String message) {
+    public static void LOGV(String message) {
         if (BuildConfig.DEBUG) {
-            Log.e(TAG + tag, message);
+            Log.v(TAG, message);
         }
     }
 
-    public static void LOGI(final String tag, String message) {
+    public static void LOGI(String message) {
         if (BuildConfig.DEBUG) {
-            Log.e(TAG + tag, message);
+            Log.i(TAG, message);
         }
     }
 
-    public static void LOGW(final String tag, String message) {
+    public static void LOGW(String message) {
         if (BuildConfig.DEBUG) {
-            Log.e(TAG + tag, message);
+            Log.w(TAG, message);
         }
     }
 
-    public static void LOGE(final String tag, String message) {
+    public static void LOGE(String message) {
         if (BuildConfig.DEBUG) {
-            Log.e(TAG + tag, message);
+            Log.e(TAG, message);
         }
     }
-
     public static void LOG(String message) {
         if (BuildConfig.DEBUG) {
             Log.e(TAG , message);

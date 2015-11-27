@@ -1,18 +1,14 @@
 package com.r.raul.tools;
 
-import android.Manifest;
 import android.Manifest.permission;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -24,9 +20,11 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    FragmentManager fragmentManager;
+    FragmentManager fragmentManager = getSupportFragmentManager();
 
     MainDeviceInfo fragmentD;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +70,17 @@ public class MainActivity extends AppCompatActivity
 
         fragmentD = new MainDeviceInfo();
 
-        if (savedInstanceState==null)
+        if (savedInstanceState == null) {
             fragmentD = new MainDeviceInfo();
-        else
-            fragmentD = (MainDeviceInfo) getSupportFragmentManager().getFragment(savedInstanceState, "crearplanfragment");
+        } else {
+
+            String tag = fragmentManager.findFragmentById(R.id.container).getTag();
+
+            if (tag == "deviceInfo") {
+                fragmentD = (MainDeviceInfo) fragmentManager.getFragment(savedInstanceState, "deviceInfo");
+            }
+
+        }
 
 
 
@@ -160,7 +165,7 @@ public class MainActivity extends AppCompatActivity
 
     private void LanzarDeviceInfo() {
 
-       fragmentManager = getSupportFragmentManager();
+
      /*   fragmentManager.beginTransaction()
                 .replace(R.id.container, new MainDeviceInfo(), "DEVICE")
                 .commit();
@@ -168,20 +173,19 @@ public class MainActivity extends AppCompatActivity
 
 
         fragmentManager.beginTransaction()
-                .replace(R.id.container, fragmentD, "LISTADO")
-                //.addToBackStack("LISTADO")
+                .replace(R.id.container, fragmentD, "deviceInfo")
+                        //.addToBackStack("LISTADO")
                 .commit();
+
 
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        fragmentManager.putFragment(outState, "deviceInfo", fragmentD);
         super.onSaveInstanceState(outState);
-        getSupportFragmentManager().putFragment(outState, "crearplanfragment", fragmentD);
+
     }
-
-
-
 
 
 }
