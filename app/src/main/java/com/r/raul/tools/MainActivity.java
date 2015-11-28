@@ -24,8 +24,6 @@ public class MainActivity extends AppCompatActivity
 
     MainDeviceInfo fragmentD;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
