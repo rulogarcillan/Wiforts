@@ -5,4 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="stroke">#f2f2f2</color>
     <color name="colorAccentTra">#80FF4081</color>
+    <color name="fondo">#3d5465</color>
+    <color name="fondofinal">#3d8465</color>
+
 </resources>
