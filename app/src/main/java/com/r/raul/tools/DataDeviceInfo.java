@@ -1,6 +1,11 @@
 package com.r.raul.tools;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 public class DataDeviceInfo {
+
+
 
 	private String txtNombreRed;
 	private String txtTipoRed;
@@ -13,6 +18,16 @@ public class DataDeviceInfo {
 	private String txtMasSubred;
 	private String txtDns1;
 	private String txtDns2;
+
+	public String getTxtHost() {
+		return txtHost;
+	}
+
+	public void setTxtHost(String txtHost) {
+		this.txtHost = txtHost;
+	}
+
+	private String txtHost;
 	private int tipoIcono;
 	private int dBm = -200;
 
@@ -155,6 +170,15 @@ public class DataDeviceInfo {
 
 	public void setTxtIpPublic(String txtIpPublic) {
 		this.txtIpPublic = txtIpPublic;
+
+		InetAddress addr = null;
+		try {
+			addr = InetAddress.getByName(txtIpPublic);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		txtHost = addr.getHostName();
+
 	}
 
 	public String getTxtIpLocal() {

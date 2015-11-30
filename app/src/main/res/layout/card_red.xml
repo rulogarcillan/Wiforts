@@ -52,11 +52,47 @@
 
         </LinearLayout>
 
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dip"
             android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="4sp"
+            android:layout_marginLeft="16sp"
+            android:layout_marginRight="16sp"
 
+            android:background="@android:color/darker_gray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingLeft="16sp"
+            android:paddingRight="16sp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="Host:"
+                android:textColor="@android:color/background_dark"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/txtHost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textSize="14sp"
+                android:lines="1" />
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dip"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4sp"
             android:layout_marginBottom="4sp"
             android:layout_marginLeft="16sp"
             android:layout_marginRight="16sp"

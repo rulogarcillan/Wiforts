@@ -69,13 +69,13 @@ public class MainDeviceInfo extends Fragment {
     SupportMapFragment fragment;
 
     // vistas
-    private TextView txtNombreRed, txtTipoRed, txtModelo, txtVersion,
+    private TextView txtNombreRed, txtTipoRed, txtModelo, txtVersion,txtHost,
             txtIpPublic, txtIpLocal, txtSeñal, txtGateway, txtMasSubred,
             txtDns1, txtDns2, txtIsp, txtCountry, txtCountryCode, txtCity, txtRegion, txtRegionName, txtZip, txtLat, txtLon;
 
     private FloatingActionButton fab;
     private LineChart chart;
-    private Boolean flag = false;
+    public Boolean flag = false;
 
     // servicios
     private Connectivity con; // clase de conexion
@@ -89,12 +89,9 @@ public class MainDeviceInfo extends Fragment {
 
     private DataDeviceInfo dataDeviceInfo = new DataDeviceInfo();
 
-    public static MainDeviceInfo newInstance() {
-        MainDeviceInfo fragment = new MainDeviceInfo();
-        return fragment;
-    }
 
     public MainDeviceInfo() {
+        flag = false;
     }
 
     @Override
@@ -136,6 +133,8 @@ public class MainDeviceInfo extends Fragment {
         txtIpLocal = (TextView) rootView.findViewById(R.id.txtIpLocal);
         txtSeñal = (TextView) rootView.findViewById(R.id.txtSeñal);
 
+
+        txtHost = (TextView) rootView.findViewById(R.id.txtHost);
         txtDns1 = (TextView) rootView.findViewById(R.id.txtDns1);
         txtDns2 = (TextView) rootView.findViewById(R.id.txtDns2);
         txtMasSubred = (TextView) rootView.findViewById(R.id.txtMasSubred);
@@ -422,7 +421,7 @@ public class MainDeviceInfo extends Fragment {
                 super.onPostExecute(aVoid);
                 if (aVoid) {
                     txtIpPublic.setText(dataDeviceInfo.getTxtIpPublic());
-
+                    txtHost.setText(dataDeviceInfo.getTxtHost());
                     txtIsp.setText(dataDeviceInfo.getTxtIsp());
                     txtCountry.setText(dataDeviceInfo.getTxtCountry());
                     txtCountryCode.setText(dataDeviceInfo.getTxtCountryCode());
@@ -432,6 +431,7 @@ public class MainDeviceInfo extends Fragment {
                     txtZip.setText(dataDeviceInfo.getTxtZip());
                     txtLat.setText(dataDeviceInfo.getTxtLat());
                     txtLon.setText(dataDeviceInfo.getTxtLon());
+
 
                     if (dataDeviceInfo.getTxtLat().equals(getActivity().getString(R.string.nodisponible)) || dataDeviceInfo.getTxtLat().equals(getActivity().getString(R.string.desconocido))) {
                         showHideFragment(fragment, true);
@@ -589,6 +589,7 @@ public class MainDeviceInfo extends Fragment {
 
         dataDeviceInfo.setTxtIpPublic(getActivity().getString(R.string.nodisponible));
         dataDeviceInfo.setTxtIpLocal(getActivity().getString(R.string.nodisponible));
+        dataDeviceInfo.setTxtHost(getActivity().getString(R.string.nodisponible));
         dataDeviceInfo.setTxtGateway(getActivity().getString(R.string.nodisponible));
         dataDeviceInfo.setTxtMasSubred(getActivity().getString(R.string.nodisponible));
         dataDeviceInfo.setTxtDns1(getActivity().getString(R.string.nodisponible));

@@ -1,7 +1,6 @@
 package com.r.raul.tools;
 
 import android.Manifest.permission;
-import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,6 +22,7 @@ public class MainActivity extends AppCompatActivity
     FragmentManager fragmentManager = getSupportFragmentManager();
 
     MainDeviceInfo fragmentD;
+    MainOpenPorts fragmentP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,18 +66,23 @@ public class MainActivity extends AppCompatActivity
         }
 
 
-        fragmentD = new MainDeviceInfo();
-
         if (savedInstanceState == null) {
+
             fragmentD = new MainDeviceInfo();
+            fragmentP = new MainOpenPorts();
+            LanzarDeviceInfo();
+            LogUtils.LOG("NO");
+
         } else {
-
             String tag = fragmentManager.findFragmentById(R.id.container).getTag();
-
             if (tag == "deviceInfo") {
                 fragmentD = (MainDeviceInfo) fragmentManager.getFragment(savedInstanceState, "deviceInfo");
+                fragmentP = new MainOpenPorts();
+            } else if (tag == "deviceOpenPorts") {
+                fragmentP = (MainOpenPorts) fragmentManager.getFragment(savedInstanceState, "deviceOpenPorts");
+                fragmentD = new MainDeviceInfo();
+                LogUtils.LOG("SI");
             }
-
         }
 
 
@@ -100,7 +105,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_device);
-        LanzarDeviceInfo();
+
     }
 
     @Override
@@ -142,11 +147,12 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_device) {
+            fragmentD.flag=false;
             LanzarDeviceInfo();
         } else if (id == R.id.nav_wifi) {
 
         } else if (id == R.id.nav_ports) {
-
+            LanzarDeviceOpenPorts();
         } else if (id == R.id.nav_test) {
 
         } else if (id == R.id.nav_share) {
@@ -162,26 +168,37 @@ public class MainActivity extends AppCompatActivity
 
 
     private void LanzarDeviceInfo() {
-
-
-     /*   fragmentManager.beginTransaction()
-                .replace(R.id.container, new MainDeviceInfo(), "DEVICE")
-                .commit();
-        getSupportActionBar().setTitle(R.string.devide_m);*/
-
-
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, fragmentD, "deviceInfo")
-                        //.addToBackStack("LISTADO")
+        //fragmentD = new MainDeviceInfo();
+        fragmentManager.beginTransaction().replace(R.id.container, fragmentD, "deviceInfo")
+                //.addToBackStack("LISTADO")
                 .commit();
 
+    }
+
+    private void LanzarDeviceOpenPorts() {
+        // fragmentP = new MainOpenPorts();
+        fragmentManager.beginTransaction().replace(R.id.container, fragmentP, "deviceOpenPorts")
+                //.addToBackStack("LISTADO")
+                .commit();
 
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        fragmentManager.putFragment(outState, "deviceInfo", fragmentD);
+
         super.onSaveInstanceState(outState);
+
+        String tag = fragmentManager.findFragmentById(R.id.container).getTag();
+
+        if (tag == "deviceInfo") {
+            fragmentManager.putFragment(outState, "deviceInfo", fragmentD);
+        } else if (tag == "deviceOpenPorts") {
+            fragmentManager.putFragment(outState, "deviceOpenPorts", fragmentP);
+            LogUtils.LOG("SI2");
+        } else {
+            fragmentManager.putFragment(outState, "deviceInfo", fragmentD);
+        }
+
 
     }
 
