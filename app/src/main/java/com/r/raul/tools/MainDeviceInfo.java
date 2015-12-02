@@ -262,19 +262,19 @@ public class MainDeviceInfo extends Fragment {
         l.setForm(Legend.LegendForm.CIRCLE);
 
         //Añado data
-        LineData data = new LineData();
-        data.setValueTextColor(Color.GREEN);
+        LineData data = chart.getData();
+		if (data != null) {
+		 data = new LineData();
+		}   
         chart.setData(data);
 		chart.setVisibleXRangeMaximum(50);
-        chart.moveViewToX(data.getXValCount() - 51);
-
+        chart.moveViewToX(data.getXValCount() - 51);		
     }
 
 
     private void anadirValorChart() {
 
         LineData data = chart.getData();
-
         if (data != null) {
             LineDataSet set = data.getDataSetByIndex(0);           
             if (set == null) {
@@ -284,8 +284,7 @@ public class MainDeviceInfo extends Fragment {
 				for (int i = 0; i < 50; i++) { 
 					data.addXValue("");
 					data.addEntry(new Entry(-200, set.getEntryCount()), 0);
-				}
-       
+				}       
              }			 
             data.addEntry(new Entry(dataDeviceInfo.getdBm(), set.getEntryCount()), 0);
             chart.notifyDataSetChanged();
