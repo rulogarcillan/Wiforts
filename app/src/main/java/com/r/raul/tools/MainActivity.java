@@ -61,18 +61,12 @@ public class MainActivity extends AppCompatActivity
                     // result of the request.
                 }
             }
-
-
         }
 
-
         if (savedInstanceState == null) {
-
             fragmentD = new MainDeviceInfo();
             fragmentP = new MainOpenPorts();
             LanzarDeviceInfo();
-            LogUtils.LOG("NO");
-
         } else {
             String tag = fragmentManager.findFragmentById(R.id.container).getTag();
             if (tag == "deviceInfo") {
@@ -81,11 +75,8 @@ public class MainActivity extends AppCompatActivity
             } else if (tag == "deviceOpenPorts") {
                 fragmentP = (MainOpenPorts) fragmentManager.getFragment(savedInstanceState, "deviceOpenPorts");
                 fragmentD = new MainDeviceInfo();
-                LogUtils.LOG("SI");
-            }
+               }
         }
-
-
 
       /*  FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -97,8 +88,7 @@ public class MainActivity extends AppCompatActivity
         });*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -136,7 +126,6 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -147,7 +136,6 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_device) {
-            fragmentD.flag=false;
             LanzarDeviceInfo();
         } else if (id == R.id.nav_wifi) {
 
@@ -160,7 +148,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_send) {
 
         }
-
+        
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -172,7 +160,6 @@ public class MainActivity extends AppCompatActivity
         fragmentManager.beginTransaction().replace(R.id.container, fragmentD, "deviceInfo")
                 //.addToBackStack("LISTADO")
                 .commit();
-
     }
 
     private void LanzarDeviceOpenPorts() {
@@ -180,25 +167,20 @@ public class MainActivity extends AppCompatActivity
         fragmentManager.beginTransaction().replace(R.id.container, fragmentP, "deviceOpenPorts")
                 //.addToBackStack("LISTADO")
                 .commit();
-
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-
         super.onSaveInstanceState(outState);
-
         String tag = fragmentManager.findFragmentById(R.id.container).getTag();
 
         if (tag == "deviceInfo") {
             fragmentManager.putFragment(outState, "deviceInfo", fragmentD);
         } else if (tag == "deviceOpenPorts") {
             fragmentManager.putFragment(outState, "deviceOpenPorts", fragmentP);
-            LogUtils.LOG("SI2");
         } else {
             fragmentManager.putFragment(outState, "deviceInfo", fragmentD);
         }
-
 
     }
 
