@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
@@ -54,8 +53,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
+
 import java.io.IOException;
 import java.util.ArrayList;
+
 import de.greenrobot.event.EventBus;
 
 /**
@@ -64,37 +65,30 @@ import de.greenrobot.event.EventBus;
 public class MainDeviceInfo extends Fragment {
 
     public static final int SIGNAL_STRENGTH_OUT = -150;
+    private GoogleMap mMap;
+    SupportMapFragment fragment;
 
     // vistas
-    private TextView txtNombreRed, txtTipoRed, txtModelo, txtVersion,txtHost,
+    private TextView txtNombreRed, txtTipoRed, txtModelo, txtVersion, txtHost,
             txtIpPublic, txtIpLocal, txtSeñal, txtGateway, txtMasSubred,
             txtDns1, txtDns2, txtIsp, txtCountry, txtCountryCode, txtCity, txtRegion, txtRegionName, txtZip, txtLat, txtLon;
+
     private FloatingActionButton fab;
     private LineChart chart;
-	private CardView cardIp;
-	
-	//vista contenedor
-	View rootView;
-	
 
+    private ArrayList<Float> chardevuelta = new ArrayList<>();
 
     // servicios
     private Connectivity con; // clase de conexion
     private NetworkInfo info; // esta llama a con
 
     private TelephonyManager tlfMan;
-    private BusWrapper busWrapper;	
-	private EventBus bus = new EventBus();
+    private BusWrapper busWrapper;
     private NetworkEvents networkEvents;
+    //
     private MyPhoneStateListener MyListener;
-	
-	
-	//datos
+
     private DataDeviceInfo dataDeviceInfo = new DataDeviceInfo();
-	
-	private GoogleMap mMap;
-    private SupportMapFragment fragment;
-	private android.support.v4.app.FragmentManager fm
 
 
     public MainDeviceInfo() {
@@ -115,39 +109,62 @@ public class MainDeviceInfo extends Fragment {
         tlfMan.listen(MyListener, PhoneStateListener.LISTEN_NONE);
         busWrapper.unregister(this);
         networkEvents.unregister();
-    }	
-	
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            for (int i = 50; i != 0; i--) {
+                String tag = "CHART" + i;
+                chardevuelta.add(savedInstanceState.getFloat("tag"));
+            }
+        }
 
-        rootView = inflater.inflate(R.layout.info_device, container, false);
-		fm = getChildFragmentManager();
-		//mapeo las vistas	
-		mapeoVistas();
-		
 
-        return rootView;
-    }	
-	
-	
-	@Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-		
-		
-		configureMaps();		
-        configureChar();
-					
-					
-		busWrapper = getGreenRobotBusWrapper(bus);
-        networkEvents = new NetworkEvents(getActivity(), busWrapper).enableWifiScan();
+        View rootView = inflater
+                .inflate(R.layout.info_device, container, false);
 
+        EventBus bus = new EventBus();
+
+        busWrapper = getGreenRobotBusWrapper(bus);
+        networkEvents = new NetworkEvents(getActivity(), busWrapper)
+                .enableWifiScan();
+
+        txtNombreRed = (TextView) rootView.findViewById(R.id.txtNombreRed);
+        txtTipoRed = (TextView) rootView.findViewById(R.id.txtRed);
+        txtModelo = (TextView) rootView.findViewById(R.id.txtModelo);
+        txtVersion = (TextView) rootView.findViewById(R.id.txtVersion);
+        txtIpPublic = (TextView) rootView.findViewById(R.id.txtIpPublic);
+        txtIpLocal = (TextView) rootView.findViewById(R.id.txtIpLocal);
+        txtSeñal = (TextView) rootView.findViewById(R.id.txtSeñal);
+
+
+        txtHost = (TextView) rootView.findViewById(R.id.txtHost);
+        txtDns1 = (TextView) rootView.findViewById(R.id.txtDns1);
+        txtDns2 = (TextView) rootView.findViewById(R.id.txtDns2);
+        txtMasSubred = (TextView) rootView.findViewById(R.id.txtMasSubred);
+        txtGateway = (TextView) rootView.findViewById(R.id.txtGateway);
+
+        txtIsp = (TextView) rootView.findViewById(R.id.txtIsp);
+        txtCountry = (TextView) rootView.findViewById(R.id.txtCountry);
+        txtCountryCode = (TextView) rootView.findViewById(R.id.txtCountryCode);
+        txtCity = (TextView) rootView.findViewById(R.id.txtCity);
+        txtRegion = (TextView) rootView.findViewById(R.id.txtRegion);
+        txtRegionName = (TextView) rootView.findViewById(R.id.txtRegionName);
+        txtZip = (TextView) rootView.findViewById(R.id.txtZip);
+        txtLat = (TextView) rootView.findViewById(R.id.txtLat);
+        txtLon = (TextView) rootView.findViewById(R.id.txtLon);
+
+
+        chart = (LineChart) rootView.findViewById(R.id.chart);
+
+        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         // datos de telefonía.
-        tlfMan = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+        tlfMan = (TelephonyManager) getActivity().getSystemService(
+                Context.TELEPHONY_SERVICE);
 
         MyListener = new MyPhoneStateListener();
         tlfMan.listen(MyListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
@@ -160,85 +177,67 @@ public class MainDeviceInfo extends Fragment {
                     startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
                 } else if (con.isConnectedMobile(getContext())) {
                     Intent intent = new Intent(Intent.ACTION_MAIN);
-                    intent.setComponent(new ComponentName("com.android.settings","com.android.settings.Settings$DataUsageSummaryActivity"));
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent
+                            .setComponent(new ComponentName(
+                                    "com.android.settings",
+                                    "com.android.settings.Settings$DataUsageSummaryActivity"));
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                            | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(Intent.ACTION_MAIN);
-                    intent.setComponent(new ComponentName("com.android.settings","com.android.settings.Settings$DataUsageSummaryActivity"));
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent
+                            .setComponent(new ComponentName(
+                                    "com.android.settings",
+                                    "com.android.settings.Settings$DataUsageSummaryActivity"));
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                            | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 }
             }
         });
 
-		
-		cardIp.setOnClickListener(new View.OnClickListener() {
+        CardView cardIp = (CardView) rootView.findViewById(R.id.cardIp);
+        cardIp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 lanzaMaps();
             }
-        });		
-        
-	}
-	
-	/*****bind/mapeo de vistas*******/
-	private void mapeoVistas(){		
-		
-		txtNombreRed = (TextView) rootView.findViewById(R.id.txtNombreRed);
-        txtTipoRed = (TextView) rootView.findViewById(R.id.txtRed);
-        txtModelo = (TextView) rootView.findViewById(R.id.txtModelo);
-        txtVersion = (TextView) rootView.findViewById(R.id.txtVersion);
-        txtIpPublic = (TextView) rootView.findViewById(R.id.txtIpPublic);
-        txtIpLocal = (TextView) rootView.findViewById(R.id.txtIpLocal);
-        txtSeñal = (TextView) rootView.findViewById(R.id.txtSeñal);
-        txtHost = (TextView) rootView.findViewById(R.id.txtHost);
-        txtDns1 = (TextView) rootView.findViewById(R.id.txtDns1);
-        txtDns2 = (TextView) rootView.findViewById(R.id.txtDns2);
-        txtMasSubred = (TextView) rootView.findViewById(R.id.txtMasSubred);
-        txtGateway = (TextView) rootView.findViewById(R.id.txtGateway);
-        txtIsp = (TextView) rootView.findViewById(R.id.txtIsp);
-        txtCountry = (TextView) rootView.findViewById(R.id.txtCountry);
-        txtCountryCode = (TextView) rootView.findViewById(R.id.txtCountryCode);
-        txtCity = (TextView) rootView.findViewById(R.id.txtCity);
-        txtRegion = (TextView) rootView.findViewById(R.id.txtRegion);
-        txtRegionName = (TextView) rootView.findViewById(R.id.txtRegionName);
-        txtZip = (TextView) rootView.findViewById(R.id.txtZip);
-        txtLat = (TextView) rootView.findViewById(R.id.txtLat);
-        txtLon = (TextView) rootView.findViewById(R.id.txtLon);
-        chart = (LineChart) rootView.findViewById(R.id.chart);
-        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);		
-		cardIp = (CardView) rootView.findViewById(R.id.cardIp);
-		
-		
+        });
+
+        android.support.v4.app.FragmentManager fm = getChildFragmentManager();
         fragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
-		
-	}
 
 
-	/**Configuración del mapa*/
-    private void configureMaps() {
-		
         if (fragment == null) {
             fragment = SupportMapFragment.newInstance();
             fm.beginTransaction().replace(R.id.map, fragment).commit();
         }
-		
+
         this.mMap = fragment.getMap();
+
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
                 lanzaMaps();
             }
         });
-       
-    	mMap.getUiSettings().setZoomControlsEnabled(false);
+        configureMaps();
+        configureChar();
+
+        return rootView;
+    }
+
+
+    private void configureMaps() {
+        mMap.getUiSettings().setZoomControlsEnabled(false);
         mMap.getUiSettings().setAllGesturesEnabled(false);
         mMap.getUiSettings().setCompassEnabled(false);
 
     }
 
     private void configureChar() {
+
 
         //especificaciones del chart
         chart.setDescription("");
@@ -261,33 +260,63 @@ public class MainDeviceInfo extends Fragment {
         Legend l = chart.getLegend();
         l.setForm(Legend.LegendForm.CIRCLE);
 
+
         //Añado data
         LineData data = chart.getData();
-		if (data != null) {
-		 data = new LineData();
-		}   
+
+
+        if (data == null) {
+            LogUtils.LOG("Es nuevo");
+            data = new LineData();
+        }
         chart.setData(data);
-		chart.setVisibleXRangeMaximum(50);
-        chart.moveViewToX(data.getXValCount() - 51);		
+
+
     }
 
 
-    private void anadirValorChart() {
+    private void addEntry() {
 
         LineData data = chart.getData();
+
         if (data != null) {
-            LineDataSet set = data.getDataSetByIndex(0);           
+
+            LineDataSet set = data.getDataSetByIndex(0);
+            // set.addEntry(...); // can be called as well
+
             if (set == null) {
                 set = createSet();
                 data.addDataSet(set);
-				//la primera vez lo cargamos con datos
-				for (int i = 0; i < 50; i++) { 
-					data.addXValue("");
-					data.addEntry(new Entry(-200, set.getEntryCount()), 0);
-				}       
-             }			 
+                if (chardevuelta.isEmpty()) {
+
+                    for (int i = 0; i < 50; i++) {
+                        data.addXValue("");
+                        data.addEntry(new Entry(-200, set.getEntryCount()), 0);
+                    }
+                } else {
+                    for (Float dato : chardevuelta ) {
+                        data.addXValue("");
+                        data.addEntry(new Entry(dato, set.getEntryCount()), 0);
+
+
+                    }
+                }
+
+            }
+
+            data.addXValue("");
+
             data.addEntry(new Entry(dataDeviceInfo.getdBm(), set.getEntryCount()), 0);
+
+            // let the chart know it's data has changed
             chart.notifyDataSetChanged();
+
+            // limit the number of visible entries
+            chart.setVisibleXRangeMaximum(50);
+            // move to the latest entry
+            chart.moveViewToX(data.getXValCount() - 51);
+
+
         }
     }
 
@@ -296,17 +325,21 @@ public class MainDeviceInfo extends Fragment {
         LineDataSet set = new LineDataSet(null, (getActivity().getString(R.string.intensidad_red).replace(":", "")));
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
         set.setColor((int) (Long.decode("#FF4081") + 4278190080L));
+
         set.setLineWidth(2f);
         set.setDrawCircles(false);
         set.setDrawCubic(true);
         set.setCubicIntensity(0.2f);
+        //set.setDrawFilled(true);
         set.setFillAlpha(65);
-		set.setFillColor((int) (Long.decode("#FF4081") + 4278190080L));
+
+        //set.setDrawHorizontalHighlightIndicator(false);
+
+        set.setFillColor((int) (Long.decode("#FF4081") + 4278190080L));
         set.setHighLightColor(Color.rgb(244, 117, 117));
         set.setValueTextColor(Color.WHITE);
         set.setValueTextSize(9f);
         set.setDrawValues(false);
-		
         return set;
     }
 
@@ -340,6 +373,7 @@ public class MainDeviceInfo extends Fragment {
             super.onSignalStrengthsChanged(signalStrength);
 
             if (con.isConnectedMobile(getContext())) {
+
                 ActualizaDatosMobile(signalStrength);
                 printData();
             } else if (con.isConnectedWifi(getContext())) {
@@ -369,7 +403,7 @@ public class MainDeviceInfo extends Fragment {
         };
     }
 
-    private void showHideFragment(final Fragment fragment, Boolean esconder) {
+    public void showHideFragment(final Fragment fragment, Boolean esconder) {
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
 
@@ -389,76 +423,72 @@ public class MainDeviceInfo extends Fragment {
 
     private void printData() {
 
-        //actualizo chart
-        anadirValorChart();
-		
-		
+
+        addEntry();
         txtVersion.setText(dataDeviceInfo.getTxtVersion());
         txtModelo.setText(dataDeviceInfo.getTxtModelo());
         txtNombreRed.setText(dataDeviceInfo.getTxtNombreRed());
         txtTipoRed.setText(dataDeviceInfo.getTxtTipoRed());
+
         fab.setImageResource(dataDeviceInfo.getTipoIcono());
         txtSeñal.setText(dataDeviceInfo.getTxtSeñal());
-		txtGateway.setText(dataDeviceInfo.getTxtGateway());
-        txtMasSubred.setText(dataDeviceInfo.getTxtMasSubred());
-        txtDns1.setText(dataDeviceInfo.getTxtDns1());
-        txtDns2.setText(dataDeviceInfo.getTxtDns2());
 
         new cargaIps() {
             @Override
             protected void onPostExecute(Boolean aVoid) {
                 super.onPostExecute(aVoid);
-				
-				txtIpLocal.setText(dataDeviceInfo.getTxtIpLocal());
-				
-				
                 //if (aVoid) {
-                   
-        		    txtIpPublic.setText(dataDeviceInfo.getTxtIpPublic());
-                    txtHost.setText(dataDeviceInfo.getTxtHost());
-                    txtIsp.setText(dataDeviceInfo.getTxtIsp());
-                    txtCountry.setText(dataDeviceInfo.getTxtCountry());
-                    txtCountryCode.setText(dataDeviceInfo.getTxtCountryCode());
-                    txtCity.setText(dataDeviceInfo.getTxtCity());
-                    txtRegion.setText(dataDeviceInfo.getTxtRegion());
-                    txtRegionName.setText(dataDeviceInfo.getTxtRegionName());
-                    txtZip.setText(dataDeviceInfo.getTxtZip());
-                    txtLat.setText(dataDeviceInfo.getTxtLat());
-                    txtLon.setText(dataDeviceInfo.getTxtLon());
+                txtIpPublic.setText(dataDeviceInfo.getTxtIpPublic());
+                txtHost.setText(dataDeviceInfo.getTxtHost());
+                txtIsp.setText(dataDeviceInfo.getTxtIsp());
+                txtCountry.setText(dataDeviceInfo.getTxtCountry());
+                txtCountryCode.setText(dataDeviceInfo.getTxtCountryCode());
+                txtCity.setText(dataDeviceInfo.getTxtCity());
+                txtRegion.setText(dataDeviceInfo.getTxtRegion());
+                txtRegionName.setText(dataDeviceInfo.getTxtRegionName());
+                txtZip.setText(dataDeviceInfo.getTxtZip());
+                txtLat.setText(dataDeviceInfo.getTxtLat());
+                txtLon.setText(dataDeviceInfo.getTxtLon());
 
 
-                    if (dataDeviceInfo.getTxtLat().equals(getActivity().getString(R.string.nodisponible)) || dataDeviceInfo.getTxtLat().equals(getActivity().getString(R.string.desconocido))) {
-                        showHideFragment(fragment, true);
-                    } else {
-                        showHideFragment(fragment, false);
-                        if (con.isConnected(getActivity())) {
+                if (dataDeviceInfo.getTxtLat().equals(getActivity().getString(R.string.nodisponible)) || dataDeviceInfo.getTxtLat().equals(getActivity().getString(R.string.desconocido))) {
+                    showHideFragment(fragment, true);
+                } else {
+                    showHideFragment(fragment, false);
+                    if (con.isConnected(getActivity())) {
 
-                            LatLng position = new LatLng(Double.parseDouble(dataDeviceInfo.getTxtLat()), Double.parseDouble(dataDeviceInfo.getTxtLon()));
-                            mMap.addMarker(new MarkerOptions().position(position).title(dataDeviceInfo.getTxtIpPublic())).showInfoWindow();
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 16));
-                            mMap.addCircle(new CircleOptions()
-                                    .center(position)
-                                    .radius(100)
-                                    .strokeWidth((float) 0.5)
-                                    .strokeColor(getResources().getColor(R.color.colorAccentTra))
-                                    .fillColor(getResources().getColor(R.color.colorAccentTra)));
+                        LatLng position = new LatLng(Double.parseDouble(dataDeviceInfo.getTxtLat()), Double.parseDouble(dataDeviceInfo.getTxtLon()));
 
-                        }
+                        mMap.clear();
+
+                        mMap.addMarker(new MarkerOptions().position(position).title(dataDeviceInfo.getTxtIpPublic())).showInfoWindow();
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 16));
+                        mMap.addCircle(new CircleOptions()
+                                .center(position)
+                                .radius(100)
+                                .strokeWidth((float) 0.5)
+                                .strokeColor(getResources().getColor(R.color.colorAccentTra))
+                                .fillColor(getResources().getColor(R.color.colorAccentTra)));
+
                     }
-                //}
-				
-                
+                    // }
+                }
+                txtIpLocal.setText(dataDeviceInfo.getTxtIpLocal());
             }
 
         }.execute();
 
-        
+        txtGateway.setText(dataDeviceInfo.getTxtGateway());
+        txtMasSubred.setText(dataDeviceInfo.getTxtMasSubred());
+        txtDns1.setText(dataDeviceInfo.getTxtDns1());
+        txtDns2.setText(dataDeviceInfo.getTxtDns2());
 
     }
 
-    public void getDatosWifi() {
+    public void getLevelWifi() {
 
-        WifiManager wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) getActivity().getSystemService(
+                Context.WIFI_SERVICE);
         DhcpInfo info = wifiManager.getDhcpInfo();
 
         int rssi = wifiManager.getConnectionInfo().getRssi();
@@ -628,9 +658,14 @@ public class MainDeviceInfo extends Fragment {
         dataDeviceInfo.setTxtNombreRed(info.getExtraInfo());
         dataDeviceInfo.setTxtTipoRed(con.getType(info.getType(), info.getSubtype(), getActivity()));
 
-        getDatosWifi(); //dbm , icono dhcp, puerta de enlace...
+        getLevelWifi(); //dbm e icono
 
-        
+        //dataDeviceInfo.setTxtIpPublic(getActivity().getString(R.string.nodisponible));
+        //dataDeviceInfo.setTxtIpLocal(getActivity().getString(R.string.nodisponible));
+        //dataDeviceInfo.setTxtGateway(getActivity().getString(R.string.nodisponible));
+        //dataDeviceInfo.setTxtMasSubred(getActivity().getString(R.string.nodisponible));
+        //dataDeviceInfo.setTxtDns1(getActivity().getString(R.string.nodisponible));
+        //dataDeviceInfo.setTxtDns2(getActivity().getString(R.string.nodisponible));
 
     }
 
@@ -639,8 +674,7 @@ public class MainDeviceInfo extends Fragment {
         protected Boolean doInBackground(Void... params) {
 
             if (con.isConnected(getActivity())) {
-                
-				//pillamos i
+
                 dataDeviceInfo.setTxtIpLocal(con.getLocalAddress().getHostAddress());
 
                 try {
@@ -710,7 +744,7 @@ public class MainDeviceInfo extends Fragment {
     private void lanzaMaps() {
 
 
-        Uri gmmIntentUri = Uri.parse("geo:" + dataDeviceInfo.getTxtLat() + "," + dataDeviceInfo.getTxtLon() + "?q=" + dataDeviceInfo.getTxtLat() + "," + dataDeviceInfo.getTxtLon() );
+        Uri gmmIntentUri = Uri.parse("geo:" + dataDeviceInfo.getTxtLat() + "," + dataDeviceInfo.getTxtLon() + "?q=" + dataDeviceInfo.getTxtLat() + "," + dataDeviceInfo.getTxtLon());
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setPackage("com.google.android.apps.maps");
         if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
@@ -718,4 +752,16 @@ public class MainDeviceInfo extends Fragment {
         }
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        LineData data = chart.getData();
+        for (int i = data.getXValCount(); i > data.getXValCount() - 50; i--) {
+            String tag = "CHART" + i;
+            outState.putFloat(tag, data.getDataSets().get(0).getEntryForXIndex(i).getVal());
+
+            LogUtils.LOG(data.getDataSets().get(0).getEntryForXIndex(i).getVal()+"bb");
+        }
+    }
 }
