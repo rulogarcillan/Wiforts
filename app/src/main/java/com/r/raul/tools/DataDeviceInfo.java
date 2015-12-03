@@ -7,17 +7,17 @@ public class DataDeviceInfo {
 
 
 
-	private String txtNombreRed;
-	private String txtTipoRed;
-	private String txtModelo;
-	private String txtVersion;
-	private String txtIpPublic;
-	private String txtIpLocal;
-	private String txtSeñal;
-	private String txtGateway;
-	private String txtMasSubred;
-	private String txtDns1;
-	private String txtDns2;
+	private String txtNombreRed = "";
+	private String txtTipoRed= "";
+	private String txtModelo= "";
+	private String txtVersion= "";
+	private String txtIpPublic= "";
+	private String txtIpLocal= "";
+	private String txtSeñal= "";
+	private String txtGateway= "";
+	private String txtMasSubred= "";
+	private String txtDns1= "";
+	private String txtDns2= "";
 
 	public String getTxtHost() {
 		return txtHost;
@@ -27,20 +27,20 @@ public class DataDeviceInfo {
 		this.txtHost = txtHost;
 	}
 
-	private String txtHost;
+	private String txtHost= "";
 	private int tipoIcono;
 	private int dBm = -200;
 
 
-	private String txtIsp;
-	private String txtCountry;
-	private String txtCountryCode;
-	private String txtCity;
-	private String txtRegion;
-	private String txtRegionName;
-	private String txtZip;
-	private String txtLat;
-	private String txtLon;
+	private String txtIsp= "";
+	private String txtCountry= "";
+	private String txtCountryCode= "";
+	private String txtCity= "";
+	private String txtRegion= "";
+	private String txtRegionName= "";
+	private String txtZip= "";
+	private String txtLat= "";
+	private String txtLon= "";
 	private int iconSubeBaja;
 
 
