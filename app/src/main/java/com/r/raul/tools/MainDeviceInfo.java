@@ -426,7 +426,7 @@ public class MainDeviceInfo extends Fragment {
             @Override
             protected void onPostExecute(Boolean fueOK) {
                 super.onPostExecute(fueOK);
-                if (!cargaIps.isCancelled())  {
+                if (!cargaIps.isCancelled()) {
                     txtIpPublic.setText(dataDeviceInfo.getTxtIpPublic());
                     txtHost.setText(dataDeviceInfo.getTxtHost());
                     txtIsp.setText(dataDeviceInfo.getTxtIsp());
