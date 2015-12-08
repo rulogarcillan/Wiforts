@@ -121,7 +121,7 @@ public class MainDeviceInfo extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            for (int i = 50; i != 0; i--) {
+            for (int i = 60; i != 0; i--) {
                 String tag = "CHART" + i;
                 chardevuelta.add(savedInstanceState.getFloat(tag));
             }
@@ -132,6 +132,10 @@ public class MainDeviceInfo extends Fragment {
                 .inflate(R.layout.info_device, container, false);
 
         EventBus bus = new EventBus();
+
+
+
+
 
         busWrapper = getGreenRobotBusWrapper(bus);
         networkEvents = new NetworkEvents(getActivity(), busWrapper)
@@ -290,7 +294,7 @@ public class MainDeviceInfo extends Fragment {
                 set = createSet();
                 data.addDataSet(set);
                 if (chardevuelta.isEmpty()) {
-                    for (int i = 0; i < 50; i++) {
+                    for (int i = 0; i < 60; i++) {
                         data.addXValue("");
                         data.addEntry(new Entry(-200, set.getEntryCount()), 0);
                     }
@@ -337,12 +341,15 @@ public class MainDeviceInfo extends Fragment {
     @SuppressWarnings("unused")
     public void onEvent(ConnectivityChanged event) {
         if (con.isConnectedWifi(getContext())) {
+            LogUtils.LOG("Conecxion 1");
             ActualizaDatosWifi();
             printData();
         } else if (!con.isConnected(getActivity())) {
             ActualizaDatosSincon();
             printData();
         }
+
+        LogUtils.LOG("Conecxion");
     }
 
     @Subscribe
@@ -351,6 +358,9 @@ public class MainDeviceInfo extends Fragment {
 
         if (con.isConnectedWifi(getContext())) {
             ActualizaDatosWifi();
+            printData();
+        } else if (!con.isConnected(getActivity())) {
+            ActualizaDatosSincon();
             printData();
         }
     }
@@ -665,6 +675,7 @@ public class MainDeviceInfo extends Fragment {
 
                 try {
                     String ip = con.getPublicIp();
+                    dataDeviceInfo.setTxtHost(con.obtenerHostName(ip));
 
                     if (!ip.equals(dataDeviceInfo.getTxtIpPublic())) {
                         dataDeviceInfo.setTxtIpPublic(ip);
@@ -743,12 +754,14 @@ public class MainDeviceInfo extends Fragment {
 
         LineData data = chart.getData();
         int b = 0;
-        for (int i = data.getXValCount(); i > data.getXValCount() - 50; i--) {
+        if (data.getXValCount() - 60 >= 0) {
+            for (int i = data.getXValCount(); i > data.getXValCount() - 60; i--) {
 
-            String tag = "CHART" + b++;
-            outState.putFloat(tag, data.getDataSets().get(0).getEntryForXIndex(i).getVal());
+                String tag = "CHART" + b++;
+                outState.putFloat(tag, data.getDataSets().get(0).getEntryForXIndex(i).getVal());
 
-            // LogUtils.LOG(tag + data.getDataSets().get(0).getEntryForXIndex(i).getVal());
+                // LogUtils.LOG(tag + data.getDataSets().get(0).getEntryForXIndex(i).getVal());
+            }
         }
     }
 }

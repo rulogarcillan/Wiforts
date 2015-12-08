@@ -1,113 +1,85 @@
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/stroke">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbarLayout"
-        android:layout_width="match_parent"
-        android:background="@color/stroke"
-        app:elevation="0dp"
-        android:layout_height="wrap_content">
+    android:orientation="vertical">
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/appbartabs"
+        <EditText
+            android:id="@+id/txtIpHost"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingBottom="@dimen/margins"
+            android:paddingTop="@dimen/margins"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            android:fillViewport="false"
-            android:background="@color/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlways" />
+            android:background="#00000000"
+            android:ems="10"
+            android:hint="Ip or Hostname"
+          />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:id="@+id/filtros"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_collapseMode="parallax"
-            app:layout_scrollFlags="scroll|snap">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="32sp"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:text="Your ip: 89.54.68.1"
-                    android:textColor="@color/primary_text" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/stroke"
-                android:orientation="vertical"
-
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin">
-
-                <android.support.design.widget.TextInputLayout
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/imageView"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp">
-
-                    <EditText
-                        android:id="@+id/tstIpHost"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:hint="Ip or Hostname" />
-                </android.support.design.widget.TextInputLayout>
-
-
-                <android.support.design.widget.TextInputLayout
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/imageView"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp">
-
-                    <EditText
-                        android:id="@+id/txtPorst"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:hint="Ports" />
-                </android.support.design.widget.TextInputLayout>
-
-                <Button
-                    android:id="@+id/btnGo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:text="Comenzar"
-                    android:theme="@style/AppTheme.RaisedButton">
-
-                    <requestFocus />
-                </Button>
-            </LinearLayout>
-        </LinearLayout>
-
-    </android.support.design.widget.AppBarLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rePorts"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/stroke"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:layout_height="0.5dip"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="4sp"
+        android:layout_marginTop="4sp"
+        android:background="@android:color/darker_gray" />
 
 
-</android.support.design.widget.CoordinatorLayout>
+
+        <EditText
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingBottom="@dimen/margins"
+            android:paddingTop="@dimen/margins"
+            android:id="@+id/txtPorst"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:ems="10"
+            android:hint="Ports" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dip"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="4sp"
+        android:layout_marginTop="4sp"
+        android:background="@android:color/darker_gray" />
+
+    <EditText
+        android:id="@+id/txtTimeUp"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingBottom="@dimen/margins"
+        android:paddingTop="@dimen/margins"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#00000000"
+        android:ems="10"
+        android:hint="Time Up"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dip"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="4sp"
+        android:layout_marginTop="4sp"
+        android:background="@android:color/darker_gray" />
+
+    <Button
+        android:id="@+id/btnGo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="Comenzar"
+        android:theme="@style/AppTheme.RaisedButton">
+
+        <requestFocus />
+    </Button>
+</LinearLayout>

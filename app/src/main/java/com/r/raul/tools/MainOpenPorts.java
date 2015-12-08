@@ -37,49 +37,9 @@ public class MainOpenPorts extends Fragment {
 
         View rootView = inflater.inflate(R.layout.open_ports, container, false);
 
-        tabLayout = (TabLayout) rootView.findViewById(R.id.appbartabs);
-        tabLayout.setTabMode(TabLayout.MODE_FIXED);
-        tabLayout.addTab(tabLayout.newTab().setText("Filtros"));
-        tabLayout.addTab(tabLayout.newTab().setText("Abiertos"));
-        tabLayout.addTab(tabLayout.newTab().setText("Cerrados"));
 
         btnGo = (Button) rootView.findViewById(R.id.btnGo);
-        filtros=(LinearLayout) rootView.findViewById(R.id.filtros);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.rePorts);
-        recyclerView.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(llm);
 
-
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                if (tab.getPosition() == 0) {
-                    recyclerView.setVisibility(View.INVISIBLE);
-                    filtros.setVisibility(View.VISIBLE);
-                } else {
-                    recyclerView.setVisibility(View.VISIBLE);
-                    filtros.setVisibility(View.INVISIBLE);
-                }
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
-
-        CustomAdapter a = new CustomAdapter();
-
-
-        recyclerView.setAdapter(a);
         return rootView;
     }
 }

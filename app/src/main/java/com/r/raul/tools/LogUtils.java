@@ -39,7 +39,7 @@ public class LogUtils {
     }
     public static void LOG(String message) {
         if (BuildConfig.DEBUG) {
-            Log.e(TAG , message);
+            Log.i(TAG , message);
         }
     }
 }

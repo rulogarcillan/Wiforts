@@ -170,15 +170,6 @@ public class DataDeviceInfo {
 
 	public void setTxtIpPublic(String txtIpPublic) {
 		this.txtIpPublic = txtIpPublic;
-
-		InetAddress addr = null;
-		try {
-			addr = InetAddress.getByName(txtIpPublic);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
-		txtHost = addr.getHostName();
-
 	}
 
 	public String getTxtIpLocal() {
