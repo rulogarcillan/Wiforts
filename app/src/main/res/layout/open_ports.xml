@@ -59,8 +59,8 @@
         android:layout_height="wrap_content"
         android:background="#00000000"
         android:ems="10"
-        android:inputType="numberDecimal"
         android:hint="Time Up"
+        android:inputType="numberDecimal"
         android:paddingBottom="@dimen/margins"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
@@ -75,15 +75,16 @@
         android:background="@android:color/darker_gray" />
 
     <TextView
-        android:layout_marginRight="4dp"
         android:id="@+id/btnGo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:text="Comenzar"
-        android:padding="6dp"
+        android:layout_marginRight="4dp"
         android:background="@drawable/botonredondo"
-        android:textColor="@android:color/white">
+        android:padding="6dp"
+        android:text="COMENZAR"
+        android:textColor="@android:color/white"
+        android:textStyle="bold">
 
         <requestFocus />
     </TextView>
