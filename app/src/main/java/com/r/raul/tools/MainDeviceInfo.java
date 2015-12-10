@@ -16,7 +16,11 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
 import android.telephony.CellInfo;
 import android.telephony.CellInfoCdma;
 import android.telephony.CellInfoGsm;
@@ -134,9 +138,6 @@ public class MainDeviceInfo extends Fragment {
         EventBus bus = new EventBus();
 
 
-
-
-
         busWrapper = getGreenRobotBusWrapper(bus);
         networkEvents = new NetworkEvents(getActivity(), busWrapper)
                 .enableWifiScan();
@@ -170,6 +171,17 @@ public class MainDeviceInfo extends Fragment {
         chart = (LineChart) rootView.findViewById(R.id.chart);
 
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+
+
+        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(getActivity(), drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+
         // datos de telefonía.
         tlfMan = (TelephonyManager) getActivity().getSystemService(
                 Context.TELEPHONY_SERVICE);

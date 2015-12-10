@@ -1,3 +1,9 @@
+package com.r.raul.tools;
+
+import com.r.raul.tools.Puerto;
+
+import java.util.concurrent.Callable;
+
 public class AnalizaPuerto implements Callable<Puerto> {
 
 	private int puertoTratar;

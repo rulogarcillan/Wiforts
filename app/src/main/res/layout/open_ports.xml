@@ -1,23 +1,25 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/txtIpHost"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingBottom="@dimen/margins"
-            android:paddingTop="@dimen/margins"
+    <include
+        android:id="@+id/toolbar"
 
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#00000000"
-            android:ems="10"
-            android:hint="Ip or Hostname"
-          />
+        layout="@layout/app_bar_main" />
+
+    <EditText
+        android:id="@+id/txtIpHost"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#00000000"
+        android:ems="10"
+
+        android:hint="Ip or Hostname"
+        android:paddingBottom="@dimen/margins"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/margins" />
 
     <View
         android:layout_width="match_parent"
@@ -28,18 +30,17 @@
         android:background="@android:color/darker_gray" />
 
 
-
-        <EditText
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingBottom="@dimen/margins"
-            android:paddingTop="@dimen/margins"
-            android:id="@+id/txtPorst"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#00000000"
-            android:ems="10"
-            android:hint="Ports" />
+    <EditText
+        android:id="@+id/txtPorst"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#00000000"
+        android:ems="10"
+        android:hint="Ports"
+        android:paddingBottom="@dimen/margins"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/margins" />
 
 
     <View
@@ -52,17 +53,16 @@
 
     <EditText
         android:id="@+id/txtTimeUp"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingBottom="@dimen/margins"
-        android:paddingTop="@dimen/margins"
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#00000000"
         android:ems="10"
+
         android:hint="Time Up"
-        />
+        android:paddingBottom="@dimen/margins"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/margins" />
 
     <View
         android:layout_width="match_parent"

@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -20,16 +21,13 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     FragmentManager fragmentManager = getSupportFragmentManager();
-
-    MainDeviceInfo fragmentD;
-    MainOpenPorts fragmentP;
+    Fragment fragment;
+    int ItemAnterior = R.id.nav_device;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -64,18 +62,14 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (savedInstanceState == null) {
-            fragmentD = new MainDeviceInfo();
-            fragmentP = new MainOpenPorts();
             LanzarDeviceInfo();
+
         } else {
             String tag = fragmentManager.findFragmentById(R.id.container).getTag();
-            if (tag == "deviceInfo") {
-                fragmentD = (MainDeviceInfo) fragmentManager.getFragment(savedInstanceState, "deviceInfo");
-                fragmentP = new MainOpenPorts();
-            } else if (tag == "deviceOpenPorts") {
-                fragmentP = (MainOpenPorts) fragmentManager.getFragment(savedInstanceState, "deviceOpenPorts");
-                fragmentD = new MainDeviceInfo();
-               }
+            fragment =  fragmentManager.getFragment(savedInstanceState, "frag");
+            fragmentManager.beginTransaction().replace(R.id.container, fragment,tag)
+                    //.addToBackStack("LISTADO")
+                    .commit();
         }
 
       /*  FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -87,14 +81,12 @@ public class MainActivity extends AppCompatActivity
             }
         });*/
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_device);
+
 
     }
 
@@ -133,22 +125,26 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+
+
+
         int id = item.getItemId();
 
-        if (id == R.id.nav_device) {
+        if (id == R.id.nav_device && id !=ItemAnterior) {
             LanzarDeviceInfo();
-        } else if (id == R.id.nav_wifi) {
+        } else if (id == R.id.nav_wifi && id !=ItemAnterior) {
 
-        } else if (id == R.id.nav_ports) {
+        } else if (id == R.id.nav_ports && id !=ItemAnterior) {
             LanzarDeviceOpenPorts();
-        } else if (id == R.id.nav_test) {
+        } else if (id == R.id.nav_test && id !=ItemAnterior) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_share && id !=ItemAnterior) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_send && id !=ItemAnterior) {
 
         }
-        
+
+        ItemAnterior = id;
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -156,15 +152,15 @@ public class MainActivity extends AppCompatActivity
 
 
     private void LanzarDeviceInfo() {
-        //fragmentD = new MainDeviceInfo();
-        fragmentManager.beginTransaction().replace(R.id.container, fragmentD, "deviceInfo")
+        fragment = new MainDeviceInfo();
+        fragmentManager.beginTransaction().replace(R.id.container, fragment, "deviceInfo")
                 //.addToBackStack("LISTADO")
                 .commit();
     }
 
     private void LanzarDeviceOpenPorts() {
-        // fragmentP = new MainOpenPorts();
-        fragmentManager.beginTransaction().replace(R.id.container, fragmentP, "deviceOpenPorts")
+        fragment = new MainOpenPorts();
+        fragmentManager.beginTransaction().replace(R.id.container, fragment, "deviceOpenPorts")
                 //.addToBackStack("LISTADO")
                 .commit();
     }
@@ -172,15 +168,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        String tag = fragmentManager.findFragmentById(R.id.container).getTag();
 
-        if (tag == "deviceInfo") {
-            fragmentManager.putFragment(outState, "deviceInfo", fragmentD);
-        } else if (tag == "deviceOpenPorts") {
-            fragmentManager.putFragment(outState, "deviceOpenPorts", fragmentP);
-        } else {
-            fragmentManager.putFragment(outState, "deviceInfo", fragmentD);
-        }
+        fragmentManager.putFragment(outState, "frag", fragment);
+
 
     }
 
