@@ -32,7 +32,7 @@ public class MainOpenPorts extends Fragment {
     TextView btnGo;
     RecyclerView recyclerView;
     TabLayout tabLayout;
-  LinearLayout filtros;
+    LinearLayout filtros;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
