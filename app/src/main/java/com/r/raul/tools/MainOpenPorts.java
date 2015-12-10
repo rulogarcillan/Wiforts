@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 
 public class MainOpenPorts extends Fragment {
@@ -28,7 +29,7 @@ public class MainOpenPorts extends Fragment {
 
     }
 
-    Button btnGo;
+    TextView btnGo;
     RecyclerView recyclerView;
     TabLayout tabLayout;
   LinearLayout filtros;
@@ -49,7 +50,7 @@ public class MainOpenPorts extends Fragment {
         toggle.syncState();
 
 
-        btnGo = (Button) rootView.findViewById(R.id.btnGo);
+        btnGo = (TextView) rootView.findViewById(R.id.btnGo);
 
         return rootView;
     }
