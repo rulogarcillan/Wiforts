@@ -1,4 +1,4 @@
-package com.r.raul.tools;
+package com.r.raul.tools.Utils;
 
 
 import android.app.Activity;
@@ -6,6 +6,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
+
+import com.r.raul.tools.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;

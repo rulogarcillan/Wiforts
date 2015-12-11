@@ -1,4 +1,4 @@
-package com.r.raul.tools;
+package com.r.raul.tools.Device;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -54,6 +54,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.r.raul.tools.Device.DataDeviceInfo;
+import com.r.raul.tools.R;
+import com.r.raul.tools.Utils.Connectivity;
+import com.r.raul.tools.Utils.LogUtils;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;

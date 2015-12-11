@@ -28,4 +28,10 @@
     <string name="infonet">Network info</string>
     <string name="infoip">IP info</string>
     <string name="my_mail" translatable="false">innovation.4.apps@gmail.com</string>
+    <string name="common">COMMON</string>
+    <string name="trojans">TROJANS</string>
+    <string name="games">GAMES</string>
+    <string name="others">OTHERS</string>
+    <string name="alls">ALLS</string>
+    <string name="custom">CUSTOM</string>
 </resources>

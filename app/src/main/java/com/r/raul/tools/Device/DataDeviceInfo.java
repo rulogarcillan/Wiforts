@@ -1,4 +1,6 @@
-package com.r.raul.tools;
+package com.r.raul.tools.Device;
+
+import com.r.raul.tools.R;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

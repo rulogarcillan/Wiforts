@@ -1,91 +1,119 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/contenedor"
     android:orientation="vertical">
 
     <include
         android:id="@+id/toolbar"
-
         layout="@layout/app_bar_main" />
 
-    <EditText
-        android:id="@+id/txtIpHost"
+    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#00000000"
-        android:ems="10"
+        android:layout_height="match_parent"
+        >
 
-        android:hint="Ip or Hostname"
-        android:paddingBottom="@dimen/margins"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/margins" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dip"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="4sp"
-        android:layout_marginTop="4sp"
-        android:background="@android:color/darker_gray" />
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
 
-    <EditText
-        android:id="@+id/txtPorst"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#00000000"
-        android:ems="10"
-        android:hint="Ports"
-        android:inputType="numberDecimal"
+            <EditText
+                android:id="@+id/txtIpHost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:ems="10"
 
-        android:paddingBottom="@dimen/margins"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/margins" />
+                android:hint="Ip or Hostname"
+                android:paddingBottom="@dimen/margins"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/margins" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dip"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="4sp"
+                android:layout_marginTop="4sp"
+                android:background="@android:color/darker_gray" />
 
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dip"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="4sp"
-        android:layout_marginTop="4sp"
-        android:background="@android:color/darker_gray" />
+            <EditText
+                android:id="@+id/txtPorst"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:ems="10"
 
-    <EditText
-        android:id="@+id/txtTimeUp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#00000000"
-        android:ems="10"
-        android:hint="Time Up"
-        android:inputType="numberDecimal"
-        android:paddingBottom="@dimen/margins"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/margins" />
+                android:hint="Ports"
+                android:paddingBottom="@dimen/margins"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/margins"
+                android:singleLine="true" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dip"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="4sp"
-        android:layout_marginTop="4sp"
-        android:background="@android:color/darker_gray" />
 
-    <TextView
-        android:id="@+id/btnGo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:layout_marginRight="4dp"
-        android:background="@drawable/botonredondo"
-        android:padding="6dp"
-        android:text="COMENZAR"
-        android:textColor="@android:color/white"
-        android:textStyle="bold">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/botoneraRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="36dp" />
 
-        <requestFocus />
-    </TextView>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dip"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="4sp"
+                android:layout_marginTop="4sp"
+                android:background="@android:color/darker_gray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/margins">
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#00000000"
+                    android:text="TimeOut" />
+
+                <Spinner
+                    android:id="@+id/spinner"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingBottom="@dimen/margins" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dip"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="4sp"
+                android:layout_marginTop="4sp"
+                android:background="@android:color/darker_gray" />
+
+
+            <Button
+                android:id="@+id/btnAceptar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:text="@android:string/ok"
+                android:theme="@style/AppTheme.RaisedButton.Accent" />
+
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 </LinearLayout>

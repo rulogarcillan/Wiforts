@@ -1,3 +1,5 @@
+package com.r.raul.tools.Utils;
+
 public final class Constantes {
   
   //Comunes
@@ -7,7 +9,7 @@ public final class Constantes {
   //Juegos
   public static final String RANGO3 ="1121,2300,2611,3000,3040,3453,4000,5670,6073,6112,6500,6667,7000,7013,7500,7777,21154,27900,28801,28805,47624";
   //Otros
-  public static final String RANGO4 ="0-3,5,7,9,11,13,17-19, 24,27,29,33,35,37-39, 42-52, 54-56,58,66,102,137-138,389,443,636,700,1117,1503,1720,2525,3389,5631,5900,41000";
+  public static final String RANGO4 ="1-3,5,7,9,11,13,17-19, 24,27,29,33,35,37-39, 42-52, 54-56,58,66,102,137-138,389,443,636,700,1117,1503,1720,2525,3389,5631,5900,41000";
   //Todos
   public static final String RANGO5 ="1-65535";
 

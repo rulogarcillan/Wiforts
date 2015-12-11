@@ -1,7 +1,7 @@
-package com.r.raul.tools;
+package com.r.raul.tools.Ports;
 
-import com.r.raul.tools.Puerto;
-
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.concurrent.Callable;
 
 public class AnalizaPuerto implements Callable<Puerto> {

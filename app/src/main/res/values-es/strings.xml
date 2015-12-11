@@ -22,4 +22,10 @@
     <string name="longitude">Longitud:</string>
     <string name="infonet">Información de red</string>
     <string name="infoip">Información de IP</string>
+    <string name="common">COMUNES</string>
+    <string name="trojans">Troyanos</string>
+    <string name="games">JUEGOS</string>
+    <string name="others">OTROS</string>
+    <string name="alls">TODOS</string>
+    <string name="custom">PERSONALIZADO</string>
 </resources>

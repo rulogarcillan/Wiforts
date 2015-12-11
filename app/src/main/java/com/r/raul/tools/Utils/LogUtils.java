@@ -1,7 +1,9 @@
-package com.r.raul.tools;
+package com.r.raul.tools.Utils;
 
 
 import android.util.Log;
+
+import com.r.raul.tools.BuildConfig;
 
 
 public class LogUtils {
