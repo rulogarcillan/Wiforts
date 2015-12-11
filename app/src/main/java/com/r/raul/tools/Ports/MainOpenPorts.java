@@ -2,6 +2,7 @@ package com.r.raul.tools.Ports;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -45,7 +46,7 @@ public class MainOpenPorts extends Fragment {
     RecyclerView botoneraRecycler;
     TextView txtPorst, txtIpHost;
     Spinner spinner;
-    Button btnAceptar;
+    FloatingActionButton btnAceptar;
 
 
     @Override
@@ -65,7 +66,7 @@ public class MainOpenPorts extends Fragment {
 
         txtIpHost = (TextView) rootView.findViewById(R.id.txtIpHost);
 
-        btnAceptar = (Button) rootView.findViewById(R.id.btnAceptar);
+        btnAceptar = (FloatingActionButton) rootView.findViewById(R.id.btnAceptar);
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         txtPorst = (TextView) rootView.findViewById(R.id.txtPorst);
         botoneraRecycler = (RecyclerView) rootView.findViewById(R.id.botoneraRecycler);

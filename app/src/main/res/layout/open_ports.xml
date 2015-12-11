@@ -1,6 +1,7 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/contenedor"
     android:orientation="vertical">
 
@@ -12,7 +13,8 @@
 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        >
+        android:layout_below="@+id/toolbar"
+        android:layout_alignParentStart="true">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
@@ -103,17 +105,22 @@
                 android:background="@android:color/darker_gray" />
 
 
-            <Button
-                android:id="@+id/btnAceptar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:text="@android:string/ok"
-                android:theme="@style/AppTheme.RaisedButton.Accent" />
+
 
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
-</LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_marginBottom="16sp"
+        android:id="@+id/btnAceptar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_go"
+        app:layout_anchor="@id/app_bar"
+        app:layout_anchorGravity="bottom|end"
+        android:layout_marginLeft="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>
