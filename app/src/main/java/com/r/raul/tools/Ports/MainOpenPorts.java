@@ -54,11 +54,19 @@ public class MainOpenPorts extends Fragment {
     }
 
 
+
+    ObtenerIp task = new ObtenerIp();
     RecyclerView botoneraRecycler;
     TextView txtPorst, txtIpHost;
     Spinner spinner;
     FloatingActionButton btnAceptar;
     ArrayList<Integer> listaPuertos = new ArrayList<Integer>();
+
+
+    public void onPause() {
+        task.cancel(true);
+        super.onPause();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -126,13 +134,15 @@ public class MainOpenPorts extends Fragment {
                         @Override
                         protected void onPostExecute(String result) {
                             super.onPostExecute(result);
-                            if (!new InetAddressValidator().isValidInet4Address(result)) {
-                                aviso(R.string.ipnovalida);
-                            } else if (!parsea(txtPorst.getText().toString())) {
-                                aviso(R.string.puertosnovalidos);
-                            } else {
+                            if (!isCancelled()) {
+                                if (!new InetAddressValidator().isValidInet4Address(result)) {
+                                    aviso(R.string.ipnovalida);
+                                } else if (!parsea(txtPorst.getText().toString())) {
+                                    aviso(R.string.puertosnovalidos);
+                                } else {
 
-
+                                    //llamada activy
+                                }
                             }
                         }
                     }.execute(datos);
@@ -169,7 +179,7 @@ public class MainOpenPorts extends Fragment {
     }
 
     public boolean parsea(String lista) {
-
+        listaPuertos = new ArrayList<Integer>();
         Set<Integer> hs = new HashSet<>();
         lista = lista.replaceAll("[^0-9,-]", "");
         lista = lista.replace(" ", "");
@@ -189,11 +199,11 @@ public class MainOpenPorts extends Fragment {
                         fin = Integer.parseInt(partsGuion[0]);
                         ini = Integer.parseInt(partsGuion[1]);
                     }
-                    if (fin > 65535){
+                    if (fin > 65535) {
                         fin = 65535;
                     }
-                    if (ini==0){
-                        ini=1;
+                    if (ini == 0) {
+                        ini = 1;
                     }
 
                     for (int i = ini; i <= fin; i++) {
@@ -207,7 +217,7 @@ public class MainOpenPorts extends Fragment {
 
             } else {
 
-                if (Integer.parseInt(portsComa) > 0 && Integer.parseInt(portsComa) <= 65535){
+                if (Integer.parseInt(portsComa) > 0 && Integer.parseInt(portsComa) <= 65535) {
                     listaPuertos.add(Integer.parseInt(portsComa));
                 }
             }
@@ -286,8 +296,12 @@ public class MainOpenPorts extends Fragment {
             dialog = new ProgressDialog(ac);
         }
 
+        public ObtenerIp() {
+        }
+
+
         protected void onPreExecute() {
-            if (ac!=null)
+            if (ac != null)
                 this.dialog.setMessage(ac.getString(R.string.procesando));
             else
                 cancel(true);
