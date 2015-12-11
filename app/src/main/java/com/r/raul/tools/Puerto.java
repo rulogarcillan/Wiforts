@@ -1,33 +1,30 @@
 package com.r.raul.tools;
 
-public class Puerto{
+public static class Puerto {
+	
+    private int puerto;
+    private boolean isOpen;
 
-	private static final int ABIERTO = 1;
-	private static final int CERRADO = 2;
-	private static final int NOTRATADO = 0;
+    public Puerto(int puerto, boolean isOpen) {
+        super();
+        this.puerto = puerto;
+        this.isOpen = isOpen;
+    }
 
-	private int puertoNumero;
-	private int estado;
+    public int getPuerto() {
+        return puerto;
+    }
 
-	public Puerto(int puertoNumero) {	
-		this.puertoNumero = puertoNumero;
-		this.puertoNumero = NOTRATADO;		
-	}
+    public void setPuerto(int puerto) {
+        this.puerto = puerto;
+    }
 
-	public int getPuertoNumero() {
-		return puertoNumero;
-	}
+    public boolean isOpen() {
+        return isOpen;
+    }
 
-	public void setPuertoNumero(int puertoNumero) {
-		this.puertoNumero = puertoNumero;
-	}
-
-	public int getEstado() {
-		return estado;
-	}
-
-	public void setEstado(int estado) {
-		this.estado = estado;
-	}
+    public void setOpen(boolean isOpen) {
+        this.isOpen = isOpen;
+    }
 
 }
