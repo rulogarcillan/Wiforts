@@ -1,6 +1,11 @@
 package com.r.raul.tools.Ports;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -10,20 +15,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.r.raul.tools.R;
+import com.r.raul.tools.Utils.Connectivity;
 import com.r.raul.tools.Utils.LogUtils;
 
+import org.apache.commons.validator.routines.InetAddressValidator;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -47,7 +58,7 @@ public class MainOpenPorts extends Fragment {
     TextView txtPorst, txtIpHost;
     Spinner spinner;
     FloatingActionButton btnAceptar;
-
+    ArrayList<Integer> listaPuertos = new ArrayList<Integer>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,7 +86,6 @@ public class MainOpenPorts extends Fragment {
         //la ultima para que este todo inicializado
         setupUI(rootView.findViewById(R.id.contenedor));
 
-
         final BotoneraAdapter adaptador = new BotoneraAdapter(getActivity()) {
             @Override
             public void onBindViewHolder(Holder holder, final int position) {
@@ -84,14 +94,12 @@ public class MainOpenPorts extends Fragment {
                     @Override
                     public void onClick(View v) {
                         txtPorst.setText(array.get(position).getRangoPuertos());
-                        parsea(array.get(position).getRangoPuertos());
                     }
                 });
-
             }
-
-
         };
+
+
         botoneraRecycler.setAdapter(adaptador);
         botoneraRecycler.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
 
@@ -103,38 +111,73 @@ public class MainOpenPorts extends Fragment {
             }
         });
 
+        //acepatr, valida y si ok nueva intent
         btnAceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                parsea(txtPorst.getText().toString());
+
+                String datos[] = new String[2];
+                datos[0] = txtPorst.getText().toString();
+                datos[1] = txtIpHost.getText().toString();
+
+
+                if (Connectivity.isConnected(getActivity())) {
+                    new ObtenerIp(getActivity()) {
+                        @Override
+                        protected void onPostExecute(String result) {
+                            super.onPostExecute(result);
+                            if (!new InetAddressValidator().isValidInet4Address(result)) {
+                                aviso(R.string.ipnovalida);
+                            } else if (!parsea(txtPorst.getText().toString())) {
+                                aviso(R.string.puertosnovalidos);
+                            } else {
+
+
+                            }
+                        }
+                    }.execute(datos);
+                } else {
+                    aviso(R.string.necesitaInet);
+                }
+
+            }
+        });
+
+
+        btnAceptar.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (keyboardShown(btnAceptar.getRootView())) {
+                    btnAceptar.hide();
+                } else {
+                    btnAceptar.show();
+                }
             }
         });
 
         return rootView;
     }
 
+    private boolean keyboardShown(View rootView) {
+
+        final int softKeyboardHeight = 100;
+        Rect r = new Rect();
+        rootView.getWindowVisibleDisplayFrame(r);
+        DisplayMetrics dm = rootView.getResources().getDisplayMetrics();
+        int heightDiff = rootView.getBottom() - r.bottom;
+        return heightDiff > softKeyboardHeight * dm.density;
+    }
 
     public boolean parsea(String lista) {
 
-        ArrayList<Integer> listaPuertos = new ArrayList<Integer>();
-
-
-// add elements to al, including duplicates
         Set<Integer> hs = new HashSet<>();
-
-
-
-
-        LogUtils.LOG(lista);
         lista = lista.replaceAll("[^0-9,-]", "");
         lista = lista.replace(" ", "");
-        LogUtils.LOG(lista);
         String[] partsComa = lista.split(",");
         if (lista.equals("")) {
             return false;
         }
         for (String portsComa : partsComa) {
-
 
             if (portsComa.contains("-")) {
                 String[] partsGuion = portsComa.split("\\-");
@@ -145,6 +188,12 @@ public class MainOpenPorts extends Fragment {
                     if (fin < ini) {
                         fin = Integer.parseInt(partsGuion[0]);
                         ini = Integer.parseInt(partsGuion[1]);
+                    }
+                    if (fin > 65535){
+                        fin = 65535;
+                    }
+                    if (ini==0){
+                        ini=1;
                     }
 
                     for (int i = ini; i <= fin; i++) {
@@ -157,7 +206,10 @@ public class MainOpenPorts extends Fragment {
                 }
 
             } else {
-                listaPuertos.add(Integer.parseInt(portsComa));
+
+                if (Integer.parseInt(portsComa) > 0 && Integer.parseInt(portsComa) <= 65535){
+                    listaPuertos.add(Integer.parseInt(portsComa));
+                }
             }
         }
 
@@ -167,14 +219,14 @@ public class MainOpenPorts extends Fragment {
 
         LogUtils.LOGE(listaPuertos.size() + "");
 
-        if (listaPuertos.size() == 0){
+        if (listaPuertos.size() == 0) {
             return false;
         }
         return true;
     }
 
+    //Carga el sniper
     private void loadSnniper() {
-
 
         List<String> categories = new ArrayList<String>();
         categories.add("100");
@@ -187,9 +239,12 @@ public class MainOpenPorts extends Fragment {
 
     }
 
+
+    //esconce el teclado al clicar en el view que le pasas
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+
     }
 
     public void setupUI(View view) {
@@ -217,6 +272,66 @@ public class MainOpenPorts extends Fragment {
                 setupUI(innerView);
             }
         }
+
+    }
+
+    /**********************/
+    private class ObtenerIp extends AsyncTask<String, Void, String> {
+
+        ProgressDialog dialog;
+        Activity ac;
+
+        public ObtenerIp(Activity ac) {
+            this.ac = ac;
+            dialog = new ProgressDialog(ac);
+        }
+
+        protected void onPreExecute() {
+            if (ac!=null)
+                this.dialog.setMessage(ac.getString(R.string.procesando));
+            else
+                cancel(true);
+            this.dialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            InetAddress address = null;
+            String retorno = "";
+
+            parsea(params[0]);
+
+            try {
+                address = InetAddress.getByName(params[1]);
+                retorno = address.getHostAddress().toString();
+            } catch (UnknownHostException e) {
+                retorno = "";
+            }
+            return retorno;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+        }
+    }
+
+    private void aviso(int mensaje) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(mensaje)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                });
+        builder.setTitle(android.R.string.dialog_alert_title);
+        builder.create().show();
+
 
     }
 

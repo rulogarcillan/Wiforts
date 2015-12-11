@@ -28,4 +28,8 @@
     <string name="others">OTROS</string>
     <string name="alls">TODOS</string>
     <string name="custom">PERSONALIZADO</string>
+    <string name="ipnovalida">La Ip/Host no es válida.</string>
+    <string name="puertosnovalidos">El número o el formato de los puertos no es válido. (1-65535)</string>
+    <string name="necesitaInet">Es necesaria una conexión a internet activa.</string>
+    <string name="procesando">Procesando...</string>
 </resources>

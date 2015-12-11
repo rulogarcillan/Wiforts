@@ -34,4 +34,8 @@
     <string name="others">OTHERS</string>
     <string name="alls">ALLS</string>
     <string name="custom">CUSTOM</string>
+    <string name="ipnovalida">The Ip/Host is invalid.</string>
+    <string name="puertosnovalidos">The number or format of ports is invalid. (1-65535)</string>
+    <string name="necesitaInet">Active internet connection is required.</string>
+    <string name="procesando">Processing...</string>
 </resources>
