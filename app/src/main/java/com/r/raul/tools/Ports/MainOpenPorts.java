@@ -368,7 +368,7 @@ public class MainOpenPorts extends Fragment {
 
     private class AnalizarPuertos extends AsyncTask<ArrayList<Integer>, Void, Boolean> {
 
-        final ExecutorService es = Executors.newFixedThreadPool(50);
+        final ExecutorService es = Executors.newFixedThreadPool(100);
         Activity ac;
         String ip;
         int timeOut;
