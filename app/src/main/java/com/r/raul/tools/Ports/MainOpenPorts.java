@@ -39,6 +39,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 
 public class MainOpenPorts extends Fragment {
@@ -52,7 +57,6 @@ public class MainOpenPorts extends Fragment {
     public MainOpenPorts() {
 
     }
-
 
 
     ObtenerIp task = new ObtenerIp();
@@ -137,14 +141,14 @@ public class MainOpenPorts extends Fragment {
                             super.onPostExecute(result);
                             if (!isCancelled()) {
 
-
                                 if (!new InetAddressValidator().isValidInet4Address(result)) {
                                     aviso(R.string.ipnovalida);
 
                                 } else if (!resultadoParseaPorts) {
                                     aviso(R.string.puertosnovalidos);
                                 } else {
-
+                                    int time = Integer.parseInt(spinner.getSelectedItem().toString());
+                                    new AnalizarPuertos(getActivity(),result,time).execute(listaPuertos);
                                     //llamada activy
                                 }
                             }
@@ -246,6 +250,10 @@ public class MainOpenPorts extends Fragment {
         categories.add("100");
         categories.add("200");
         categories.add("300");
+        categories.add("500");
+        categories.add("1000");
+        categories.add("2000");
+
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, categories);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -318,7 +326,7 @@ public class MainOpenPorts extends Fragment {
             InetAddress address = null;
             String retorno = "";
 
-            resultadoParseaPorts= parsea(params[0]);
+            resultadoParseaPorts = parsea(params[0]);
 
             try {
                 address = InetAddress.getByName(params[1]);
@@ -352,6 +360,70 @@ public class MainOpenPorts extends Fragment {
         builder.create().show();
 
 
+
+
+    }
+
+
+    private class AnalizarPuertos extends AsyncTask<ArrayList<Integer>, Void, Boolean> {
+
+        final ExecutorService es = Executors.newFixedThreadPool(20);
+        Activity ac;
+        String ip;
+        int timeOut;
+
+
+        final ArrayList<Future<Puerto>> futures = new ArrayList<>();
+
+        public AnalizarPuertos(Activity ac, String ip, int timeOut) {
+            this.ac = ac;
+            this.ip = ip;
+            this.timeOut = timeOut;
+        }
+
+        public AnalizarPuertos() {
+        }
+
+
+        @Override
+        protected Boolean doInBackground(ArrayList<Integer>... params) {
+
+            for (int  puerto : params[0]){
+                 futures.add(es.submit(new AnalizaPuerto(ip, puerto, timeOut)));
+            }
+            try {
+                es.awaitTermination(timeOut, TimeUnit.MILLISECONDS);
+                for (final Future<Puerto> f : futures) {
+                    if (f.get().isOpen()) {
+                        LogUtils.LOGE("Puerto: " +  f.get().getPuerto() +" abierto") ;
+                    }else{
+                        LogUtils.LOGE("Puerto: " +  f.get().getPuerto() +" Cerrado") ;
+                    }
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            LogUtils.LOGE("FINALLLLLLLLLLLL" +timeOut);
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
     }
 
 
