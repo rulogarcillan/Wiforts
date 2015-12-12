@@ -61,6 +61,7 @@ public class MainOpenPorts extends Fragment {
     Spinner spinner;
     FloatingActionButton btnAceptar;
     ArrayList<Integer> listaPuertos = new ArrayList<Integer>();
+    Boolean resultadoParseaPorts = false;
 
 
     public void onPause() {
@@ -135,9 +136,12 @@ public class MainOpenPorts extends Fragment {
                         protected void onPostExecute(String result) {
                             super.onPostExecute(result);
                             if (!isCancelled()) {
+
+
                                 if (!new InetAddressValidator().isValidInet4Address(result)) {
                                     aviso(R.string.ipnovalida);
-                                } else if (!parsea(txtPorst.getText().toString())) {
+
+                                } else if (!resultadoParseaPorts) {
                                     aviso(R.string.puertosnovalidos);
                                 } else {
 
@@ -227,7 +231,7 @@ public class MainOpenPorts extends Fragment {
         listaPuertos.clear();
         listaPuertos.addAll(hs);
 
-        LogUtils.LOGE(listaPuertos.size() + "");
+        LogUtils.LOGI("Total puertos: " + listaPuertos.size());
 
         if (listaPuertos.size() == 0) {
             return false;
@@ -314,7 +318,7 @@ public class MainOpenPorts extends Fragment {
             InetAddress address = null;
             String retorno = "";
 
-            parsea(params[0]);
+            resultadoParseaPorts= parsea(params[0]);
 
             try {
                 address = InetAddress.getByName(params[1]);
@@ -322,6 +326,7 @@ public class MainOpenPorts extends Fragment {
             } catch (UnknownHostException e) {
                 retorno = "";
             }
+            LogUtils.LOGI("La IP: " + retorno);
             return retorno;
         }
 
