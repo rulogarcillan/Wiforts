@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import android.widget.TextView;
 
 import com.r.raul.tools.R;
 import com.r.raul.tools.Utils.Connectivity;
+import com.r.raul.tools.Utils.Constantes;
 import com.r.raul.tools.Utils.LogUtils;
 
 import org.apache.commons.validator.routines.InetAddressValidator;
@@ -137,19 +139,24 @@ public class MainOpenPorts extends Fragment {
                 if (Connectivity.isConnected(getActivity())) {
                     new ObtenerIp(getActivity()) {
                         @Override
-                        protected void onPostExecute(String result) {
-                            super.onPostExecute(result);
+                        protected void onPostExecute(String ip) {
+                            super.onPostExecute(ip);
                             if (!isCancelled()) {
 
-                                if (!new InetAddressValidator().isValidInet4Address(result)) {
+                                if (!new InetAddressValidator().isValidInet4Address(ip)) {
                                     aviso(R.string.ipnovalida);
 
                                 } else if (!resultadoParseaPorts) {
                                     aviso(R.string.puertosnovalidos);
                                 } else {
                                     int time = Integer.parseInt(spinner.getSelectedItem().toString());
-                                    new AnalizarPuertos(getActivity(),result,time).execute(listaPuertos);
-                                    //llamada activy
+                                  //  new AnalizarPuertos(getActivity(),ip,time).execute(listaPuertos);
+
+                                    Intent myIntent = new Intent(getActivity(), DetallePuertos.class);
+                                    myIntent.putExtra(Constantes.IP, ip); //Ip
+                                    myIntent.putExtra(Constantes.TIMEOUT, time); //Timeout
+                                    myIntent.putIntegerArrayListExtra(Constantes.PORTS, listaPuertos); //Ports
+                                            getActivity().startActivity(myIntent);
                                 }
                             }
                         }
@@ -366,71 +373,7 @@ public class MainOpenPorts extends Fragment {
 
 
 
-    private class AnalizarPuertos extends AsyncTask<ArrayList<Integer>, Void, Boolean> {
 
-        final ExecutorService es = Executors.newFixedThreadPool(100);
-        Activity ac;
-        String ip;
-        int timeOut;
-        int a=0, c=0;
-
-
-        final ArrayList<Future<Puerto>> futures = new ArrayList<>();
-
-        public AnalizarPuertos(Activity ac, String ip, int timeOut) {
-            this.ac = ac;
-            this.ip = ip;
-            this.timeOut = timeOut;
-        }
-
-        public AnalizarPuertos() {
-        }
-
-
-        @Override
-        protected Boolean doInBackground(ArrayList<Integer>... params) {
-
-            for (int  puerto : params[0]){
-                 futures.add(es.submit(new AnalizaPuerto(ip, puerto, timeOut)));
-            }
-            try {
-                es.awaitTermination(timeOut, TimeUnit.MILLISECONDS);
-                for (final Future<Puerto> f : futures) {
-                    if (f.get().isOpen()) {
-                        a++;
-                        LogUtils.LOGE("Puerto: " +  f.get().getPuerto() +" abierto") ;
-                    }else{
-                        c++;
-                        LogUtils.LOGE("Puerto: " +  f.get().getPuerto() +" Cerrado") ;
-                    }
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-
-
-            aviso2("Abiertos: "+a+ "Cerrados: " + c);
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-        }
-    }
 
 
     private void aviso2(String mensaje) {

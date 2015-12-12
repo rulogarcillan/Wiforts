@@ -7,35 +7,56 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+    <style name="AppTheme.NoActionBarGreen">
+        <item name="colorPrimary">@color/colorPrimary2</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark2</item>
+        <item name="colorAccent">@color/colorAccent2</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+
+    <style name="AppTheme.NoActionBarRed">
+        <item name="colorPrimary">@color/colorPrimary3</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark3</item>
+        <item name="colorAccent">@color/colorAccent2</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
     <style name="AppTheme.RaisedButton">
-    <item name="android:buttonStyle">@style/Widget.AppCompat.Button.Colored</item>
-</style>
+        <item name="android:buttonStyle">@style/Widget.AppCompat.Button.Colored</item>
+    </style>
 
-<style name="AppTheme.RaisedButton.Primary">
-    <item name="colorAccent">@color/colorPrimary</item>
-</style>
+    <style name="AppTheme.RaisedButton.Primary">
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
 
-<style name="AppTheme.RaisedButton.Accent">
-</style>
+    <style name="AppTheme.RaisedButton.Accent"></style>
 
-<style name="AppTheme.FlatButton">
-    <item name="android:buttonStyle">@style/Widget.AppCompat.Button.Borderless.Colored</item>
-    <item name="colorControlHighlight">@android:color/white</item>
-</style>
+    <style name="AppTheme.FlatButton">
+        <item name="android:buttonStyle">@style/Widget.AppCompat.Button.Borderless.Colored</item>
+        <item name="colorControlHighlight">@android:color/white</item>
+    </style>
 
-<style name="AppTheme.FlatButton.Primary">
-    <item name="colorAccent">@color/colorPrimary</item>
-</style>
+    <style name="AppTheme.FlatButton.Primary">
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
 
-<style name="AppTheme.FlatButton.Accent">
-</style>
+    <style name="AppTheme.FlatButton.Accent"></style>
 
 </resources>

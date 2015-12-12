@@ -13,4 +13,7 @@ public final class Constantes {
   //Todos
   public static final String RANGO5 ="1-65535";
 
+  public static final String PORTS ="PORTS";
+  public static final String IP ="IP";
+  public static final String TIMEOUT ="TIMEOUT";
 }

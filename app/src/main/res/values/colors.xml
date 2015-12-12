@@ -3,6 +3,15 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="colorPrimary2">#4CAF50</color>
+    <color name="colorPrimaryDark2">#388E3C</color>
+    <color name="colorAccent2">#FFFFFF</color>
+
+    <color name="colorPrimary3">#D32F2F</color>
+    <color name="colorPrimaryDark3">#F44336</color>
+
+
     <color name="stroke">#f2f2f2</color>
     <color name="colorAccentTra">#80FF4081</color>
     <color name="fondo">#3d5465</color>
