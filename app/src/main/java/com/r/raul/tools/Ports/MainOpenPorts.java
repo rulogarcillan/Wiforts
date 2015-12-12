@@ -365,12 +365,14 @@ public class MainOpenPorts extends Fragment {
     }
 
 
+
     private class AnalizarPuertos extends AsyncTask<ArrayList<Integer>, Void, Boolean> {
 
-        final ExecutorService es = Executors.newFixedThreadPool(20);
+        final ExecutorService es = Executors.newFixedThreadPool(50);
         Activity ac;
         String ip;
         int timeOut;
+        int a=0, c=0;
 
 
         final ArrayList<Future<Puerto>> futures = new ArrayList<>();
@@ -395,8 +397,10 @@ public class MainOpenPorts extends Fragment {
                 es.awaitTermination(timeOut, TimeUnit.MILLISECONDS);
                 for (final Future<Puerto> f : futures) {
                     if (f.get().isOpen()) {
+                        a++;
                         LogUtils.LOGE("Puerto: " +  f.get().getPuerto() +" abierto") ;
                     }else{
+                        c++;
                         LogUtils.LOGE("Puerto: " +  f.get().getPuerto() +" Cerrado") ;
                     }
                 }
@@ -417,7 +421,9 @@ public class MainOpenPorts extends Fragment {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            LogUtils.LOGE("FINALLLLLLLLLLLL" +timeOut);
+
+
+            aviso2("Abiertos: "+a+ "Cerrados: " + c);
         }
 
         @Override
@@ -427,4 +433,20 @@ public class MainOpenPorts extends Fragment {
     }
 
 
+    private void aviso2(String mensaje) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(mensaje)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                });
+        builder.setTitle(android.R.string.dialog_alert_title);
+        builder.create().show();
+
+
+
+
+    }
 }
