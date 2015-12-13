@@ -66,7 +66,7 @@ public class DetallePuertosAdapter extends RecyclerView.Adapter<DetallePuertosAd
     @Override
     public void onBindViewHolder(Holder holder, int position) {
 
-        holder.txtPuerto.setText("#" + array.get(position).getPuerto());
+        holder.txtPuerto.setText("" + array.get(position).getPuerto() + " #");
 
     }
 
