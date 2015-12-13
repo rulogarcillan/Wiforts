@@ -66,7 +66,6 @@ public class MainOpenPorts extends Fragment {
     TextView txtPorst, txtIpHost;
     Spinner spinner;
     FloatingActionButton btnAceptar;
-    ArrayList<Integer> listaPuertos = new ArrayList<Integer>();
     Boolean resultadoParseaPorts = false;
 
 
@@ -150,12 +149,13 @@ public class MainOpenPorts extends Fragment {
                                     aviso(R.string.puertosnovalidos);
                                 } else {
                                     int time = Integer.parseInt(spinner.getSelectedItem().toString());
+                                    String port = txtPorst.getText().toString();
                                   //  new AnalizarPuertos(getActivity(),ip,time).execute(listaPuertos);
 
                                     Intent myIntent = new Intent(getActivity(), DetallePuertos.class);
                                     myIntent.putExtra(Constantes.IP, ip); //Ip
                                     myIntent.putExtra(Constantes.TIMEOUT, time); //Timeout
-                                    myIntent.putIntegerArrayListExtra(Constantes.PORTS, listaPuertos); //Ports
+                                    myIntent.putExtra(Constantes.PORTS, port); //Ports
                                             getActivity().startActivity(myIntent);
                                 }
                             }
@@ -194,7 +194,7 @@ public class MainOpenPorts extends Fragment {
     }
 
     public boolean parsea(String lista) {
-        listaPuertos = new ArrayList<Integer>();
+        ArrayList<Integer> listaPuertos = new ArrayList<Integer>();
         Set<Integer> hs = new HashSet<>();
         lista = lista.replaceAll("[^0-9,-]", "");
         lista = lista.replace(" ", "");
