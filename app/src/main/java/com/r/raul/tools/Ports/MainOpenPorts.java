@@ -41,11 +41,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 
 public class MainOpenPorts extends Fragment {
@@ -150,13 +145,13 @@ public class MainOpenPorts extends Fragment {
                                 } else {
                                     int time = Integer.parseInt(spinner.getSelectedItem().toString());
                                     String port = txtPorst.getText().toString();
-                                  //  new AnalizarPuertos(getActivity(),ip,time).execute(listaPuertos);
+                                    //  new AnalizarPuertos(getActivity(),ip,time).execute(listaPuertos);
 
                                     Intent myIntent = new Intent(getActivity(), DetallePuertos.class);
                                     myIntent.putExtra(Constantes.IP, ip); //Ip
                                     myIntent.putExtra(Constantes.TIMEOUT, time); //Timeout
                                     myIntent.putExtra(Constantes.PORTS, port); //Ports
-                                            getActivity().startActivity(myIntent);
+                                    getActivity().startActivity(myIntent);
                                 }
                             }
                         }
@@ -260,7 +255,7 @@ public class MainOpenPorts extends Fragment {
         categories.add("500");
         categories.add("1000");
         categories.add("2000");
-
+        categories.add("0");
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, categories);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -367,13 +362,7 @@ public class MainOpenPorts extends Fragment {
         builder.create().show();
 
 
-
-
     }
-
-
-
-
 
 
     private void aviso2(String mensaje) {
@@ -387,8 +376,6 @@ public class MainOpenPorts extends Fragment {
                 });
         builder.setTitle(android.R.string.dialog_alert_title);
         builder.create().show();
-
-
 
 
     }

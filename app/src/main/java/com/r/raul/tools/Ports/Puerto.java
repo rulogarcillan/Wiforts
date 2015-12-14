@@ -3,9 +3,9 @@ package com.r.raul.tools.Ports;
 public class Puerto {
 
     private int puerto;
-    private boolean isOpen;
+    private int isOpen;
 
-    public Puerto(int puerto, boolean isOpen) {
+    public Puerto(int puerto, int isOpen) {
         super();
         this.puerto = puerto;
         this.isOpen = isOpen;
@@ -19,14 +19,13 @@ public class Puerto {
         this.puerto = puerto;
     }
 
-    public boolean isOpen() {
+    public int getIsOpen() {
         return isOpen;
     }
 
-    public void setOpen(boolean isOpen) {
+    public void setIsOpen(int isOpen) {
         this.isOpen = isOpen;
     }
-
 }
 
 

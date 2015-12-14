@@ -38,4 +38,7 @@
     <string name="puertosnovalidos">The number or format of ports is invalid. (1-65535)</string>
     <string name="necesitaInet">Active internet connection is required.</string>
     <string name="procesando">Processing...</string>
+    <string name="p_abiertos">Opened (#)</string>
+    <string name="p_cerrados">Closed (#)</string>
+    <string name="p_time" translatable="false">TimeOut (#)</string>
 </resources>

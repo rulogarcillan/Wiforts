@@ -32,4 +32,6 @@
     <string name="puertosnovalidos">El número o el formato de los puertos no es válido. (1-65535)</string>
     <string name="necesitaInet">Es necesaria una conexión a internet activa.</string>
     <string name="procesando">Procesando...</string>
+    <string name="p_abiertos">Abiertos (#)</string>
+    <string name="p_cerrados">Cerrados (#)</string>
 </resources>

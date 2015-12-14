@@ -42,9 +42,11 @@ public class DetallePuertos extends BaseActivity {
     private TabLayout tabLayout;
     private ArrayList<Puerto> arrayAbiertos = new ArrayList<>();
     private ArrayList<Puerto> arrayCerrados = new ArrayList<>();
+    private ArrayList<Puerto> arrayTimeOut = new ArrayList<>();
+
+
     private RecyclerView recdetalle;
     private DetallePuertosAdapter adaptador;
-    private int posTabAnterior = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,9 +70,9 @@ public class DetallePuertos extends BaseActivity {
 
         tabLayout = (TabLayout) findViewById(R.id.appbartabs);
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
-        tabLayout.addTab(tabLayout.newTab().setText("Abiertos"));
-        tabLayout.addTab(tabLayout.newTab().setText("Cerrados"));
-
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.p_abiertos).replace("#", Integer.toString(0))));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.p_cerrados).replace("#", Integer.toString(0))));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.p_time).replace("#", Integer.toString(0))));
 
         adaptador = new DetallePuertosAdapter(this, new ArrayList<Puerto>());
         recdetalle = (RecyclerView) findViewById(R.id.recdetalle);
@@ -80,7 +82,7 @@ public class DetallePuertos extends BaseActivity {
         recdetalle.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
 
         parsea(ports);
-        AnalizarPuertos tarea = new AnalizarPuertos(progressBar, this, ip, timeOut);
+        tarea = new AnalizarPuertos(progressBar, this, ip, timeOut);
         tarea.execute(listaPuertos);
 
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -93,13 +95,18 @@ public class DetallePuertos extends BaseActivity {
                     adaptador.notifyDataSetChanged();
 
 
-                } else {
+                } else if (tab.getPosition() == 1) {
 
                     adaptador.setArray(arrayCerrados);
                     adaptador.notifyDataSetChanged();
 
+                } else if (tab.getPosition() == 2) {
+
+                    adaptador.setArray(arrayTimeOut);
+                    adaptador.notifyDataSetChanged();
+
                 }
-                tab.getPosition();
+
             }
 
             @Override
@@ -119,11 +126,11 @@ public class DetallePuertos extends BaseActivity {
 
     private class AnalizarPuertos extends AsyncTask<ArrayList<Integer>, Integer, Boolean> {
 
-        final ExecutorService es = Executors.newFixedThreadPool(80);
+        final ExecutorService es = Executors.newFixedThreadPool(100);
         Activity ac;
         String ipAsync;
         int timeOutAsync;
-        int ab = 0, ce = 0, tot = 0;
+        int ab = 0, ce = 0, tot = 0, to = 0;
         int sleep = 0;
 
 
@@ -137,7 +144,7 @@ public class DetallePuertos extends BaseActivity {
             this.ipAsync = ipAsync;
             this.timeOutAsync = timeOutAsync;
             this.progressBar2 = progressBar2;
-            ;
+
         }
 
         public AnalizarPuertos() {
@@ -157,18 +164,27 @@ public class DetallePuertos extends BaseActivity {
             try {
                 es.awaitTermination(timeOutAsync, TimeUnit.MILLISECONDS);
                 for (final Future<Puerto> f : futures) {
-                    if (f.get().isOpen()) {
+
+
+                    if (f.get().getIsOpen() == 0) {
                         tot++;
                         ab++;
                         publishProgress(tot);
-                        LogUtils.LOGE("Puerto: " + f.get().getPuerto() + " abierto");
+
                         arrayAbiertos.add(f.get());
-                    } else {
+                    } else if (f.get().getIsOpen() == 1) {
                         tot++;
                         ce++;
                         publishProgress(tot);
-                        LogUtils.LOGE("Puerto: " + f.get().getPuerto() + " Cerrado");
+
                         arrayCerrados.add(f.get());
+                    } else if (f.get().getIsOpen() == 2) {
+                        tot++;
+                        to++;
+                        publishProgress(tot);
+
+                        arrayTimeOut.add(f.get());
+
                     }
                 }
             } catch (InterruptedException e) {
@@ -185,27 +201,18 @@ public class DetallePuertos extends BaseActivity {
             super.onPreExecute();
             progressBar2.setVisibility(View.VISIBLE);
             progressBar2.setMax(100);
+            progressBar2.setProgress(0);
+            adaptador.setArray(arrayAbiertos);
+
         }
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-
             progressBar2.setVisibility(View.INVISIBLE);
-            //  aviso2("Abiertos: "+a+ "Cerrados: " + c);
+
         }
 
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-            es.shutdown();
-        }
-
-        @Override
-        protected void onCancelled(Boolean aBoolean) {
-            super.onCancelled(aBoolean);
-            es.shutdown();
-        }
 
         @Override
         protected void onProgressUpdate(Integer... values) {
@@ -214,50 +221,51 @@ public class DetallePuertos extends BaseActivity {
             int valor = values[0] * 100 / tamanno;
             progressBar2.setProgress(valor);
 
-
             if (timeOutAsync < 1000) {
                 sleep++;
                 switch (timeOutAsync) {
                     case 100:
                         if (sleep == 10) {
                             sleep = 0;
-                            adaptador.notifyDataSetChanged();
-                            tabLayout.getTabAt(0).setText("Abiertos " + "(" + ab + ")");
-                            tabLayout.getTabAt(1).setText("Cerrados " + "(" + ce + ")");
+                            actualizaTabs();
                         }
                         break;
                     case 200:
                         if (sleep == 5) {
                             sleep = 0;
-                            adaptador.notifyDataSetChanged();
-                            tabLayout.getTabAt(0).setText("Abiertos " + "(" + ab + ")");
-                            tabLayout.getTabAt(1).setText("Cerrados " + "(" + ce + ")");
+                            actualizaTabs();
                         }
                         break;
                     case 300:
                         if (sleep == 4) {
                             sleep = 0;
-                            adaptador.notifyDataSetChanged();
-                            tabLayout.getTabAt(0).setText("Abiertos " + "(" + ab + ")");
-                            tabLayout.getTabAt(1).setText("Cerrados " + "(" + ce + ")");
+                            actualizaTabs();
                         }
                         break;
                     case 500:
                         if (sleep == 2) {
                             sleep = 0;
-                            adaptador.notifyDataSetChanged();
-                            tabLayout.getTabAt(0).setText("Abiertos " + "(" + ab + ")");
-                            tabLayout.getTabAt(1).setText("Cerrados " + "(" + ce + ")");
+                            actualizaTabs();
                         }
                         break;
                 }
 
             } else {
-                adaptador.notifyDataSetChanged();
-                tabLayout.getTabAt(0).setText("Abiertos " + "(" + ab + ")");
-                tabLayout.getTabAt(1).setText("Cerrados " + "(" + ce + ")");
+
+                actualizaTabs();
             }
 
+
+        }
+
+
+        private void actualizaTabs() {
+            if (ac != null) {
+                adaptador.notifyDataSetChanged();
+                tabLayout.getTabAt(0).setText(ac.getString(R.string.p_abiertos).replace("#", Integer.toString(ab)));
+                tabLayout.getTabAt(1).setText(ac.getString(R.string.p_cerrados).replace("#", Integer.toString(ce)));
+                tabLayout.getTabAt(2).setText(ac.getString(R.string.p_time).replace("#", Integer.toString(to)));
+            }
 
         }
     }
@@ -313,8 +321,6 @@ public class DetallePuertos extends BaseActivity {
         listaPuertos.clear();
         listaPuertos.addAll(hs);
 
-        LogUtils.LOGI("Total puertos: " + listaPuertos.size());
-
         if (listaPuertos.size() == 0) {
             return false;
         }
@@ -338,5 +344,7 @@ public class DetallePuertos extends BaseActivity {
     protected void onPause() {
         super.onPause();
         tarea.cancel(true);
+        LogUtils.LOG("PARADO");
     }
+
 }
