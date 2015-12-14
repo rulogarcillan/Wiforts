@@ -69,7 +69,7 @@ public class DetallePuertos extends BaseActivity {
         getSupportActionBar().setTitle(ip);
 
         tabLayout = (TabLayout) findViewById(R.id.appbartabs);
-        tabLayout.setTabMode(TabLayout.MODE_FIXED);
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.p_abiertos).replace("#", Integer.toString(0))));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.p_cerrados).replace("#", Integer.toString(0))));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.p_time).replace("#", Integer.toString(0))));
