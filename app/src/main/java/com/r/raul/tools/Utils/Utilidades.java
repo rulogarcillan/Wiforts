@@ -10,8 +10,7 @@ class Utilidades {
 		v.vibrate(time);
 	}
 
-	public static Future<Puerto> portIsOpen(final ExecutorService es,
-			final String ip, final int puertoTratar, final int timeOut) {
+	public static Future<Puerto> portIsOpen(final ExecutorService es, final String ip, final int puertoTratar, final int timeOut) {
 
 		return es.submit(new Callable<Puerto>() {
 			@Override
@@ -22,8 +21,7 @@ class Utilidades {
 					if (timeOut == 0) {
 						socket.connect(new InetSocketAddress(ip, puertoTratar));
 					} else {
-						socket.connect(new InetSocketAddress(ip, puertoTratar),
-								timeOut);
+						socket.connect(new InetSocketAddress(ip, puertoTratar),timeOut);
 					}
 					socket.close();
 					LogUtils.LOGE("Puerto: " + puertoTratar + " Abierto");
