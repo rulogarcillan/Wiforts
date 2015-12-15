@@ -247,14 +247,32 @@ public class DetallePuertos extends BaseActivity {
 			 long tDelta = tEnd - tStart;
 			 double elapsedSeconds = tDelta / 1000.0;
 			 if ((ac != null && elapsedSeconds >= 1) || (ac != null && pintaSiempre)) {
+			 		
+			 		ordena(arrayAbiertos);
+			 		ordena(arrayCerrados);
+			 		ordena(arrayTimeOut);
+			 		
 					adaptador.notifyDataSetChanged();
 					tabLayout.getTabAt(0).setText(ac.getString(R.string.p_abiertos).replace("#", Integer.toString(totalAbiertos)));
 					tabLayout.getTabAt(1).setText(ac.getString(R.string.p_cerrados).replace("#", Integer.toString(totalCerrados)));
 					tabLayout.getTabAt(2).setText(ac.getString(R.string.p_time).replace("#", Integer.toString(totalTimeOut)));
 					tStart = System.currentTimeMillis();
-				}
+					
+			}
+			
+			
         }
     }
+    
+    private void ordena(Puerto lista){
+	Collections.sort(lista, new Comparator() {
+		@Override
+		public int compare(Puerto p1, Puerto p2) {
+			return new Integer(p1.getPuerto()).compareTo(new Integer(p2.getPuerto()));
+		}
+	});
+}
+
     
     public boolean parsea(String lista) {
         listaPuertos = new ArrayList<Integer>();
