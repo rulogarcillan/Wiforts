@@ -181,7 +181,7 @@ public class DetallePuertos extends BaseActivity {
 			
     	    for (int puerto : params[0]) {
     	    	if (!isCancelled()){
-    	         	futures.add(portIsOpen(es, ip, puerto, timeout));
+    	         	futures.add(Utilidades.portIsOpen(es, ip, puerto, timeout));
     	    	}else{
     	    		es.shutdownNow();
     	    	  return true;	
