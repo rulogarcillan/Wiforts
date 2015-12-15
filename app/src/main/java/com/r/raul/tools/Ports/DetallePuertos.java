@@ -125,148 +125,109 @@ public class DetallePuertos extends BaseActivity {
 
 
     private class AnalizarPuertos extends AsyncTask<ArrayList<Integer>, Integer, Boolean> {
-
-        final ExecutorService es = Executors.newFixedThreadPool(100);
+        
+		final static int NUMERO_HILOS = 100;
+		
         Activity ac;
         String ipAsync;
-        int timeOutAsync;
-        int ab = 0, ce = 0, tot = 0, to = 0;
-        int sleep = 0;
-
-
+		int timeOutAsync;
+		ProgressBar progressBarAsyncTask;
+		
+		long tStart;	 
+        
+        int totalAbiertos = 0;
+		int totalCerrados = 0;
+		int totalPuertos = 0
+		int totalTimeOut = 0;
+		
         int tamanno;
-        ProgressBar progressBar2;
+        
 
-        final ArrayList<Future<Puerto>> futures = new ArrayList<>();
-
-        public AnalizarPuertos(ProgressBar progressBar2, Activity ac, String ipAsync, int timeOutAsync) {
+        public AnalizarPuertos(ProgressBar progressBarAsyncTask, Activity ac, String ipAsync, int timeOutAsync) {
             this.ac = ac;
             this.ipAsync = ipAsync;
             this.timeOutAsync = timeOutAsync;
-            this.progressBar2 = progressBar2;
-
+            this.progressBarAsyncTask = progressBarAsyncTask;
         }
-
+        
         public AnalizarPuertos() {
         }
 
-
         @Override
         protected Boolean doInBackground(ArrayList<Integer>... params) {
-
+			
+			
             tamanno = params[0].size();
             arrayAbiertos = new ArrayList<>();
             arrayCerrados = new ArrayList<>();
-
-            for (int puerto : params[0]) {
-                futures.add(es.submit(new AnalizaPuerto(ipAsync, puerto, timeOutAsync)));
-            }
-            try {
-                es.awaitTermination(timeOutAsync, TimeUnit.MILLISECONDS);
-                for (final Future<Puerto> f : futures) {
-
-
-                    if (f.get().getIsOpen() == 0) {
-                        tot++;
-                        ab++;
-                        publishProgress(tot);
-
-                        arrayAbiertos.add(f.get());
-                    } else if (f.get().getIsOpen() == 1) {
-                        tot++;
-                        ce++;
-                        publishProgress(tot);
-
-                        arrayCerrados.add(f.get());
-                    } else if (f.get().getIsOpen() == 2) {
-                        tot++;
-                        to++;
-                        publishProgress(tot);
-
-                        arrayTimeOut.add(f.get());
-
-                    }
+            arrayTimeOut = new ArrayList<>();
+            
+			final ExecutorService es = Executors.newFixedThreadPool(NUMERO_HILOS);
+            final List<Future<Puerto>> futures = new ArrayList<Future<Puerto>>();
+			
+			//empieza el tiempo para actualizar cada 1 sec por temas de fluidez en la UI
+			tStart = System.currentTimeMillis();	 
+			
+    	    for (int puerto : params[0]) {
+    	         futures.add(portIsOpen(es, ip, puerto, timeout));
+    	    }
+			
+	        es.awaitTermination(200L, TimeUnit.MILLISECONDS);
+	        //es.awaitTermination(timeOutAsync, TimeUnit.MILLISECONDS);
+	        //es.shutdownNow();
+                
+            for (final Future<Puerto> f : futures) {
+                if (f.get().getIsOpen() == 0) {                    
+                    totalAbiertos++;               
+                    arrayAbiertos.add(f.get());
+                } else if (f.get().getIsOpen() == 1) {                    
+                    totalCerrados++;            
+                    arrayCerrados.add(f.get());
+                } else if (f.get().getIsOpen() == 2) {                   
+                    totalTimeOut++;                   
+                    arrayTimeOut.add(f.get());
                 }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
+				totalPuertos++;
+				publishProgress(totalPuertos);
             }
-
-            return null;
+            return true;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressBar2.setVisibility(View.VISIBLE);
-            progressBar2.setMax(100);
-            progressBar2.setProgress(0);
+            progressBarAsyncTask.setVisibility(View.VISIBLE);
+            progressBarAsyncTask.setMax(100);
+            progressBarAsyncTask.setProgress(0);
             adaptador.setArray(arrayAbiertos);
-
+			actualizaTabs(true);
         }
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            progressBar2.setVisibility(View.INVISIBLE);
-
+            progressBarAsyncTask.setVisibility(View.INVISIBLE);
+            actualizaTabs(true);
         }
-
 
         @Override
         protected void onProgressUpdate(Integer... values) {
-
             super.onProgressUpdate(values[0]);
-            int valor = values[0] * 100 / tamanno;
-            progressBar2.setProgress(valor);
-
-            if (timeOutAsync < 1000) {
-                sleep++;
-                switch (timeOutAsync) {
-                    case 100:
-                        if (sleep == 10) {
-                            sleep = 0;
-                            actualizaTabs();
-                        }
-                        break;
-                    case 200:
-                        if (sleep == 5) {
-                            sleep = 0;
-                            actualizaTabs();
-                        }
-                        break;
-                    case 300:
-                        if (sleep == 4) {
-                            sleep = 0;
-                            actualizaTabs();
-                        }
-                        break;
-                    case 500:
-                        if (sleep == 2) {
-                            sleep = 0;
-                            actualizaTabs();
-                        }
-                        break;
-                }
-
-            } else {
-
-                actualizaTabs();
-            }
-
-
+            progressBarAsyncTask.setProgress((values[0] * 100 / tamanno));
+            actualizaTabs(false);            			
         }
 
-
-        private void actualizaTabs() {
-            if (ac != null) {
-                adaptador.notifyDataSetChanged();
-                tabLayout.getTabAt(0).setText(ac.getString(R.string.p_abiertos).replace("#", Integer.toString(ab)));
-                tabLayout.getTabAt(1).setText(ac.getString(R.string.p_cerrados).replace("#", Integer.toString(ce)));
-                tabLayout.getTabAt(2).setText(ac.getString(R.string.p_time).replace("#", Integer.toString(to)));
-            }
-
+        private void actualizaTabs(Booelan pintaSiempre) {			
+			 long tEnd = System.currentTimeMillis();
+			 long tDelta = tEnd - tStart;
+			 double elapsedSeconds = tDelta / 1000.0;
+			 if ((ac != null && elapsedSeconds >= 1) || (ac != null && pintaSiempre)) {
+					adaptador.notifyDataSetChanged();
+					tabLayout.getTabAt(0).setText(ac.getString(R.string.p_abiertos).replace("#", Integer.toString(totalAbiertos)));
+					tabLayout.getTabAt(1).setText(ac.getString(R.string.p_cerrados).replace("#", Integer.toString(totalCerrados)));
+					tabLayout.getTabAt(2).setText(ac.getString(R.string.p_time).replace("#", Integer.toString(totalTimeOut)));
+					tStart = System.currentTimeMillis();
+				}
         }
     }
 
