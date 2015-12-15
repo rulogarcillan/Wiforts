@@ -183,6 +183,7 @@ public class DetallePuertos extends BaseActivity {
     	    	if (!isCancelled()){
     	         	futures.add(portIsOpen(es, ip, puerto, timeout));
     	    	}else{
+    	    		es.shutdownNow();
     	    	  return true;	
     	    	}
     	    }
@@ -221,14 +222,16 @@ public class DetallePuertos extends BaseActivity {
             progressBarAsyncTask.setMax(100);
             progressBarAsyncTask.setProgress(0);
             adaptador.setArray(arrayAbiertos);
-			actualizaTabs(true);
+	    actualizaTabs(true);
         }
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            progressBarAsyncTask.setVisibility(View.INVISIBLE);
-            actualizaTabs(true);
+            if (!isCancelled()){
+            	progressBarAsyncTask.setVisibility(View.INVISIBLE);
+            	actualizaTabs(true);
+            }
         }
 
         @Override
