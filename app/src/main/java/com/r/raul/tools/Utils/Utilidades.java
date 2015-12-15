@@ -1,6 +1,13 @@
 package com.r.raul.tools.Utils;
 
 import android.os.Vibrator;
+import com.r.raul.tools.Utils.LogUtils;
+
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketTimeoutException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeoutException;
 
 class Utilidades {
 
