@@ -49,6 +49,19 @@ public class DetallePuertos extends BaseActivity {
     private DetallePuertosAdapter adaptador;
 
     @Override
+    protected void onPause() {
+        super.onPause();
+    }
+    
+    @Override
+    protected void onDestroy() 
+    {
+       super.onDestroy();
+       tarea.cancel(true);
+       LogUtils.LOG("Detenemos el AsynTask");
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -123,22 +136,20 @@ public class DetallePuertos extends BaseActivity {
 
     }
 
-
     private class AnalizarPuertos extends AsyncTask<ArrayList<Integer>, Integer, Boolean> {
-        
-		final static int NUMERO_HILOS = 100;
+	
+	final static int NUMERO_HILOS = 100;
 		
         Activity ac;
-        String ipAsync;
-		int timeOutAsync;
-		ProgressBar progressBarAsyncTask;
-		
-		long tStart;	 
-        
-        int totalAbiertos = 0;
-		int totalCerrados = 0;
-		int totalPuertos = 0
-		int totalTimeOut = 0;
+	String ipAsync;
+	int timeOutAsync;
+	ProgressBar progressBarAsyncTask;
+	long tStart;	 
+	
+	int totalAbiertos = 0;
+	int totalCerrados = 0;
+	int totalPuertos = 0
+	int totalTimeOut = 0;
 		
         int tamanno;
         
@@ -162,33 +173,43 @@ public class DetallePuertos extends BaseActivity {
             arrayCerrados = new ArrayList<>();
             arrayTimeOut = new ArrayList<>();
             
-			final ExecutorService es = Executors.newFixedThreadPool(NUMERO_HILOS);
+	    final ExecutorService es = Executors.newFixedThreadPool(NUMERO_HILOS);
             final List<Future<Puerto>> futures = new ArrayList<Future<Puerto>>();
 			
-			//empieza el tiempo para actualizar cada 1 sec por temas de fluidez en la UI
-			tStart = System.currentTimeMillis();	 
+	    //empieza el tiempo para actualizar cada 1 sec por temas de fluidez en la UI
+	    tStart = System.currentTimeMillis();	 
 			
     	    for (int puerto : params[0]) {
-    	         futures.add(portIsOpen(es, ip, puerto, timeout));
+    	    	if (!isCancelled()){
+    	         	futures.add(portIsOpen(es, ip, puerto, timeout));
+    	    	}else{
+    	    	  return true;	
+    	    	}
     	    }
 			
-	        es.awaitTermination(200L, TimeUnit.MILLISECONDS);
-	        //es.awaitTermination(timeOutAsync, TimeUnit.MILLISECONDS);
-	        //es.shutdownNow();
+	    es.awaitTermination(200L, TimeUnit.MILLISECONDS);
+	    //es.awaitTermination(timeOutAsync, TimeUnit.MILLISECONDS);
+	    
                 
             for (final Future<Puerto> f : futures) {
-                if (f.get().getIsOpen() == 0) {                    
-                    totalAbiertos++;               
-                    arrayAbiertos.add(f.get());
-                } else if (f.get().getIsOpen() == 1) {                    
-                    totalCerrados++;            
-                    arrayCerrados.add(f.get());
-                } else if (f.get().getIsOpen() == 2) {                   
-                    totalTimeOut++;                   
-                    arrayTimeOut.add(f.get());
-                }
-				totalPuertos++;
-				publishProgress(totalPuertos);
+            	
+            	if (!isCancelled()){
+	                if (f.get().getIsOpen() == 0) {                    
+	                    totalAbiertos++;               
+	                    arrayAbiertos.add(f.get());
+	                } else if (f.get().getIsOpen() == 1) {                    
+	                    totalCerrados++;            
+	                    arrayCerrados.add(f.get());
+	                } else if (f.get().getIsOpen() == 2) {                   
+	                    totalTimeOut++;                   
+	                    arrayTimeOut.add(f.get());
+	                }
+			totalPuertos++;
+			publishProgress(totalPuertos);
+    	    	}else{
+    	    	  es.shutdownNow();
+    	    	  return true;	
+    	    	}
             }
             return true;
         }
@@ -301,11 +322,6 @@ public class DetallePuertos extends BaseActivity {
     }
 
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        tarea.cancel(true);
-        LogUtils.LOG("PARADO");
-    }
+   
 
 }
