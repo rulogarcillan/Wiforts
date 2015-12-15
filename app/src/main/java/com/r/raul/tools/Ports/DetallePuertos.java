@@ -235,7 +235,8 @@ public class DetallePuertos extends BaseActivity {
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values[0]);
             progressBarAsyncTask.setProgress((values[0] * 100 / tamanno));
-            actualizaTabs(false);            			
+            actualizaTabs(false);     
+            lanzaVibracion(500, this);
         }
 
         private void actualizaTabs(Booelan pintaSiempre) {			
@@ -251,8 +252,7 @@ public class DetallePuertos extends BaseActivity {
 				}
         }
     }
-
-
+    
     public boolean parsea(String lista) {
         listaPuertos = new ArrayList<Integer>();
 
@@ -313,7 +313,6 @@ public class DetallePuertos extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                //Write your logic here
                 this.finish();
                 return true;
             default:
