@@ -1,3 +1,5 @@
+
+package com.r.raul.tools.Utils;
 import android.os.Vibrator;
 
 class Utilidades {
