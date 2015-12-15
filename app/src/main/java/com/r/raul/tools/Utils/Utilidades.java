@@ -1,15 +1,18 @@
 package com.r.raul.tools.Utils;
 
+import android.content.Context;
 import android.os.Vibrator;
-import com.r.raul.tools.Utils.LogUtils;
+
+import com.r.raul.tools.Ports.Puerto;
 
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
-class Utilidades {
+public class Utilidades {
 
 	public static void lanzaVibracion(Context mContext, int time) {
 		Vibrator v = (Vibrator) mContext

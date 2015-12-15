@@ -8,8 +8,8 @@
     <color name="colorPrimaryDark2">#388E3C</color>
     <color name="colorAccent2">#FFFFFF</color>
 
-    <color name="colorPrimary3">#D32F2F</color>
-    <color name="colorPrimaryDark3">#F44336</color>
+    <color name="colorPrimary3">#F44336</color>
+    <color name="colorPrimaryDark3">#D32F2F</color>
 
 
     <color name="stroke">#f2f2f2</color>
