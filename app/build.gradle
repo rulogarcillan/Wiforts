@@ -36,5 +36,5 @@ dependencies {
     compile 'com.google.android.gms:play-services:8.3.+'
     compile files('libs/commons-validator-1.5.0.jar')
 
-    compile 'com.github.markushi:android-ui:1.2'
+
 }
