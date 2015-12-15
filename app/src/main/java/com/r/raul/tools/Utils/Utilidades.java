@@ -1,3 +1,5 @@
+import android.os.Vibrator;
+
 class Utilidades {
 
 static static void lanzaVibracion(Context mContext, int time){
