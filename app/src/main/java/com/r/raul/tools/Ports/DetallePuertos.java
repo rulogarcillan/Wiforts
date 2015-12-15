@@ -236,7 +236,7 @@ public class DetallePuertos extends BaseActivity {
             super.onProgressUpdate(values[0]);
             progressBarAsyncTask.setProgress((values[0] * 100 / tamanno));
             actualizaTabs(false);     
-             Utilidades.lanzaVibracion(500, this);
+             Utilidades.lanzaVibracion(this,500);
         }
 
         private void actualizaTabs(Booelan pintaSiempre) {			
