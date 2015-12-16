@@ -75,6 +75,9 @@ public class MainDeviceInfo extends Fragment {
     public static final int SIGNAL_STRENGTH_OUT = -150;
     private GoogleMap mMap;
     SupportMapFragment fragment;
+    
+    
+    private Map<String, DetalleTarjeta> misDatos = new HashMap<String, DetalleTarjeta>();
 
     // vistas
     private TextView txtNombreRed, txtTipoRed, txtModelo, txtVersion, txtHost,
@@ -135,16 +138,14 @@ public class MainDeviceInfo extends Fragment {
             }
         }
 
+	inicializaHashMap();
 
-        View rootView = inflater
-                .inflate(R.layout.info_device, container, false);
+        View rootView = inflater.inflate(R.layout.info_device, container, false);
 
         EventBus bus = new EventBus();
 
-
         busWrapper = getGreenRobotBusWrapper(bus);
-        networkEvents = new NetworkEvents(getActivity(), busWrapper)
-                .enableWifiScan();
+        networkEvents = new NetworkEvents(getActivity(), busWrapper).enableWifiScan();
 
         txtNombreRed = (TextView) rootView.findViewById(R.id.txtNombreRed);
         txtTipoRed = (TextView) rootView.findViewById(R.id.txtRed);
@@ -780,4 +781,11 @@ public class MainDeviceInfo extends Fragment {
             }
         }
     }
+    
+    
+    private void inicializaHashMap(){
+		misDatos.put(TIPE_AIRPLANE, new DetalleTarjeta());
+		misDatos.put(TIPE_MOBILE, new DetalleTarjeta());
+		misDatos.put(TIPE_WIFI, new DetalleTarjeta());
+	}
 }
