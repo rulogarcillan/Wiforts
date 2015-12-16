@@ -447,7 +447,6 @@ public class MainDeviceInfo extends Fragment {
         txtModelo.setText(dataDeviceInfo.getTxtModelo());
         txtNombreRed.setText(dataDeviceInfo.getTxtNombreRed());
         txtTipoRed.setText(dataDeviceInfo.getTxtTipoRed());
-
         fab.setImageResource(dataDeviceInfo.getTipoIcono());
         txtSeñal.setText(dataDeviceInfo.getTxtSeñal());
 
@@ -467,6 +466,7 @@ public class MainDeviceInfo extends Fragment {
                     txtZip.setText(dataDeviceInfo.getTxtZip());
                     txtLat.setText(dataDeviceInfo.getTxtLat());
                     txtLon.setText(dataDeviceInfo.getTxtLon());
+                    txtIpLocal.setText(dataDeviceInfo.getTxtIpLocal());
 
                     if (getResources().getString(R.string.nodisponible).equals(dataDeviceInfo.getTxtLat()) || getResources().getString(R.string.desconocido).equals(dataDeviceInfo.getTxtLat())) {
                         showHideFragment(fragment, true);
@@ -486,11 +486,8 @@ public class MainDeviceInfo extends Fragment {
                                     .strokeWidth((float) 0.5)
                                     .strokeColor(getResources().getColor(R.color.colorAccentTra))
                                     .fillColor(getResources().getColor(R.color.colorAccentTra)));
-
                         }
-                        // }
                     }
-                    txtIpLocal.setText(dataDeviceInfo.getTxtIpLocal());
                 }
             }
 
@@ -683,10 +680,8 @@ public class MainDeviceInfo extends Fragment {
 
     public class CargaIps extends AsyncTask<Void, Void, Boolean> {
 
-
         @Override
         protected Boolean doInBackground(Void... params) {
-
 
             if (con.isConnected(getActivity())) {
 
