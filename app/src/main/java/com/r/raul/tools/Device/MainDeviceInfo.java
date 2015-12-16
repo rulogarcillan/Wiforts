@@ -54,9 +54,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.r.raul.tools.Device.DataDeviceInfo;
 import com.r.raul.tools.R;
 import com.r.raul.tools.Utils.Connectivity;
+import com.r.raul.tools.Utils.Constantes;
 import com.r.raul.tools.Utils.LogUtils;
 import com.squareup.otto.Subscribe;
 
@@ -64,6 +64,8 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -75,8 +77,8 @@ public class MainDeviceInfo extends Fragment {
     public static final int SIGNAL_STRENGTH_OUT = -150;
     private GoogleMap mMap;
     SupportMapFragment fragment;
-    
-    
+
+
     private Map<String, DetalleTarjeta> misDatos = new HashMap<String, DetalleTarjeta>();
 
     // vistas
@@ -138,7 +140,7 @@ public class MainDeviceInfo extends Fragment {
             }
         }
 
-	inicializaHashMap();
+        inicializaHashMap();
 
         View rootView = inflater.inflate(R.layout.info_device, container, false);
 
@@ -781,35 +783,33 @@ public class MainDeviceInfo extends Fragment {
             }
         }
     }
-    
-    
-    private void inicializaHashMap(){
-		misDatos.put(TIPE_AIRPLANE, new DetalleTarjeta());
-		misDatos.put(TIPE_MOBILE, new DetalleTarjeta());
-		misDatos.put(TIPE_WIFI, new DetalleTarjeta());
-		
-	/*	misDatos.get(TIPE_AIRPLANE).gettt
-		
-		dataDeviceInfo.setTxtIpPublic(getResources().getString(R.string.nodisponible));
-        dataDeviceInfo.setTxtIpLocal(getResources().getString(R.string.nodisponible));
-        dataDeviceInfo.setTxtHost(getResources().getString(R.string.nodisponible));
-        dataDeviceInfo.setTxtGateway(getResources().getString(R.string.nodisponible));
-        dataDeviceInfo.setTxtMasSubred(getResources().getString(R.string.nodisponible));
-        dataDeviceInfo.setTxtDns1(getResources().getString(R.string.nodisponible));
-        dataDeviceInfo.setTxtDns2(getResources().getString(R.string.nodisponible));
 
 
-        dataDeviceInfo.setTxtIsp(getResources().getString(R.string.nodisponible));
-        dataDeviceInfo.setTxtCountry(getResources().getString(R.string.nodisponible));
-        dataDeviceInfo.setTxtCountryCode(getResources().getString(R.string.nodisponible));
-        dataDeviceInfo.setTxtCity(getResources().getString(R.string.nodisponible));
-        dataDeviceInfo.setTxtRegion(getResources().getString(R.string.nodisponible));
-        dataDeviceInfo.setTxtRegionName(getResources().getString(R.string.nodisponible));
-        dataDeviceInfo.setTxtZip(getResources().getString(R.string.nodisponible));
-        dataDeviceInfo.setTxtLat(getResources().getString(R.string.nodisponible));
-        dataDeviceInfo.setTxtLon(getResources().getString(R.string.nodisponible));*/
-		
-		
-		
-	}
+    private void inicializaHashMap() {
+
+        misDatos.put(Constantes.TIPE_AIRPLANE, new DetalleTarjeta());
+        misDatos.put(Constantes.TIPE_MOBILE, new DetalleTarjeta());
+        misDatos.put(Constantes.TIPE_WIFI, new DetalleTarjeta());
+
+
+        misDatos.get(Constantes.TIPE_AIRPLANE).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.host), getResources().getString(R.string.nodisponible)));
+        misDatos.get(Constantes.TIPE_AIRPLANE).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.ippublica), getResources().getString(R.string.nodisponible)));
+        misDatos.get(Constantes.TIPE_AIRPLANE).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.iplocal), getResources().getString(R.string.nodisponible)));
+        misDatos.get(Constantes.TIPE_AIRPLANE).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.gateway), getResources().getString(R.string.nodisponible)));
+        misDatos.get(Constantes.TIPE_AIRPLANE).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.masacarasubred), getResources().getString(R.string.nodisponible)));
+        misDatos.get(Constantes.TIPE_AIRPLANE).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.dns1), getResources().getString(R.string.nodisponible)));
+        misDatos.get(Constantes.TIPE_AIRPLANE).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.dns2), getResources().getString(R.string.nodisponible)));
+
+        misDatos.get(Constantes.TIPE_AIRPLANE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.isp), getResources().getString(R.string.nodisponible)));
+        misDatos.get(Constantes.TIPE_AIRPLANE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.country), getResources().getString(R.string.nodisponible)));
+        misDatos.get(Constantes.TIPE_AIRPLANE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.countrycode), getResources().getString(R.string.nodisponible)));
+        misDatos.get(Constantes.TIPE_AIRPLANE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.city), getResources().getString(R.string.nodisponible)));
+        misDatos.get(Constantes.TIPE_AIRPLANE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.regionname), getResources().getString(R.string.nodisponible)));
+        misDatos.get(Constantes.TIPE_AIRPLANE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.regioncode), getResources().getString(R.string.nodisponible)));
+        misDatos.get(Constantes.TIPE_AIRPLANE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.zip), getResources().getString(R.string.nodisponible)));
+        misDatos.get(Constantes.TIPE_AIRPLANE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.latitude), getResources().getString(R.string.nodisponible)));
+        misDatos.get(Constantes.TIPE_AIRPLANE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.longitude), getResources().getString(R.string.nodisponible)));
+
+
+    }
 }

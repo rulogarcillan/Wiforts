@@ -74,7 +74,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="left"
-                android:text="Host:"
+                android:text="@string/host"
                 android:textColor="@android:color/background_dark"
                 android:textSize="14sp" />
 

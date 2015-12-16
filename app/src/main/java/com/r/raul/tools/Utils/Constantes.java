@@ -20,7 +20,7 @@ public final class Constantes {
   
   // TAGS para el hasmaps de deviceinfo
   public static final String TIPE_WIFI ="WIFI";
-	public static final String TIPE_MOBILE ="MOBILE";
-	public static final String TIPE_AIRPLANE ="AIRPLANE";
+  public static final String TIPE_MOBILE ="MOBILE";
+  public static final String TIPE_AIRPLANE ="AIRPLANE";
   
 }

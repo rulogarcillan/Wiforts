@@ -11,8 +11,8 @@ public class DetalleTarjeta {
 
 	public DetalleTarjeta() {
 		super();
-		infoIp = new ArrayList<DetalleFilaTarjeta>;
-		infoRed = new ArrayList<DetalleFilaTarjeta>;
+		infoIp = new ArrayList<DetalleFilaTarjeta>();
+		infoRed = new ArrayList<DetalleFilaTarjeta>();
 	}
 	
 	public void resetArrays(){

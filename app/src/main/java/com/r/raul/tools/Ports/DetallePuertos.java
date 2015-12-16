@@ -443,7 +443,7 @@ public class DetallePuertos extends BaseActivity {
                 ColorDrawable background = new ColorDrawable(blended);
                 getSupportActionBar().setBackgroundDrawable(background);
                 tabLayout.setBackground(background);
-                progressBar.setBackground(background);
+            //    progressBar.setBackground(background);
             }
         });
 

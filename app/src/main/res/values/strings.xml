@@ -41,4 +41,7 @@
     <string name="p_abiertos">Opened (#)</string>
     <string name="p_cerrados">Closed (#)</string>
     <string name="p_time" translatable="false">TimeOut (#)</string>
+    <string name="host" translatable="false">Host:</string>
+    <string name="dns1" translatable="false">DNS 1:</string>
+    <string name="dns2">DNS 2:</string>
 </resources>
