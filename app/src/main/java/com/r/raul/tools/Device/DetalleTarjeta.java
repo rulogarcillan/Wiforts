@@ -15,6 +15,11 @@ public class DetalleTarjeta {
 		infoRed = new ArrayList<DetalleFilaTarjeta>;
 	}
 	
+	public void resetArrays(){
+		  infoIp.clear();
+		  infoRed.clear();
+	}
+	
 	public ArrayList<DetalleFilaTarjeta> getInfoIp() {
 		return infoIp;
 	}
