@@ -13,7 +13,14 @@ public final class Constantes {
   //Todos
   public static final String RANGO5 ="1-65535";
 
+  //bundle para el activity de ports
   public static final String PORTS ="PORTS";
   public static final String IP ="IP";
   public static final String TIMEOUT ="TIMEOUT";
+  
+  // TAGS para el hasmaps de deviceinfo
+  public static final String TIPE_WIFI ="WIFI";
+	public static final String TIPE_MOBILE ="MOBILE";
+	public static final String TIPE_AIRPLANE ="AIRPLANE";
+  
 }
