@@ -1,10 +1,10 @@
-package com.r.raul.tools.Ports;
+package com.r.raul.tools.Device;
 
-import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.r.raul.tools.R;
@@ -23,7 +23,6 @@ public class DetalleFilaTarjetaAdapter extends RecyclerView.Adapter<DetalleFilaT
 
     public DetalleFilaTarjetaAdapter(ArrayList<DetalleFilaTarjeta > array) {
 
-        this.activity = activity;
         this.array = array;
     }
 
@@ -40,8 +39,12 @@ public class DetalleFilaTarjetaAdapter extends RecyclerView.Adapter<DetalleFilaT
         public TextView titu_card,conte_card;
 		ProgressBar pBar;
 
-        public Holder(View v) {
+
+
+        public Holder(View v, int cuantos) {
+
             super(v);
+          
             // Define click listener for the ViewHolder's View.
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -50,7 +53,7 @@ public class DetalleFilaTarjetaAdapter extends RecyclerView.Adapter<DetalleFilaT
                 }
             });
 			
-			if (array.size()>0){
+			if (cuantos>0){
 				 titu_card = (TextView) v.findViewById(R.id.titu_card);
 				 conte_card = (TextView) v.findViewById(R.id.conte_card);
 			}else{				
@@ -66,12 +69,12 @@ public class DetalleFilaTarjetaAdapter extends RecyclerView.Adapter<DetalleFilaT
 		
 		View v;
 		Holder pvh;
-		if (array.size()>0)
-			 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.dummy_card_detalle, parent, false);
-			 pvh = new Holder(v);
-		else{
-			 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.dummy_card_detalle, parent, false); //cambiar 
-			 pvh = new Holder(v);
+		if (array.size()>0) {
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.dummy_card_detalle, parent, false);
+            pvh = new Holder(v,array.size());
+        }else{
+			 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.dummy_card_pro, parent, false); //cambiar
+			 pvh = new Holder(v,array.size());
 		}
         return pvh;
     }
@@ -82,13 +85,18 @@ public class DetalleFilaTarjetaAdapter extends RecyclerView.Adapter<DetalleFilaT
 		if (array.size()>0){
 			holder.titu_card.setText(array.get(position).getTitulo());
 			holder.conte_card.setText(array.get(position).getContenido());
-		}         
+		}
 
     }
 
     @Override
     public int getItemCount() {
-        return array.size();
+
+        if( array.size() == 0) {
+            return 1;
+        }else{
+            return array.size();
+        }
     }
 
 

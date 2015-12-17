@@ -20,6 +20,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.telephony.CellInfo;
 import android.telephony.CellInfoCdma;
@@ -57,7 +59,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.r.raul.tools.R;
 import com.r.raul.tools.Utils.Connectivity;
 import com.r.raul.tools.Utils.Constantes;
+import com.r.raul.tools.Utils.DividerItemDecoration;
 import com.r.raul.tools.Utils.LogUtils;
+import com.r.raul.tools.Utils.MyLinearLayoutManager;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
@@ -82,8 +86,11 @@ public class MainDeviceInfo extends Fragment {
     private Map<String, DetalleTarjeta> misDatos = new HashMap<String, DetalleTarjeta>();
 
     // vistas
-    private TextView txtNombreRed, txtTipoRed, txtModelo, txtVersion, 
-            txtSeñal,  txtIsp, txtCountry, txtCountryCode, txtCity, txtRegion, txtRegionName, txtZip, txtLat, txtLon;
+    private TextView txtNombreRed, txtTipoRed, txtModelo, txtVersion,
+            txtSeñal, txtIsp, txtCountry, txtCountryCode, txtCity, txtRegion, txtRegionName, txtZip, txtLat, txtLon;
+
+    private RecyclerView recIp;
+    DetalleFilaTarjetaAdapter adaptadorIp;
 
     private FloatingActionButton fab;
     private LineChart chart;
@@ -99,7 +106,7 @@ public class MainDeviceInfo extends Fragment {
     private NetworkEvents networkEvents;
     //
     private MyPhoneStateListener MyListener;
-    CargaIps cargaIps = new CargaIps();
+    CargaIps cargaIps = new CargaIps("");
 
     private DataDeviceInfo dataDeviceInfo = new DataDeviceInfo();
 
@@ -114,6 +121,19 @@ public class MainDeviceInfo extends Fragment {
         tlfMan.listen(MyListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
         busWrapper.register(this);
         networkEvents.register();
+
+        if (con.isConnectedWifi(getContext())) {
+            recuperaDatosInet(Constantes.TIPE_WIFI);
+            printData();
+        } else if (!con.isConnectedMobile(getActivity())) {
+            recuperaDatosInet(Constantes.TIPE_MOBILE);
+            printData();
+        } else if (!con.isConnected(getActivity())) {
+            recuperaDatosInet(Constantes.TIPE_AIRPLANE);
+            ActualizaDatosSincon();
+            printData();
+        }
+
     }
 
     @Override
@@ -152,16 +172,17 @@ public class MainDeviceInfo extends Fragment {
         txtTipoRed = (TextView) rootView.findViewById(R.id.txtRed);
         txtModelo = (TextView) rootView.findViewById(R.id.txtModelo);
         txtVersion = (TextView) rootView.findViewById(R.id.txtVersion);
-        txtIpPublic = (TextView) rootView.findViewById(R.id.txtIpPublic);
-        txtIpLocal = (TextView) rootView.findViewById(R.id.txtIpLocal);
+
         txtSeñal = (TextView) rootView.findViewById(R.id.txtSeñal);
 
 
-        txtHost = (TextView) rootView.findViewById(R.id.txtHost);
-        txtDns1 = (TextView) rootView.findViewById(R.id.txtDns1);
-        txtDns2 = (TextView) rootView.findViewById(R.id.txtDns2);
-        txtMasSubred = (TextView) rootView.findViewById(R.id.txtMasSubred);
-        txtGateway = (TextView) rootView.findViewById(R.id.txtGateway);
+        recIp = (RecyclerView) rootView.findViewById(R.id.recIp);
+        recIp.setHasFixedSize(true);
+        adaptadorIp = new DetalleFilaTarjetaAdapter(misDatos.get(Constantes.TIPE_WIFI).getInfoRed());
+        recIp.setAdapter(adaptadorIp);
+        recIp.setLayoutManager(new MyLinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        recIp.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+
 
         txtIsp = (TextView) rootView.findViewById(R.id.txtIsp);
         txtCountry = (TextView) rootView.findViewById(R.id.txtCountry);
@@ -250,6 +271,9 @@ public class MainDeviceInfo extends Fragment {
         });
         configureMaps();
         configureChar();
+
+
+
 
         return rootView;
     }
@@ -358,11 +382,16 @@ public class MainDeviceInfo extends Fragment {
     @Subscribe
     @SuppressWarnings("unused")
     public void onEvent(ConnectivityChanged event) {
+        LogUtils.LOG("HA CAMBIADO LA CONEXION");
+
         if (con.isConnectedWifi(getContext())) {
-            LogUtils.LOG("Conecxion 1");
-            ActualizaDatosWifi();
+            recuperaDatosInet(Constantes.TIPE_WIFI);
+            printData();
+        } else if (!con.isConnectedMobile(getActivity())) {
+            recuperaDatosInet(Constantes.TIPE_MOBILE);
             printData();
         } else if (!con.isConnected(getActivity())) {
+            recuperaDatosInet(Constantes.TIPE_AIRPLANE);
             ActualizaDatosSincon();
             printData();
         }
@@ -373,7 +402,7 @@ public class MainDeviceInfo extends Fragment {
     @Subscribe
     @SuppressWarnings("unused")
     public void onEvent(WifiSignalStrengthChanged event) {
-
+        LogUtils.LOG("HA CAMBIADO LA COBERTURA WIFI");
         if (con.isConnectedWifi(getContext())) {
             ActualizaDatosWifi();
             printData();
@@ -449,67 +478,20 @@ public class MainDeviceInfo extends Fragment {
         fab.setImageResource(dataDeviceInfo.getTipoIcono());
         txtSeñal.setText(dataDeviceInfo.getTxtSeñal());
 
-        cargaIps = (CargaIps) new CargaIps() {
-            @Override
-            protected void onPostExecute(Boolean fueOK) {
-                super.onPostExecute(fueOK);
-                if (!cargaIps.isCancelled()) {
-                    txtIpPublic.setText(dataDeviceInfo.getTxtIpPublic());
-                    txtHost.setText(dataDeviceInfo.getTxtHost());
-                    txtIsp.setText(dataDeviceInfo.getTxtIsp());
-                    txtCountry.setText(dataDeviceInfo.getTxtCountry());
-                    txtCountryCode.setText(dataDeviceInfo.getTxtCountryCode());
-                    txtCity.setText(dataDeviceInfo.getTxtCity());
-                    txtRegion.setText(dataDeviceInfo.getTxtRegion());
-                    txtRegionName.setText(dataDeviceInfo.getTxtRegionName());
-                    txtZip.setText(dataDeviceInfo.getTxtZip());
-                    txtLat.setText(dataDeviceInfo.getTxtLat());
-                    txtLon.setText(dataDeviceInfo.getTxtLon());
-                    txtIpLocal.setText(dataDeviceInfo.getTxtIpLocal());
-
-                    if (getResources().getString(R.string.nodisponible).equals(dataDeviceInfo.getTxtLat()) || getResources().getString(R.string.desconocido).equals(dataDeviceInfo.getTxtLat())) {
-                        showHideFragment(fragment, true);
-                    } else {
-                        showHideFragment(fragment, false);
-                        if (con.isConnected(getActivity())) {
-
-                            LatLng position = new LatLng(Double.parseDouble(dataDeviceInfo.getTxtLat()), Double.parseDouble(dataDeviceInfo.getTxtLon()));
-
-                            mMap.clear();
-
-                            mMap.addMarker(new MarkerOptions().position(position).title(dataDeviceInfo.getTxtIpPublic())).showInfoWindow();
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 16));
-                            mMap.addCircle(new CircleOptions()
-                                    .center(position)
-                                    .radius(100)
-                                    .strokeWidth((float) 0.5)
-                                    .strokeColor(getResources().getColor(R.color.colorAccentTra))
-                                    .fillColor(getResources().getColor(R.color.colorAccentTra)));
-                        }
-                    }
-                }
-            }
-
-        }.execute();
-
-        txtGateway.setText(dataDeviceInfo.getTxtGateway());
-        txtMasSubred.setText(dataDeviceInfo.getTxtMasSubred());
-        txtDns1.setText(dataDeviceInfo.getTxtDns1());
-        txtDns2.setText(dataDeviceInfo.getTxtDns2());
 
     }
 
     public void getLevelWifi() {
 
-        WifiManager wifiManager = (WifiManager) getActivity().getSystemService(
-                Context.WIFI_SERVICE);
-        DhcpInfo info = wifiManager.getDhcpInfo();
+        WifiManager wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
 
         int rssi = wifiManager.getConnectionInfo().getRssi();
         int level = WifiManager.calculateSignalLevel(rssi, 5);
 
         dataDeviceInfo.iconoDataWifi(level);
         dataDeviceInfo.setdBm(rssi);
+
+        DhcpInfo info = wifiManager.getDhcpInfo();
 
         dataDeviceInfo.setTxtGateway(con.parseIP(info.gateway));
         dataDeviceInfo.setTxtMasSubred(con.parseIP(info.netmask));
@@ -679,6 +661,16 @@ public class MainDeviceInfo extends Fragment {
 
     public class CargaIps extends AsyncTask<Void, Void, Boolean> {
 
+        String tipoSeñal;
+
+        public CargaIps(String tipoSeñal) {
+            this.tipoSeñal = tipoSeñal;
+        }
+
+        public String getTipoSeñal() {
+            return tipoSeñal;
+        }
+
         @Override
         protected Boolean doInBackground(Void... params) {
 
@@ -779,6 +771,79 @@ public class MainDeviceInfo extends Fragment {
     }
 
 
+    private void recuperaDatosInet(String tipo) {
+        Boolean ejecutar = false;
+
+        if (!cargaIps.getStatus().equals(AsyncTask.Status.RUNNING) || (!tipo.equals(cargaIps.getTipoSeñal()))) {
+            ejecutar = true;
+        }
+
+        if (ejecutar) {
+            cargaIps = (CargaIps) new CargaIps(tipo) {
+                @Override
+                protected void onPostExecute(Boolean fueOK) {
+                    super.onPostExecute(fueOK);
+                    if (!cargaIps.isCancelled()) {
+
+                        switch (this.getTipoSeñal()) {
+                            case Constantes.TIPE_MOBILE:
+                                inicializaTypeMobile();
+                                adaptadorIp.setArray(misDatos.get(Constantes.TIPE_MOBILE).getInfoRed());
+                                break;
+                            case Constantes.TIPE_WIFI:
+                                inicializaTypeWifi();
+                                adaptadorIp.setArray(misDatos.get(Constantes.TIPE_WIFI).getInfoRed());
+                                break;
+                            case Constantes.TIPE_AIRPLANE:
+                                adaptadorIp.setArray(misDatos.get(Constantes.TIPE_AIRPLANE).getInfoRed());
+                                break;
+
+                        }
+
+                        recIp.setAdapter(adaptadorIp);
+                        adaptadorIp.notifyDataSetChanged();
+
+
+                        txtIsp.setText(dataDeviceInfo.getTxtIsp());
+                        txtCountry.setText(dataDeviceInfo.getTxtCountry());
+                        txtCountryCode.setText(dataDeviceInfo.getTxtCountryCode());
+                        txtCity.setText(dataDeviceInfo.getTxtCity());
+                        txtRegion.setText(dataDeviceInfo.getTxtRegion());
+                        txtRegionName.setText(dataDeviceInfo.getTxtRegionName());
+                        txtZip.setText(dataDeviceInfo.getTxtZip());
+                        txtLat.setText(dataDeviceInfo.getTxtLat());
+                        txtLon.setText(dataDeviceInfo.getTxtLon());
+
+
+                        if (getResources().getString(R.string.nodisponible).equals(dataDeviceInfo.getTxtLat()) || getResources().getString(R.string.desconocido).equals(dataDeviceInfo.getTxtLat())) {
+                            showHideFragment(fragment, true);
+                        } else {
+                            showHideFragment(fragment, false);
+                            if (con.isConnected(getActivity())) {
+
+                                LatLng position = new LatLng(Double.parseDouble(dataDeviceInfo.getTxtLat()), Double.parseDouble(dataDeviceInfo.getTxtLon()));
+
+                                mMap.clear();
+
+                                mMap.addMarker(new MarkerOptions().position(position).title(dataDeviceInfo.getTxtIpPublic())).showInfoWindow();
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 16));
+                                mMap.addCircle(new CircleOptions()
+                                        .center(position)
+                                        .radius(100)
+                                        .strokeWidth((float) 0.5)
+                                        .strokeColor(getResources().getColor(R.color.colorAccentTra))
+                                        .fillColor(getResources().getColor(R.color.colorAccentTra)));
+                            }
+                        }
+                    }
+                }
+
+            }.execute();
+        }
+
+    }
+
+
     private void inicializaHashMap() {
 
         misDatos.put(Constantes.TIPE_AIRPLANE, new DetalleTarjeta());
@@ -794,6 +859,7 @@ public class MainDeviceInfo extends Fragment {
         misDatos.get(Constantes.TIPE_AIRPLANE).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.dns1), getResources().getString(R.string.nodisponible)));
         misDatos.get(Constantes.TIPE_AIRPLANE).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.dns2), getResources().getString(R.string.nodisponible)));
 
+
         misDatos.get(Constantes.TIPE_AIRPLANE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.isp), getResources().getString(R.string.nodisponible)));
         misDatos.get(Constantes.TIPE_AIRPLANE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.country), getResources().getString(R.string.nodisponible)));
         misDatos.get(Constantes.TIPE_AIRPLANE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.countrycode), getResources().getString(R.string.nodisponible)));
@@ -804,6 +870,40 @@ public class MainDeviceInfo extends Fragment {
         misDatos.get(Constantes.TIPE_AIRPLANE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.latitude), getResources().getString(R.string.nodisponible)));
         misDatos.get(Constantes.TIPE_AIRPLANE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.longitude), getResources().getString(R.string.nodisponible)));
 
+
+    }
+
+    private void inicializaTypeWifi() {
+
+        misDatos.get(Constantes.TIPE_WIFI).getInfoRed().clear();
+        misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.host), dataDeviceInfo.getTxtHost()));
+        misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.ippublica), dataDeviceInfo.getTxtIpPublic()));
+        misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.iplocal), dataDeviceInfo.getTxtIpLocal()));
+        misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.gateway), dataDeviceInfo.getTxtGateway()));
+        misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.masacarasubred), dataDeviceInfo.getTxtMasSubred()));
+        misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.dns1), dataDeviceInfo.getTxtDns1()));
+        misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.dns2), dataDeviceInfo.getTxtDns2()));
+
+    }
+
+    private void inicializaTypeMobile() {
+
+        WifiManager wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
+        DhcpInfo info = wifiManager.getDhcpInfo();
+
+        dataDeviceInfo.setTxtGateway(con.parseIP(info.gateway));
+        dataDeviceInfo.setTxtMasSubred(con.parseIP(info.netmask));
+        dataDeviceInfo.setTxtDns1(con.parseIP(info.dns1));
+        dataDeviceInfo.setTxtDns2(con.parseIP(info.dns2));
+
+        misDatos.get(Constantes.TIPE_MOBILE).getInfoRed().clear();
+        misDatos.get(Constantes.TIPE_MOBILE).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.host), dataDeviceInfo.getTxtHost()));
+        misDatos.get(Constantes.TIPE_MOBILE).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.ippublica), dataDeviceInfo.getTxtIpPublic()));
+        misDatos.get(Constantes.TIPE_MOBILE).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.iplocal), dataDeviceInfo.getTxtIpLocal()));
+        misDatos.get(Constantes.TIPE_MOBILE).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.gateway), dataDeviceInfo.getTxtGateway()));
+        misDatos.get(Constantes.TIPE_MOBILE).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.masacarasubred), dataDeviceInfo.getTxtMasSubred()));
+        misDatos.get(Constantes.TIPE_MOBILE).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.dns1), dataDeviceInfo.getTxtDns1()));
+        misDatos.get(Constantes.TIPE_MOBILE).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.dns2), dataDeviceInfo.getTxtDns2()));
 
     }
 }
