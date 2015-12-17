@@ -125,7 +125,7 @@ public class MainDeviceInfo extends Fragment {
         if (con.isConnectedWifi(getContext())) {
             recuperaDatosInet(Constantes.TIPE_WIFI);
             printData();
-        } else if (!con.isConnectedMobile(getActivity())) {
+        } else if (con.isConnectedMobile(getActivity())) {
             recuperaDatosInet(Constantes.TIPE_MOBILE);
             printData();
         } else if (!con.isConnected(getActivity())) {
@@ -387,7 +387,7 @@ public class MainDeviceInfo extends Fragment {
         if (con.isConnectedWifi(getContext())) {
             recuperaDatosInet(Constantes.TIPE_WIFI);
             printData();
-        } else if (!con.isConnectedMobile(getActivity())) {
+        } else if (con.isConnectedMobile(getActivity())) {
             recuperaDatosInet(Constantes.TIPE_MOBILE);
             printData();
         } else if (!con.isConnected(getActivity())) {
