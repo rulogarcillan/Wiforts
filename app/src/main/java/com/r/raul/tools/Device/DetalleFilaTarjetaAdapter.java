@@ -18,26 +18,27 @@ import java.util.ArrayList;
 
 public class DetalleFilaTarjetaAdapter extends RecyclerView.Adapter<DetalleFilaTarjetaAdapter.Holder> {
 
-    ArrayList<Puerto> array = new ArrayList<Puerto>();
+    ArrayList<DetalleFilaTarjeta> array = new ArrayList<DetalleFilaTarjeta >();
     
 
-    public DetalleFilaTarjetaAdapter(ArrayList<Puerto> array) {
+    public DetalleFilaTarjetaAdapter(ArrayList<DetalleFilaTarjeta > array) {
 
         this.activity = activity;
         this.array = array;
     }
 
-    public ArrayList<Puerto> getArray() {
+    public ArrayList<DetalleFilaTarjeta > getArray() {
         return array;
     }
 
-    public void setArray(ArrayList<Puerto> array) {
+    public void setArray(ArrayList<DetalleFilaTarjeta > array) {
         this.array = array;
     }
 
     public static class Holder extends RecyclerView.ViewHolder {
 
-        public TextView txtPuerto;
+        public TextView titu_card,conte_card;
+		ProgressBar pBar;
 
         public Holder(View v) {
             super(v);
@@ -48,9 +49,13 @@ public class DetalleFilaTarjetaAdapter extends RecyclerView.Adapter<DetalleFilaT
 
                 }
             });
-
-            txtPuerto = (TextView) v.findViewById(R.id.txtPuerto);
-
+			
+			if (array.size()>0){
+				 titu_card = (TextView) v.findViewById(R.id.titu_card);
+				 conte_card = (TextView) v.findViewById(R.id.conte_card);
+			}else{				
+				pBar = (ProgressBar) v.findViewById(R.id.pBar);
+			}
 
         }
     }
@@ -58,15 +63,26 @@ public class DetalleFilaTarjetaAdapter extends RecyclerView.Adapter<DetalleFilaT
 
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_port, parent, false);
-        Holder pvh = new Holder(v);
+		
+		View v;
+		Holder pvh;
+		if (array.size()>0)
+			 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.dummy_card_detalle, parent, false);
+			 pvh = new Holder(v);
+		else{
+			 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.dummy_card_detalle, parent, false); //cambiar 
+			 pvh = new Holder(v);
+		}
         return pvh;
     }
 
     @Override
     public void onBindViewHolder(Holder holder, int position) {
 
-        holder.txtPuerto.setText("" + array.get(position).getPuerto() + " #");
+		if (array.size()>0){
+			holder.titu_card.setText(array.get(position).getTitulo());
+			holder.conte_card.setText(array.get(position).getContenido());
+		}         
 
     }
 
