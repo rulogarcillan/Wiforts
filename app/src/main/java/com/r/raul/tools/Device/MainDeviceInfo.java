@@ -82,9 +82,8 @@ public class MainDeviceInfo extends Fragment {
     private Map<String, DetalleTarjeta> misDatos = new HashMap<String, DetalleTarjeta>();
 
     // vistas
-    private TextView txtNombreRed, txtTipoRed, txtModelo, txtVersion, txtHost,
-            txtIpPublic, txtIpLocal, txtSeñal, txtGateway, txtMasSubred,
-            txtDns1, txtDns2, txtIsp, txtCountry, txtCountryCode, txtCity, txtRegion, txtRegionName, txtZip, txtLat, txtLon;
+    private TextView txtNombreRed, txtTipoRed, txtModelo, txtVersion, 
+            txtSeñal,  txtIsp, txtCountry, txtCountryCode, txtCity, txtRegion, txtRegionName, txtZip, txtLat, txtLon;
 
     private FloatingActionButton fab;
     private LineChart chart;
