@@ -19,8 +19,8 @@ import android.widget.ProgressBar;
 import com.r.raul.tools.BaseActivity;
 import com.r.raul.tools.R;
 import com.r.raul.tools.Utils.Constantes;
-import com.r.raul.tools.Utils.DividerItemDecoration;
 import com.r.raul.tools.Utils.LogUtils;
+import com.r.raul.tools.Utils.SampleDivider;
 import com.r.raul.tools.Utils.Utilidades;
 
 import java.util.ArrayList;
@@ -72,9 +72,9 @@ public class DetallePuertos extends BaseActivity {
     @Override
     public void onResume(){
         super.onResume();
-         tabLayout.postInvalidate();
+        // tabLayout.postInvalidate();
 
-        if (tabLayout.getSelectedTabPosition() == 0) {
+      /*  if (tabLayout.getSelectedTabPosition() == 0) {
 
             adaptador.setArray(arrayAbiertos);
             adaptador.notifyDataSetChanged();
@@ -95,7 +95,7 @@ public class DetallePuertos extends BaseActivity {
             adaptador.notifyDataSetChanged();
             tintSystemBars(R.color.colorPrimaryDark, R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorPrimary);
 
-        }
+        }*/
 
     }
 
@@ -126,12 +126,12 @@ public class DetallePuertos extends BaseActivity {
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.p_cerrados).replace("#", Integer.toString(0))));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.p_time).replace("#", Integer.toString(0))));
 
-        adaptador = new DetallePuertosAdapter(this, new ArrayList<Puerto>());
+        adaptador = new DetallePuertosAdapter(this, arrayAbiertos);
         recdetalle = (RecyclerView) findViewById(R.id.recdetalle);
         recdetalle.setHasFixedSize(true);
         recdetalle.setAdapter(adaptador);
         recdetalle.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        recdetalle.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        recdetalle.addItemDecoration(new SampleDivider(this,null));
 
         parsea(ports);
         tarea = new AnalizarPuertos(progressBar, this, ip, timeOut);
@@ -146,21 +146,21 @@ public class DetallePuertos extends BaseActivity {
                     adaptador.setArray(arrayAbiertos);
                     adaptador.notifyDataSetChanged();
 
-                    tintSystemBars(colorAntiguo1, colorAntiguo2, R.color.colorPrimaryDark2, R.color.colorPrimary2);
+                    //     tintSystemBars(colorAntiguo1, colorAntiguo2, R.color.colorPrimaryDark2, R.color.colorPrimary2);
 
                 } else if (tab.getPosition() == 1) {
 
                     adaptador.setArray(arrayCerrados);
                     adaptador.notifyDataSetChanged();
 
-                    tintSystemBars(colorAntiguo1, colorAntiguo2, R.color.colorPrimaryDark3, R.color.colorPrimary3);
+                    //  tintSystemBars(colorAntiguo1, colorAntiguo2, R.color.colorPrimaryDark3, R.color.colorPrimary3);
 
 
                 } else if (tab.getPosition() == 2) {
 
                     adaptador.setArray(arrayTimeOut);
                     adaptador.notifyDataSetChanged();
-                    tintSystemBars(colorAntiguo1, colorAntiguo2, R.color.colorPrimaryDark, R.color.colorPrimary);
+                    //   tintSystemBars(colorAntiguo1, colorAntiguo2, R.color.colorPrimaryDark, R.color.colorPrimary);
 
                 }
 
@@ -170,7 +170,7 @@ public class DetallePuertos extends BaseActivity {
             public void onTabUnselected(TabLayout.Tab tab) {
 
 
-                if (tab.getPosition() == 0) {
+            /*    if (tab.getPosition() == 0) {
 
                     colorAntiguo1 = R.color.colorPrimaryDark2;
                     colorAntiguo2 = R.color.colorPrimary2;
@@ -184,7 +184,7 @@ public class DetallePuertos extends BaseActivity {
                     colorAntiguo1 = R.color.colorPrimaryDark;
                     colorAntiguo2 = R.color.colorPrimary;
 
-                }
+                }*/
             }
 
             @Override

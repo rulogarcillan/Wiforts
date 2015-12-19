@@ -43,5 +43,10 @@
     <string name="p_time" translatable="false">TimeOut (#)</string>
     <string name="host" translatable="false">Host:</string>
     <string name="dns1" translatable="false">DNS 1:</string>
-    <string name="dns2">DNS 2:</string>
+    <string name="dns2" translatable="false">DNS 2:</string>
+    <string name="loading">Loading data...</string>
+    <string name="copied">copied to clipboard</string>
+    <string name="inspector">Inspector wifi</string>
+    <string name="changelog" translatable="false">Changelog</string>
+    <string name="license">Licenses</string>
 </resources>

@@ -117,10 +117,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_go"
+        app:elevation="6dp"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
         android:layout_marginLeft="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
         android:layout_centerHorizontal="true" />
 </RelativeLayout>

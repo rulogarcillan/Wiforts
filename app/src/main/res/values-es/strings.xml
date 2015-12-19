@@ -34,4 +34,8 @@
     <string name="procesando">Procesando...</string>
     <string name="p_abiertos">Abiertos (#)</string>
     <string name="p_cerrados">Cerrados (#)</string>
+    <string name="loading">Cargando datos...</string>
+    <string name="copied">copiado al portapapeles</string>
+    <string name="inspector">Inspector wifi</string>
+    <string name="license">Licencias</string>
 </resources>

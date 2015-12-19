@@ -1,5 +1,7 @@
 package com.r.raul.tools.Device;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -14,12 +16,12 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -59,9 +61,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.r.raul.tools.R;
 import com.r.raul.tools.Utils.Connectivity;
 import com.r.raul.tools.Utils.Constantes;
-import com.r.raul.tools.Utils.DividerItemDecoration;
+import com.r.raul.tools.Utils.ItemClickSupport;
 import com.r.raul.tools.Utils.LogUtils;
 import com.r.raul.tools.Utils.MyLinearLayoutManager;
+import com.r.raul.tools.Utils.SampleDivider;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
@@ -87,10 +90,10 @@ public class MainDeviceInfo extends Fragment {
 
     // vistas
     private TextView txtNombreRed, txtTipoRed, txtModelo, txtVersion,
-            txtSeñal, txtIsp, txtCountry, txtCountryCode, txtCity, txtRegion, txtRegionName, txtZip, txtLat, txtLon;
+            txtSeñal;
 
-    private RecyclerView recIp;
-    DetalleFilaTarjetaAdapter adaptadorIp;
+    private RecyclerView recIp, recIpDetails;
+    DetalleFilaTarjetaAdapter adaptadorIp, adaptadorIpIpDetails;
 
     private FloatingActionButton fab;
     private LineChart chart;
@@ -161,7 +164,7 @@ public class MainDeviceInfo extends Fragment {
 
         inicializaHashMap();
 
-        View rootView = inflater.inflate(R.layout.info_device, container, false);
+        final View rootView = inflater.inflate(R.layout.info_device, container, false);
 
         EventBus bus = new EventBus();
 
@@ -181,18 +184,14 @@ public class MainDeviceInfo extends Fragment {
         adaptadorIp = new DetalleFilaTarjetaAdapter(misDatos.get(Constantes.TIPE_WIFI).getInfoRed());
         recIp.setAdapter(adaptadorIp);
         recIp.setLayoutManager(new MyLinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        recIp.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+        recIp.addItemDecoration(new SampleDivider(getActivity(),null));
 
-
-        txtIsp = (TextView) rootView.findViewById(R.id.txtIsp);
-        txtCountry = (TextView) rootView.findViewById(R.id.txtCountry);
-        txtCountryCode = (TextView) rootView.findViewById(R.id.txtCountryCode);
-        txtCity = (TextView) rootView.findViewById(R.id.txtCity);
-        txtRegion = (TextView) rootView.findViewById(R.id.txtRegion);
-        txtRegionName = (TextView) rootView.findViewById(R.id.txtRegionName);
-        txtZip = (TextView) rootView.findViewById(R.id.txtZip);
-        txtLat = (TextView) rootView.findViewById(R.id.txtLat);
-        txtLon = (TextView) rootView.findViewById(R.id.txtLon);
+        recIpDetails = (RecyclerView) rootView.findViewById(R.id.recIpDetails);
+        recIpDetails.setHasFixedSize(true);
+        adaptadorIpIpDetails = new DetalleFilaTarjetaAdapter(misDatos.get(Constantes.TIPE_WIFI).getInfoRed());
+        recIpDetails.setAdapter(adaptadorIpIpDetails);
+        recIpDetails.setLayoutManager(new MyLinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        recIpDetails.addItemDecoration(new SampleDivider(getActivity(),null));
 
 
         chart = (LineChart) rootView.findViewById(R.id.chart);
@@ -244,13 +243,13 @@ public class MainDeviceInfo extends Fragment {
             }
         });
 
-        CardView cardIp = (CardView) rootView.findViewById(R.id.cardIp);
+     /*   CardView cardIp = (CardView) rootView.findViewById(R.id.cardIp);
         cardIp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 lanzaMaps();
             }
-        });
+        });*/
 
         android.support.v4.app.FragmentManager fm = getChildFragmentManager();
         fragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
@@ -273,7 +272,38 @@ public class MainDeviceInfo extends Fragment {
         configureChar();
 
 
+        ItemClickSupport.addTo(recIp).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                Snackbar.make(rootView, adaptadorIp.getArray().get(position).getTitulo().replace(":" ," ") + getResources().getString(R.string.copied), Snackbar.LENGTH_LONG)
+                        .show();
 
+
+                        ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("label", adaptadorIp.getArray().get(position).getContenido());
+                clipboard.setPrimaryClip(clip);
+                //  v.conte_card.setText(array.get(position).getContenido());   adaptadorIpIpDetails;
+            }
+        });
+
+
+        ItemClickSupport.addTo(recIpDetails).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                Snackbar.make(rootView, adaptadorIpIpDetails.getArray().get(position).getTitulo().replace(":" ," ") + getResources().getString(R.string.copied), Snackbar.LENGTH_LONG)
+                        .show();
+
+
+                /*View view = snack.getView();
+                TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
+                tv.setTextColor(Color.WHITE);*/
+
+                ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("label", adaptadorIpIpDetails.getArray().get(position).getContenido());
+                clipboard.setPrimaryClip(clip);
+                //  v.conte_card.setText(array.get(position).getContenido());   adaptadorIpIpDetails;
+            }
+        });
 
         return rootView;
     }
@@ -360,7 +390,7 @@ public class MainDeviceInfo extends Fragment {
 
         LineDataSet set = new LineDataSet(null, (getResources().getString(R.string.intensidad_red).replace(":", "")));
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
-        set.setColor((int) (Long.decode("#FF4081") + 4278190080L));
+        set.setColor((int) (Long.decode("#dd0149") + 4278190080L));
 
         set.setLineWidth(2f);
         set.setDrawCircles(false);
@@ -371,8 +401,8 @@ public class MainDeviceInfo extends Fragment {
 
         //set.setDrawHorizontalHighlightIndicator(false);
 
-        set.setFillColor((int) (Long.decode("#FF4081") + 4278190080L));
-        set.setHighLightColor(Color.rgb(244, 117, 117));
+        set.setFillColor((int) (Long.decode("#dd0149") + 4278190080L));
+        set.setHighLightColor(Color.rgb(221, 1, 73));
         set.setValueTextColor(Color.WHITE);
         set.setValueTextSize(9f);
         set.setDrawValues(false);
@@ -382,7 +412,7 @@ public class MainDeviceInfo extends Fragment {
     @Subscribe
     @SuppressWarnings("unused")
     public void onEvent(ConnectivityChanged event) {
-        LogUtils.LOG("HA CAMBIADO LA CONEXION");
+
 
         if (con.isConnectedWifi(getContext())) {
             recuperaDatosInet(Constantes.TIPE_WIFI);
@@ -402,7 +432,7 @@ public class MainDeviceInfo extends Fragment {
     @Subscribe
     @SuppressWarnings("unused")
     public void onEvent(WifiSignalStrengthChanged event) {
-        LogUtils.LOG("HA CAMBIADO LA COBERTURA WIFI");
+
         if (con.isConnectedWifi(getContext())) {
             ActualizaDatosWifi();
             printData();
@@ -636,13 +666,6 @@ public class MainDeviceInfo extends Fragment {
 
         getLevelMobile(signalStrength); // dbm e icono
 
-        //dataDeviceInfo.setTxtIpPublic(getResources().getString(R.string.nodisponible));
-        //dataDeviceInfo.setTxtIpLocal(getResources().getString(R.string.nodisponible));
-        dataDeviceInfo.setTxtGateway(getResources().getString(R.string.desconocido));
-        dataDeviceInfo.setTxtMasSubred(getResources().getString(R.string.desconocido));
-        dataDeviceInfo.setTxtDns1(getResources().getString(R.string.desconocido));
-        dataDeviceInfo.setTxtDns2(getResources().getString(R.string.desconocido));
-
     }
 
     public void ActualizaDatosWifi() {
@@ -776,6 +799,14 @@ public class MainDeviceInfo extends Fragment {
 
         if (!cargaIps.getStatus().equals(AsyncTask.Status.RUNNING) || (!tipo.equals(cargaIps.getTipoSeñal()))) {
             ejecutar = true;
+            misDatos.get(Constantes.TIPE_MOBILE).resetArrays();
+            misDatos.get(Constantes.TIPE_WIFI).resetArrays();
+
+            recIp.setAdapter(adaptadorIp);
+            adaptadorIp.notifyDataSetChanged();
+            recIpDetails.setAdapter(adaptadorIpIpDetails);
+            adaptadorIpIpDetails.notifyDataSetChanged();
+
         }
 
         if (ejecutar) {
@@ -789,13 +820,16 @@ public class MainDeviceInfo extends Fragment {
                             case Constantes.TIPE_MOBILE:
                                 inicializaTypeMobile();
                                 adaptadorIp.setArray(misDatos.get(Constantes.TIPE_MOBILE).getInfoRed());
+                                adaptadorIpIpDetails.setArray(misDatos.get(Constantes.TIPE_MOBILE).getInfoIp());
                                 break;
                             case Constantes.TIPE_WIFI:
                                 inicializaTypeWifi();
                                 adaptadorIp.setArray(misDatos.get(Constantes.TIPE_WIFI).getInfoRed());
+                                adaptadorIpIpDetails.setArray(misDatos.get(Constantes.TIPE_WIFI).getInfoIp());
                                 break;
                             case Constantes.TIPE_AIRPLANE:
                                 adaptadorIp.setArray(misDatos.get(Constantes.TIPE_AIRPLANE).getInfoRed());
+                                adaptadorIpIpDetails.setArray(misDatos.get(Constantes.TIPE_AIRPLANE).getInfoIp());
                                 break;
 
                         }
@@ -803,16 +837,8 @@ public class MainDeviceInfo extends Fragment {
                         recIp.setAdapter(adaptadorIp);
                         adaptadorIp.notifyDataSetChanged();
 
-
-                        txtIsp.setText(dataDeviceInfo.getTxtIsp());
-                        txtCountry.setText(dataDeviceInfo.getTxtCountry());
-                        txtCountryCode.setText(dataDeviceInfo.getTxtCountryCode());
-                        txtCity.setText(dataDeviceInfo.getTxtCity());
-                        txtRegion.setText(dataDeviceInfo.getTxtRegion());
-                        txtRegionName.setText(dataDeviceInfo.getTxtRegionName());
-                        txtZip.setText(dataDeviceInfo.getTxtZip());
-                        txtLat.setText(dataDeviceInfo.getTxtLat());
-                        txtLon.setText(dataDeviceInfo.getTxtLon());
+                        recIpDetails.setAdapter(adaptadorIpIpDetails);
+                        adaptadorIpIpDetails.notifyDataSetChanged();
 
 
                         if (getResources().getString(R.string.nodisponible).equals(dataDeviceInfo.getTxtLat()) || getResources().getString(R.string.desconocido).equals(dataDeviceInfo.getTxtLat())) {
@@ -875,19 +901,6 @@ public class MainDeviceInfo extends Fragment {
 
     private void inicializaTypeWifi() {
 
-        misDatos.get(Constantes.TIPE_WIFI).getInfoRed().clear();
-        misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.host), dataDeviceInfo.getTxtHost()));
-        misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.ippublica), dataDeviceInfo.getTxtIpPublic()));
-        misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.iplocal), dataDeviceInfo.getTxtIpLocal()));
-        misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.gateway), dataDeviceInfo.getTxtGateway()));
-        misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.masacarasubred), dataDeviceInfo.getTxtMasSubred()));
-        misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.dns1), dataDeviceInfo.getTxtDns1()));
-        misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.dns2), dataDeviceInfo.getTxtDns2()));
-
-    }
-
-    private void inicializaTypeMobile() {
-
         WifiManager wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
         DhcpInfo info = wifiManager.getDhcpInfo();
 
@@ -896,7 +909,35 @@ public class MainDeviceInfo extends Fragment {
         dataDeviceInfo.setTxtDns1(con.parseIP(info.dns1));
         dataDeviceInfo.setTxtDns2(con.parseIP(info.dns2));
 
-        misDatos.get(Constantes.TIPE_MOBILE).getInfoRed().clear();
+        misDatos.get(Constantes.TIPE_WIFI).resetArrays();
+        misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.host), dataDeviceInfo.getTxtHost()));
+        misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.ippublica), dataDeviceInfo.getTxtIpPublic()));
+        misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.iplocal), dataDeviceInfo.getTxtIpLocal()));
+        misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.gateway), dataDeviceInfo.getTxtGateway()));
+        misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.masacarasubred), dataDeviceInfo.getTxtMasSubred()));
+        misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.dns1), dataDeviceInfo.getTxtDns1()));
+        misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.dns2), dataDeviceInfo.getTxtDns2()));
+
+        misDatos.get(Constantes.TIPE_WIFI).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.isp), dataDeviceInfo.getTxtIsp()));
+        misDatos.get(Constantes.TIPE_WIFI).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.country), dataDeviceInfo.getTxtCountry()));
+        misDatos.get(Constantes.TIPE_WIFI).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.countrycode), dataDeviceInfo.getTxtCountryCode()));
+        misDatos.get(Constantes.TIPE_WIFI).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.city), dataDeviceInfo.getTxtCity()));
+        misDatos.get(Constantes.TIPE_WIFI).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.regionname), dataDeviceInfo.getTxtRegionName()));
+        misDatos.get(Constantes.TIPE_WIFI).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.regioncode), dataDeviceInfo.getTxtRegion()));
+        misDatos.get(Constantes.TIPE_WIFI).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.zip), dataDeviceInfo.getTxtZip()));
+        misDatos.get(Constantes.TIPE_WIFI).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.latitude), dataDeviceInfo.getTxtLat()));
+        misDatos.get(Constantes.TIPE_WIFI).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.longitude), dataDeviceInfo.getTxtLon()));
+    }
+
+    private void inicializaTypeMobile() {
+
+        dataDeviceInfo.setTxtGateway(getResources().getString(R.string.desconocido));
+        dataDeviceInfo.setTxtMasSubred(getResources().getString(R.string.desconocido));
+        dataDeviceInfo.setTxtDns1(getResources().getString(R.string.desconocido));
+        dataDeviceInfo.setTxtDns2(getResources().getString(R.string.desconocido));
+
+        misDatos.get(Constantes.TIPE_MOBILE).resetArrays();
+
         misDatos.get(Constantes.TIPE_MOBILE).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.host), dataDeviceInfo.getTxtHost()));
         misDatos.get(Constantes.TIPE_MOBILE).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.ippublica), dataDeviceInfo.getTxtIpPublic()));
         misDatos.get(Constantes.TIPE_MOBILE).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.iplocal), dataDeviceInfo.getTxtIpLocal()));
@@ -905,5 +946,15 @@ public class MainDeviceInfo extends Fragment {
         misDatos.get(Constantes.TIPE_MOBILE).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.dns1), dataDeviceInfo.getTxtDns1()));
         misDatos.get(Constantes.TIPE_MOBILE).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.dns2), dataDeviceInfo.getTxtDns2()));
 
+
+        misDatos.get(Constantes.TIPE_MOBILE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.isp), dataDeviceInfo.getTxtIsp()));
+        misDatos.get(Constantes.TIPE_MOBILE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.country), dataDeviceInfo.getTxtCountry()));
+        misDatos.get(Constantes.TIPE_MOBILE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.countrycode), dataDeviceInfo.getTxtCountryCode()));
+        misDatos.get(Constantes.TIPE_MOBILE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.city), dataDeviceInfo.getTxtCity()));
+        misDatos.get(Constantes.TIPE_MOBILE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.regionname), dataDeviceInfo.getTxtRegionName()));
+        misDatos.get(Constantes.TIPE_MOBILE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.regioncode), dataDeviceInfo.getTxtRegion()));
+        misDatos.get(Constantes.TIPE_MOBILE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.zip), dataDeviceInfo.getTxtZip()));
+        misDatos.get(Constantes.TIPE_MOBILE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.latitude), dataDeviceInfo.getTxtLat()));
+        misDatos.get(Constantes.TIPE_MOBILE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.longitude), dataDeviceInfo.getTxtLon()));
     }
 }

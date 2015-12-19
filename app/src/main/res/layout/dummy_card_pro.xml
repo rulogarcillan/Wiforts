@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="4sp"
-    android:layout_marginTop="4sp"
+android:layout_margin="16dp"
     android:orientation="horizontal">
 
     <ProgressBar
         android:id="@+id/pBar"
         style="@style/Base.Widget.AppCompat.ProgressBar"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:indeterminate="true"
         android:layout_gravity="center"/>
-</FrameLayout>
+
+    <TextView
+        android:layout_marginLeft="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/loading"
+        android:id="@+id/textView2"
+        android:layout_gravity="center_vertical"/>
+
+
+</LinearLayout>
