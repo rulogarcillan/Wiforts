@@ -76,8 +76,8 @@ public class MainActivity extends BaseActivity
 
         } else {
             String tag = fragmentManager.findFragmentById(R.id.container).getTag();
-            fragment =  fragmentManager.getFragment(savedInstanceState, "frag");
-            fragmentManager.beginTransaction().replace(R.id.container, fragment,tag)
+            fragment = fragmentManager.getFragment(savedInstanceState, "frag");
+            fragmentManager.beginTransaction().replace(R.id.container, fragment, tag)
                     //.addToBackStack("LISTADO")
                     .commit();
         }
@@ -90,7 +90,6 @@ public class MainActivity extends BaseActivity
                         .setAction("Action", null).show();
             }
         });*/
-
 
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -111,32 +110,32 @@ public class MainActivity extends BaseActivity
     }
 
 
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
 
 
-
         int id = item.getItemId();
 
-        if (id == R.id.nav_device && id !=ItemAnterior) {
+        if (id == R.id.nav_device && id != ItemAnterior) {
             LanzarDeviceInfo();
 
-        } else if (id == R.id.nav_wifi_inspector && id !=ItemAnterior) {
+        } else if (id == R.id.nav_wifi_inspector && id != ItemAnterior) {
 
-        }
-        else if (id == R.id.nav_wifi && id !=ItemAnterior) {
+        } else if (id == R.id.nav_wifi && id != ItemAnterior) {
 
-        } else if (id == R.id.nav_ports && id !=ItemAnterior) {
+        } else if (id == R.id.nav_ports && id != ItemAnterior) {
             LanzarDeviceOpenPorts();
-        } else if (id == R.id.nav_test && id !=ItemAnterior) {
-        } else if (id == R.id.nav_opciones && id !=ItemAnterior) {
+        } else if (id == R.id.nav_test && id != ItemAnterior) {
 
-        } else if (id == R.id.nav_info && id !=ItemAnterior) {
+            // } else if (id == R.id.nav_opciones) {
 
-        } else if (id == R.id.nav_changelog && id !=ItemAnterior) {
+        } else if (id == R.id.nav_info) {
+
+            lanzaInfo();
+
+        } else if (id == R.id.nav_changelog) {
             new LanzaChangelog(this).getFullLogDialog().show();
 
         }
@@ -171,16 +170,19 @@ public class MainActivity extends BaseActivity
 
     }
 
-    private void lanzaInfo(){
-        String s ="";
-        try{
+    private void lanzaInfo() {
+        String s = "";
+        try {
             ApplicationInfo ai = getPackageManager().getApplicationInfo(getPackageName(), 0);
             ZipFile zf = new ZipFile(ai.sourceDir);
             ZipEntry ze = zf.getEntry("classes.dex");
             long time = ze.getTime();
-             s = SimpleDateFormat.getInstance().format(new java.util.Date(time));
+            SimpleDateFormat formatter1 = new SimpleDateFormat("DD/mm/yyyy");
+            s = formatter1.getInstance().format(new java.util.Date(time));
+            s = formatter1.format(s);
 
-        }catch(Exception e){
+
+        } catch (Exception e) {
 
         }
 
@@ -192,13 +194,16 @@ public class MainActivity extends BaseActivity
                 .withAboutIconShown(true)
                 .withAboutVersionShown(true)
                 .withAutoDetect(true)
-              //  .withLibraries("DiscreteSeekBar", "CircleIndicator")
+                        //  .withLibraries("DiscreteSeekBar", "CircleIndicator")
                 .withActivityTitle(getResources().getString(R.string.license))
+                .withAboutAppName(getResources().getString(R.string.app_name))
                 .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
-                .withAboutDescription(s)
-               // .withAboutDescription(getResources().getString(R.string.escrita) + "<br/><br/><b>License GNU GPL V3.0</b><br/><br/><a href=\"https://github.com/rulogarcillan/Cadence\">Project in Github</a>")
-                .withActivityTheme(R.style.AppTheme)
+
+                .withAboutDescription("<b>" + getResources().getString(R.string.compilacion) + ": <i>" + s + "</i></b>")
+                        // .withAboutDescription(getResources().getString(R.string.escrita) + "<br/><br/><b>License GNU GPL V3.0</b><br/><br/><a href=\"https://github.com/rulogarcillan/Cadence\">Project in Github</a>")
+                        //     .withActivityTheme(R.style.AppTheme)
                         //start the activity
+                .withActivityTheme(R.style.AppTheme2)
                 .start(this);
     }
 

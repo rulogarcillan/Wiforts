@@ -28,12 +28,10 @@
     </group>
 
 
-
         <item
             android:id="@+id/nav_opciones"
             android:icon="@drawable/ic_settings"
             android:title="@string/action_settings"/>
-
 
 
     <item android:title="@string/info">

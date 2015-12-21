@@ -52,4 +52,5 @@
     <string name="license">About</string>
     <string name="info">Information</string>
     <string name="escrita">escrita</string>
+    <string name="compilacion">Build Date</string>
 </resources>

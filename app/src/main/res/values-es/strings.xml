@@ -40,4 +40,5 @@
     <string name="license">Acerca de</string>
     <string name="otros">Otros</string>
     <string name="info">Información</string>
+    <string name="compilacion">Fecha de compilación</string>
 </resources>
