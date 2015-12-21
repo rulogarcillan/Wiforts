@@ -1,6 +1,8 @@
 package com.r.raul.tools;
 
 import android.Manifest.permission;
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,10 +13,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 
+import com.mikepenz.aboutlibraries.Libs;
+import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.r.raul.tools.Device.MainDeviceInfo;
 import com.r.raul.tools.Ports.MainOpenPorts;
+
+import java.text.SimpleDateFormat;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
+import de.cketti.library.changelog.ChangeLog;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -121,10 +132,12 @@ public class MainActivity extends BaseActivity
         } else if (id == R.id.nav_ports && id !=ItemAnterior) {
             LanzarDeviceOpenPorts();
         } else if (id == R.id.nav_test && id !=ItemAnterior) {
+        } else if (id == R.id.nav_opciones && id !=ItemAnterior) {
 
-        } else if (id == R.id.nav_license && id !=ItemAnterior) {
+        } else if (id == R.id.nav_info && id !=ItemAnterior) {
 
         } else if (id == R.id.nav_changelog && id !=ItemAnterior) {
+            new LanzaChangelog(this).getFullLogDialog().show();
 
         }
 
@@ -156,6 +169,53 @@ public class MainActivity extends BaseActivity
         fragmentManager.putFragment(outState, "frag", fragment);
 
 
+    }
+
+    private void lanzaInfo(){
+        String s ="";
+        try{
+            ApplicationInfo ai = getPackageManager().getApplicationInfo(getPackageName(), 0);
+            ZipFile zf = new ZipFile(ai.sourceDir);
+            ZipEntry ze = zf.getEntry("classes.dex");
+            long time = ze.getTime();
+             s = SimpleDateFormat.getInstance().format(new java.util.Date(time));
+
+        }catch(Exception e){
+
+        }
+
+        new LibsBuilder()
+                //Pass the fields of your application to the lib so it can find all external lib information
+                .withFields(R.string.class.getFields())
+                .withVersionShown(true)
+                .withLicenseShown(true)
+                .withAboutIconShown(true)
+                .withAboutVersionShown(true)
+                .withAutoDetect(true)
+              //  .withLibraries("DiscreteSeekBar", "CircleIndicator")
+                .withActivityTitle(getResources().getString(R.string.license))
+                .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
+                .withAboutDescription(s)
+               // .withAboutDescription(getResources().getString(R.string.escrita) + "<br/><br/><b>License GNU GPL V3.0</b><br/><br/><a href=\"https://github.com/rulogarcillan/Cadence\">Project in Github</a>")
+                .withActivityTheme(R.style.AppTheme)
+                        //start the activity
+                .start(this);
+    }
+
+
+    public static class LanzaChangelog extends ChangeLog {
+
+
+        public static final String DEFAULT_CSS =
+
+                "body {                                                           " + "	font-family: Verdana, Helvetica, Arial, sans-serif;   " + "	font-size: 11px;                                      " + "	color: #000000;                                       " + "	background-color: #ffffff;                            " + "	margin: 0px;                                          " + "	padding: 0px;                                         " + "}                                                        "
+                        + "h1 {                                                     " + "	font-size: 14px;                                      " + "	font-weight: bold;                                    " + "	text-transform: uppercase;                            " + "	color: #000000;                                       " + "	margin: 0px;                                          " + "	padding: 10px 0px 0px 8px;                            " + "}                                                        "
+                        + "h2 {                                                     " + "	font-size: 10px;                                      " + "	color: #999999;                                       " + "	font-weight: normal;                                  " + "	margin: 0px 0px 0px 8px;                              " + "	padding: 0px;                                         " + "}                                                        " + "ul {                                                     "
+                        + "	margin: 0px 0px 10px 15px;                            " + "	padding-left: 15px;                                " + "	padding-top: 8px;                                     " + "	list-style-type: square;                              " + "	color: #999999;                                       " + "}";
+
+        public LanzaChangelog(Context context) {
+            super(new ContextThemeWrapper(context, R.style.AppTheme), DEFAULT_CSS);
+        }
     }
 
 

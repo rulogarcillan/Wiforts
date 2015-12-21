@@ -37,5 +37,7 @@
     <string name="loading">Cargando datos...</string>
     <string name="copied">copiado al portapapeles</string>
     <string name="inspector">Inspector wifi</string>
-    <string name="license">Licencias</string>
+    <string name="license">Acerca de</string>
+    <string name="otros">Otros</string>
+    <string name="info">Información</string>
 </resources>

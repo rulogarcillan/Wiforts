@@ -32,6 +32,7 @@
     <string name="trojans">TROJANS</string>
     <string name="games">GAMES</string>
     <string name="others">OTHERS</string>
+    <string name="otros">Others</string>
     <string name="alls">ALLS</string>
     <string name="custom">CUSTOM</string>
     <string name="ipnovalida">The Ip/Host is invalid.</string>
@@ -46,7 +47,9 @@
     <string name="dns2" translatable="false">DNS 2:</string>
     <string name="loading">Loading data...</string>
     <string name="copied">copied to clipboard</string>
-    <string name="inspector">Inspector wifi</string>
+    <string name="inspector">Wifi Inspector</string>
     <string name="changelog" translatable="false">Changelog</string>
-    <string name="license">Licenses</string>
+    <string name="license">About</string>
+    <string name="info">Information</string>
+    <string name="escrita">escrita</string>
 </resources>

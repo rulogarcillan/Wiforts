@@ -1,26 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_device" android:icon="@drawable/ic_device"
-            android:title="@string/devide_m" />
-        <item android:id="@+id/nav_wifi_inspector" android:icon="@drawable/ic_inspector"
-              android:title="@string/inspector" />
-        <item android:id="@+id/nav_wifi" android:icon="@drawable/ic_wifi"
-            android:title="@string/wifi_m" />
 
-        <item android:id="@+id/nav_ports" android:icon="@drawable/ic_ports"
-            android:title="@string/ports_m" />
-        <item android:id="@+id/nav_test" android:icon="@drawable/ic_speed"
-            android:title="@string/test_m" />
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_device"
+            android:icon="@drawable/ic_device"
+            android:title="@string/devide_m"/>
+        <item
+            android:id="@+id/nav_wifi_inspector"
+            android:icon="@drawable/ic_inspector"
+            android:title="@string/inspector"/>
+        <item
+            android:id="@+id/nav_wifi"
+            android:icon="@drawable/ic_wifi"
+            android:title="@string/wifi_m"/>
+
+        <item
+            android:id="@+id/nav_ports"
+            android:icon="@drawable/ic_ports"
+            android:title="@string/ports_m"/>
+        <item
+            android:id="@+id/nav_test"
+            android:icon="@drawable/ic_speed"
+            android:title="@string/test_m"/>
     </group>
 
-    <item android:title="Acerca de">
+
+
+        <item
+            android:id="@+id/nav_opciones"
+            android:icon="@drawable/ic_settings"
+            android:title="@string/action_settings"/>
+
+
+
+    <item android:title="@string/info">
+
         <menu>
-            <item android:id="@+id/nav_license" android:icon="@drawable/ic_copyleft"
+
+            <item
+                android:id="@+id/nav_info"
+                android:icon="@drawable/ic_info"
                 android:title="@string/license"/>
-            <item android:id="@+id/nav_changelog" android:icon="@drawable/ic_changelog"
-                android:title="@string/changelog" />
+            <item
+                android:id="@+id/nav_changelog"
+                android:icon="@drawable/ic_changelog"
+                android:title="@string/changelog"/>
         </menu>
     </item>
 
