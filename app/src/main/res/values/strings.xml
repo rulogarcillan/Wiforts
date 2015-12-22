@@ -51,6 +51,7 @@
     <string name="changelog" translatable="false">Changelog</string>
     <string name="license">About</string>
     <string name="info">Information</string>
-    <string name="escrita">escrita</string>
+
     <string name="compilacion">Build Date</string>
+    <string name="conectewifi">Please, you have to connect to a wireless network.</string>
 </resources>

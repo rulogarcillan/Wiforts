@@ -41,4 +41,5 @@
     <string name="otros">Otros</string>
     <string name="info">Información</string>
     <string name="compilacion">Fecha de compilación</string>
+    <string name="conectewifi">Por favor, conectesé a una red wifi.</string>
 </resources>

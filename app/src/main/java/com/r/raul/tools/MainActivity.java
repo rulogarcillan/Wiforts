@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.r.raul.tools.Device.MainDeviceInfo;
+import com.r.raul.tools.Inspector.MainInspector;
 import com.r.raul.tools.Ports.MainOpenPorts;
 
 import java.text.SimpleDateFormat;
@@ -122,7 +123,7 @@ public class MainActivity extends BaseActivity
             LanzarDeviceInfo();
 
         } else if (id == R.id.nav_wifi_inspector && id != ItemAnterior) {
-
+            LanzarInspector();
         } else if (id == R.id.nav_wifi && id != ItemAnterior) {
 
         } else if (id == R.id.nav_ports && id != ItemAnterior) {
@@ -150,6 +151,13 @@ public class MainActivity extends BaseActivity
     private void LanzarDeviceInfo() {
         fragment = new MainDeviceInfo();
         fragmentManager.beginTransaction().replace(R.id.container, fragment, "deviceInfo")
+                //.addToBackStack("LISTADO")
+                .commit();
+    }
+
+    private void LanzarInspector() {
+        fragment = new MainInspector();
+        fragmentManager.beginTransaction().replace(R.id.container, fragment, "inspector")
                 //.addToBackStack("LISTADO")
                 .commit();
     }

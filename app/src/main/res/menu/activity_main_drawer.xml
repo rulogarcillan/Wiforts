@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    >
 
 
     <group android:checkableBehavior="single">
@@ -28,16 +29,14 @@
     </group>
 
 
-        <item
-            android:id="@+id/nav_opciones"
-            android:icon="@drawable/ic_settings"
-            android:title="@string/action_settings"/>
+    <item
+        android:id="@+id/nav_opciones"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/action_settings"/>
 
 
     <item android:title="@string/info">
-
         <menu>
-
             <item
                 android:id="@+id/nav_info"
                 android:icon="@drawable/ic_info"
