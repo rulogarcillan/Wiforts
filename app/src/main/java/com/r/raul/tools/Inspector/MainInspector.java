@@ -133,6 +133,12 @@ public class MainInspector extends Fragment {
 
         @Override
         protected Void doInBackground(Void... params) {
+
+          /*  try {
+                new ScanNet().escaneaIps();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }*/
             //also, this fails for an invalid address, like "www.sjdosgoogle.com1234sd"
            /* InetAddress[] addresses = new InetAddress[0];
             try {
@@ -178,19 +184,24 @@ public class MainInspector extends Fragment {
                 try {
                     if (address.isReachable(200)) {
                         System.out.println(address + " machine is turned on and can be pinged");
+
                     } else if (!address.getHostAddress().equals(address.getHostName())) {
                         System.out.println(address + " machine is known in a DNS lookup");
-                    } else {
+                    } /*else {
                         System.out.println(address + " the host address and host name are equal, meaning the host name could not be resolved");
-                    }
+                    }*/
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
 
 
+
+
             return null;
         }
     }
+
+
 
 }
