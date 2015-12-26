@@ -20,11 +20,19 @@ import com.github.pwittchen.networkevents.library.NetworkEvents;
 import com.github.pwittchen.networkevents.library.event.ConnectivityChanged;
 import com.r.raul.tools.R;
 import com.r.raul.tools.Utils.Connectivity;
+import com.r.raul.tools.Utils.LogUtils;
+import com.r.raul.tools.Utils.Utilidades;
 import com.squareup.otto.Subscribe;
 
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import de.greenrobot.event.EventBus;
 
@@ -131,10 +139,72 @@ public class MainInspector extends Fragment {
 
     private class Pruebas extends AsyncTask<Void, Void, Void> {
 
+        final static int NUMERO_HILOS = 100;
+        final static int TIME_UP = 1000;
+
         @Override
         protected Void doInBackground(Void... params) {
 
-          /*  try {
+
+            final ExecutorService es = Executors.newFixedThreadPool(NUMERO_HILOS);
+            final List<Future<Machine>> futures = new ArrayList<Future<Machine>>();
+
+
+            WifiManager wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
+
+            String[] re = con.parseIP(wifiManager.getDhcpInfo().gateway).split("\\.");
+            String range;
+            if (re.length >= 3) {
+                range = re[0] + "." + re[1] + "." + re[2];
+            } else {
+                LogUtils.LOGE("Ip mal formada");
+                return null;
+            }
+
+            int[] bounds = Utilidades.ScanNet.rangeFromCidr(range + ".255/24");
+
+            for (int i = bounds[0]; i <= bounds[1]; i++) {
+                String address = Utilidades.ScanNet.InetRange.intToIp(i);
+                InetAddress ip = null;
+                try {
+                    ip = InetAddress.getByName(address);
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                }
+                if (!isCancelled()) {
+                    futures.add(Utilidades.machineExist(es, ip,TIME_UP));
+                } else {
+                    es.shutdownNow();
+                }
+            }
+
+            try {
+                es.awaitTermination(TIME_UP, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            for (final Future<Machine> f : futures) {
+
+                if (!isCancelled()) {
+                    try {
+                        if (f.get().isConectado()) {
+                            LogUtils.LOGE(f.get().getIp());
+                        }
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    es.shutdownNow();
+
+                }
+            }
+
+            /*  try {
                 new ScanNet().escaneaIps();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -160,7 +230,7 @@ public class MainInspector extends Fragment {
                     e.printStackTrace();
                 }
             }*/
-
+/*
             WifiManager wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
 
 
@@ -182,26 +252,21 @@ public class MainInspector extends Fragment {
                     e.printStackTrace();
                 }
                 try {
-                    if (address.isReachable(200)) {
+                    if (address.isReachable(1000)) {
                         System.out.println(address + " machine is turned on and can be pinged");
 
                     } else if (!address.getHostAddress().equals(address.getHostName())) {
                         System.out.println(address + " machine is known in a DNS lookup");
-                    } /*else {
-                        System.out.println(address + " the host address and host name are equal, meaning the host name could not be resolved");
-                    }*/
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-
-
-
+*/
 
             return null;
         }
     }
-
 
 
 }
