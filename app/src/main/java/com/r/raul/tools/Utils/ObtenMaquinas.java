@@ -55,6 +55,8 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
         SubnetUtils utils = new SubnetUtils(gateway, subMask);
         SubnetUtils.SubnetInfo info = utils.getInfo();
 
+
+
         String[] addresses = utils.getInfo().getAllAddresses();
 
         for (String ipS : addresses) {
@@ -65,6 +67,11 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
             try {
                 ip = InetAddress.getByName(ipS);
 
+            /*    try {
+                    LogUtils.LOGE(NetworkInterface.getByInetAddress(ip).getName());
+                } catch (SocketException e) {
+                    e.printStackTrace();
+                }*/
 
 
             } catch (UnknownHostException e) {
