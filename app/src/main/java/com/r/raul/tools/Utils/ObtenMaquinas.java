@@ -48,15 +48,12 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
         String gateway = con.parseIP(wifiManager.getDhcpInfo().gateway);
         String subMask = con.parseIP(wifiManager.getDhcpInfo().netmask);
 
-
         final ExecutorService es = Executors.newFixedThreadPool(NUMERO_HILOS);
         final List<Future<Machine>> futures = new ArrayList<Future<Machine>>();
 
 
         SubnetUtils utils = new SubnetUtils(gateway, subMask);
         SubnetUtils.SubnetInfo info = utils.getInfo();
-
-
 
         String[] addresses = utils.getInfo().getAllAddresses();
 
@@ -81,7 +78,7 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
             e.printStackTrace();
         }
 
-        int tot=0;
+        int tot = 0;
         for (final Future<Machine> f : futures) {
             tot++;
             if (!isCancelled()) {
@@ -101,13 +98,12 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
                 } catch (ExecutionException e) {
                     LogUtils.LOGE(e.getMessage());
                 }
-                publishProgress(calculoPercent(tot,addresses.length));
+                publishProgress(calculoPercent(tot, addresses.length));
 
             } else {
                 es.shutdownNow();
             }
         }
-
 
         return null;
     }
