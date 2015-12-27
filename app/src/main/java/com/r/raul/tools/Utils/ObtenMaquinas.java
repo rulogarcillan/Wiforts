@@ -59,9 +59,14 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
 
         for (String ipS : addresses) {
 
+
+
             InetAddress ip = null;
             try {
                 ip = InetAddress.getByName(ipS);
+
+
+
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             }
