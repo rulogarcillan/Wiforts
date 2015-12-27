@@ -17,7 +17,23 @@ public class SampleDivider extends RecyclerView.ItemDecoration {
             private boolean mShowLastDivider = false;
 
 
-            public SampleDivider(Context context, AttributeSet attrs) {
+    public boolean ismShowFirstDivider() {
+        return mShowFirstDivider;
+    }
+
+    public void setmShowFirstDivider(boolean mShowFirstDivider) {
+        this.mShowFirstDivider = mShowFirstDivider;
+    }
+
+    public boolean ismShowLastDivider() {
+        return mShowLastDivider;
+    }
+
+    public void setmShowLastDivider(boolean mShowLastDivider) {
+        this.mShowLastDivider = mShowLastDivider;
+    }
+
+    public SampleDivider(Context context, AttributeSet attrs) {
                 final TypedArray a = context
                         .obtainStyledAttributes(attrs, new int[]{android.R.attr.listDivider});
                 mDivider = a.getDrawable(0);

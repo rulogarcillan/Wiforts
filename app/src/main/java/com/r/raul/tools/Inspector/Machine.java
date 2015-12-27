@@ -5,11 +5,14 @@ package com.r.raul.tools.Inspector;
  */
 public class Machine {
 
+
+
     String ip;
     String mac;
     String nombre;
     boolean conocido;
     boolean conectado;
+    int tipoImg;
 
     public Machine() {
     }
@@ -52,5 +55,14 @@ public class Machine {
 
     public void setConectado(boolean conectado) {
         this.conectado = conectado;
+    }
+
+
+    public int getTipoImg() {
+        return tipoImg;
+    }
+
+    public void setTipoImg(int tipoImg) {
+        this.tipoImg = tipoImg;
     }
 }

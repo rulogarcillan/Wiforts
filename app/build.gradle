@@ -39,10 +39,19 @@ dependencies {
 
     compile files('libs/commons-validator-1.5.0.jar')
 
+    compile files('libs/commons-net-3.4-sources.jar')
+
 
     compile('com.mikepenz:aboutlibraries:5.3.4@aar') {
         transitive = true
     }
     compile 'de.cketti.library.changelog:ckchangelog:1.2.2'
+
+    android {
+        packagingOptions {
+            exclude 'META-INF/LICENSE.txt'
+            exclude 'META-INF/NOTICE.txt'
+        }
+    }
 
 }
