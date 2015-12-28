@@ -5,12 +5,12 @@ public class inspectorTable {
 	String nombre;
 	int favorito;
 	
-	public inspectorTable() {
+	public InspectorTable() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public inspectorTable(String macdevice, String macpadre, String nombre, Boolean favorito) {
+	public InspectorTable(String macdevice, String macpadre, String nombre, Boolean favorito) {
 		super();
 		this.macdevice = macdevice;
 		this.macpadre = macpadre;
