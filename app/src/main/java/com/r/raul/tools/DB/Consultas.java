@@ -45,6 +45,16 @@ public class Consultas {
         //Insertamos el registro en la base de datos
         db.insert("inspector", null, nuevoRegistro);
     }
+    
+      public void upItemInspectorTable (final InspectorTable item) {
+        //Actualizar dos registros con update(), utilizando argumentos
+        ContentValues valores = new ContentValues();
+        nuevoRegistro.put("favorito",item.getFavorito() ? 1:0);
+     
+        String[] args = new String[]{item.getMacdevice(), item.getMacpadre()};
+        db.update("inspector", valores, "mac_device=? AND mac_padre=?", args);
+      }
+    
 
    /* public static String remove(String input) {
 
