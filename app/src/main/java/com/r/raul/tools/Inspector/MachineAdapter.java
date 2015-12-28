@@ -40,7 +40,9 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.Holder> 
     public static class Holder extends RecyclerView.ViewHolder {
 
         public TextView txtIp;
+        public TextView txtMac;
         public ImageView imgDevice;
+        public RatingBar chkState;
 
         public Holder(View v) {
             super(v);
@@ -53,7 +55,9 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.Holder> 
             });
 
             txtIp = (TextView) v.findViewById(R.id.txtIp);
+            txtMac = (TextView) v.findViewById(R.id.txtMac);
             imgDevice = (ImageView) v.findViewById(R.id.imgDevice);
+            chkState = (RatingBar) v.findViewById(R.id.chkState);
 
         }
     }
@@ -70,18 +74,18 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.Holder> 
     public void onBindViewHolder(Holder holder, int position) {
 
         holder.txtIp.setText("" + array.get(position).getIp());
+        holder.txtMac.setText("" + array.get(position).getMac());
+        
+        holder.chkState.setRating(array.get(position).isConocido() ? 1:0);
 
         switch (array.get(position).getTipoImg()){
             case Constantes.TIPE_GATEWAY:
                 holder.imgDevice.setImageResource(R.drawable.ic_router);
                 break;
             case Constantes.TIPE_OTHERS:
-
                 holder.imgDevice.setImageResource(R.drawable.ic_devices);
                 break;
         }
-
-
     }
 
     @Override
