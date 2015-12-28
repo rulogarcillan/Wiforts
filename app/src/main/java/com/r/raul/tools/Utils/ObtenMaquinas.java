@@ -55,25 +55,16 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
         SubnetUtils.SubnetInfo info = utils.getInfo();
 
         String[] addresses = utils.getInfo().getAllAddresses();
-
-        for (String ipS : addresses) {
-
-            InetAddress ip = null;
+	
+        for (String ip : addresses) {
+            InetAddress ipA = null;
             try {
-                ip = InetAddress.getByName(ipS);
-
-            /*    try {
-                    LogUtils.LOGE(NetworkInterface.getByInetAddress(ip).getName());
-                } catch (SocketException e) {
-                    e.printStackTrace();
-                }*/
-
-
+                ipA = InetAddress.getByName(ip);
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             }
             if (!isCancelled()) {
-                futures.add(Utilidades.machineExist(es, ip, TIME_UP));
+                futures.add(Utilidades.machineExist(es, ipA, TIME_UP));
             } else {
                 es.shutdownNow();
             }
@@ -85,18 +76,19 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
             e.printStackTrace();
         }
 
-        int tot = 0;
+        int tot = 0; //total ips analizadas para barra de progreso
         for (final Future<Machine> f : futures) {
             tot++;
             if (!isCancelled()) {
                 try {
                     if (f.get().isConectado()) {
-                        LogUtils.LOGE(f.get().getIp());
+                        LogUtils.LOGI(f.get().getIp());
                         if (f.get().getIp().equals(gateway)) {
                             f.get().setTipoImg(Constantes.TIPE_GATEWAY);
                         } else {
                             f.get().setTipoImg(Constantes.TIPE_OTHERS);
                         }
+                        f.get().setMac(getMacFromArpCache(f.get().getIp()));
                         array.add(f.get());
                     }
 
