@@ -32,6 +32,19 @@ public class Consultas {
         db.close();
         return array;
     }
+    
+    
+    public void setItemInspectorTable (final InspectorTable item) {
+        //Creamos el registro a insertar como objeto ContentValues
+        ContentValues nuevoRegistro = new ContentValues();
+        nuevoRegistro.put("mac_device",item.getMacdevice());
+        nuevoRegistro.put("mac_padre",item.getMacpadre());
+        nuevoRegistro.put("nombre",item.getNombre());
+        nuevoRegistro.put("favorito",item.getFavorito() ? 1:0);
+        
+        //Insertamos el registro en la base de datos
+        db.insert("inspector", null, nuevoRegistro);
+    }
 
    /* public static String remove(String input) {
 
