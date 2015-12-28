@@ -113,7 +113,7 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
                     	}
                     	if (!isInBBDD){
                     		InspectorTable itemIns = new InspectorTable(f.get().getMac, macPadre, "", isGateway ? true:false);
-                    		//insertamos en bbdd pasasndole itemIns
+                    		consultas.setItemInspectorTable(itemIns);
                     		arrayInspectorTable.add(itemIns);
                     		f.get().setNombre("");
                     		f.get().setConocido(isGateway ? true:false);
