@@ -11,8 +11,8 @@ import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 public class MyDatabase extends SQLiteAssetHelper {
 
-    private static final String DATABASE_NAME = "sqlitedatabase.db";
-    private static final int DATABASE_VERSION = 1;
+    public static final String DATABASE_NAME = "sqlitedatabase.db";
+    public static final int DATABASE_VERSION = 1;
     public static final String LEER = "R";
     public static final String ESCRIBIR = "W";
 

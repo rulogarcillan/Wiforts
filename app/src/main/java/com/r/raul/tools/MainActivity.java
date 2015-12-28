@@ -29,6 +29,8 @@ import java.util.zip.ZipFile;
 
 import de.cketti.library.changelog.ChangeLog;
 
+import static com.r.raul.tools.Utils.LogUtils.copybd;
+
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -43,6 +45,8 @@ public class MainActivity extends BaseActivity
         
         //se crea la base de datos si no existe.
         new MyDatabase(this);
+        //copia debug
+        copybd();
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //code

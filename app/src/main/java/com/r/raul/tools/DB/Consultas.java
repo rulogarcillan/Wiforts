@@ -3,6 +3,7 @@ package com.r.raul.tools.DB;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.r.raul.tools.Inspector.InspectorTable;
 
@@ -24,7 +25,7 @@ public class Consultas {
         this.c = c;
         db = new MyDatabase(c);
     }
-    
+
     public ArrayList getAllInspectorTableFromMacPadre(final String macPadre) {
         String sql = "select inspector.* from inspector where inspector.mac_padre = '" + macPadre + "'";
         LOGI(sql);
@@ -40,28 +41,36 @@ public class Consultas {
         db.close();
         return array;
     }
-    
-    
-    public void setItemInspectorTable (final InspectorTable item) {
+
+
+    public void setItemInspectorTable(final InspectorTable item) {
+
+        SQLiteDatabase db2;
+
+
         //Creamos el registro a insertar como objeto ContentValues
         ContentValues nuevoRegistro = new ContentValues();
-        nuevoRegistro.put("mac_device",item.getMacdevice());
-        nuevoRegistro.put("mac_padre",item.getMacpadre());
-        nuevoRegistro.put("nombre",item.getNombre());
-        nuevoRegistro.put("favorito",item.getFavorito() ? 1:0);
-        
+        nuevoRegistro.put("mac_device", item.getMacdevice());
+        nuevoRegistro.put("mac_padre", item.getMacpadre());
+        nuevoRegistro.put("nombre", item.getNombre());
+        nuevoRegistro.put("favorito", item.getFavorito() ? 1 : 0);
+
         //Insertamos el registro en la base de datos
-       // db.insert("inspector", null, nuevoRegistro);
+        db2 = db.getWritableDatabase();
+        db2.insert("inspector", null, nuevoRegistro);
     }
-    
-      public void upItemInspectorTable (final InspectorTable item) {
+
+    public void upItemInspectorTable(final InspectorTable item) {
+        SQLiteDatabase db2;
+
         //Actualizar dos registros con update(), utilizando argumentos
         ContentValues valores = new ContentValues();
-        valores.put("favorito",item.getFavorito() ? 1:0);
-     
+        valores.put("favorito", item.getFavorito() ? 1 : 0);
+
         String[] args = new String[]{item.getMacdevice(), item.getMacpadre()};
-      //  db.update("inspector", valores, "mac_device=? AND mac_padre=?", args);
-      }
+        db2 = db.getWritableDatabase();
+        db2.update("inspector", valores, "mac_device=? AND mac_padre=?", args);
+    }
     
 
    /* public static String remove(String input) {
@@ -369,7 +378,6 @@ public class Consultas {
         db.close();
 
     }*/
-
 
 
 }

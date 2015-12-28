@@ -5,10 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.r.raul.tools.DB.Consultas;
 import com.r.raul.tools.R;
 import com.r.raul.tools.Utils.Constantes;
 
@@ -23,11 +25,13 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.Holder> 
 
     ArrayList<Machine> array = new ArrayList<Machine>();
     Activity activity;
+    Consultas consultas;
 
     public MachineAdapter(Activity activity, ArrayList<Machine> array) {
 
         this.activity = activity;
         this.array = array;
+        consultas = new Consultas(activity);
     }
 
     public ArrayList<Machine> getArray() {
@@ -72,27 +76,37 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.Holder> 
     }
 
     @Override
-    public void onBindViewHolder( Holder holder,final int position) {
+    public void onBindViewHolder(Holder holder, final int position) {
 
         holder.txtIp.setText("" + array.get(position).getIp());
         holder.txtMac.setText("" + array.get(position).getMac());
         holder.chkState.setChecked(array.get(position).isConocido());
 
 
-       /* holder.chkState.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.chkState.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
+                if (buttonView.isPressed()) {
+
                     array.get(position).setConocido(isChecked);
-                    //notifyItemChanged(position);
+
+                    InspectorTable inspectorTable = new InspectorTable();
+                    inspectorTable.setMacdevice(array.get(position).getMac());
+                    inspectorTable.setFavorito(isChecked);
+                    inspectorTable.setMacpadre(array.get(position).getMacPadre());
 
 
+                    consultas.upItemInspectorTable(inspectorTable);
+                    // notifyItemChanged(position);
                 }
 
-        });*/
-        //array.get(position).setConocico();
-        //consultas.upItemInspectorTable(array.get(position));
+            }
 
-        switch (array.get(position).getTipoImg()){
+        });
+       
+        
+
+        switch (array.get(position).getTipoImg()) {
             case Constantes.TIPE_GATEWAY:
                 holder.imgDevice.setImageResource(R.drawable.ic_router);
                 holder.chkState.setEnabled(false);
@@ -101,10 +115,10 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.Holder> 
                 holder.imgDevice.setImageResource(R.drawable.ic_device2);
                 holder.chkState.setEnabled(false);
                 break;
-              case Constantes.TIPE_OTHERS:
+            case Constantes.TIPE_OTHERS:
                 holder.imgDevice.setImageResource(R.drawable.ic_devices);
-                break;   
-                
+                break;
+
         }
     }
 
