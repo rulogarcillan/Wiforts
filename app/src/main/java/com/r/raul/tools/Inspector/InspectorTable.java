@@ -22,6 +22,15 @@ public class InspectorTable {
 			this.favorito = 0;	
 		}	
 	}
+	
+	public InspectorTable(String macdevice, String macpadre, String nombre, int favorito) {
+		super();
+		this.macdevice = macdevice;
+		this.macpadre = macpadre;
+		this.nombre = nombre;
+		this.favorito = favorito;
+		
+	}
 
 
 
