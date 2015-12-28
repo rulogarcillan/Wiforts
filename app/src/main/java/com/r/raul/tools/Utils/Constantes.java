@@ -23,7 +23,8 @@ public final class Constantes {
   public static final String TIPE_MOBILE ="MOBILE";
   public static final String TIPE_AIRPLANE ="AIRPLANE";
 
-  public static final int TIPE_GATEWAY =1;
-  public static final int TIPE_OTHERS =2;
+  public static final int TIPE_GATEWAY = 1;
+  public static final int TIPE_DEVICE = 2;
+  public static final int TIPE_OTHERS = 3;
   
 }
