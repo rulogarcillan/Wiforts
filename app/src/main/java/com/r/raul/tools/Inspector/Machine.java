@@ -9,6 +9,7 @@ public class Machine {
 
     String ip;
     String mac;
+    String macPadre; 
     String nombre;
     boolean conocido;
     boolean conectado;
@@ -65,4 +66,13 @@ public class Machine {
     public void setTipoImg(int tipoImg) {
         this.tipoImg = tipoImg;
     }
+    
+    public String getMacPadre() {
+		return macPadre;
+	}
+
+	public void setMacPadre(String macPadre) {
+		this.macPadre = macPadre;
+	}
+    
 }
