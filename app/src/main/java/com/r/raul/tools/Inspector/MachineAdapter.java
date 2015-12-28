@@ -77,6 +77,10 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.Holder> 
         holder.txtMac.setText("" + array.get(position).getMac());
         
         holder.chkState.setRating(array.get(position).isConocido() ? 1:0);
+        
+        
+        //array.get(position).setConocico();
+        //consultas.upItemInspectorTable(array.get(position));
 
         switch (array.get(position).getTipoImg()){
             case Constantes.TIPE_GATEWAY:
