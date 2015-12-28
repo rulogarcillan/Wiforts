@@ -53,6 +53,7 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
         final String macPadre = wifiManager.getConnectionInfo().getBSSID();
         final String gateway = con.parseIP(wifiManager.getDhcpInfo().gateway);
         final String subMask = con.parseIP(wifiManager.getDhcpInfo().netmask);
+        final String loacalIp = con.getLocalAddress().getHostAddress();
 
 	//consultamos las conexiones guardadas para la mac padre
         ArrayList<InspectorTable> arrayInspectorTable = consultas.getAllInspectorTableFromMacPadre(macPadre);
@@ -91,12 +92,16 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
                     	
                     	Boolean isGateway=false;
                     	Boolean isInBBDD=false;
+                    	Boolean isMyDevice=false;
                     	
                     	LogUtils.LOGI(f.get().getIp());
                     	
                     	if (f.get().getIp().equals(gateway)) {
                             isGateway=true;
                             f.get().setTipoImg(Constantes.TIPE_GATEWAY);
+                    	}else if (f.get().getIp().equals(loacalIp)){
+                    	    isMyDevice=true;			
+                    	    f.get().setTipoImg(Constantes.TIPE_DEVICE);
                         } else {
                             f.get().setTipoImg(Constantes.TIPE_OTHERS);
                         }
@@ -113,11 +118,11 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
                     		}
                     	}
                     	if (!isInBBDD){
-                    		InspectorTable itemIns = new InspectorTable(f.get().getMac, macPadre, "", isGateway ? true:false);
+                    		InspectorTable itemIns = new InspectorTable(f.get().getMac, macPadre, "", (isGateway || isMyDevice) ? true : false);
                     		consultas.setItemInspectorTable(itemIns);
                     		arrayInspectorTable.add(itemIns);
                     		f.get().setNombre("");
-                    		f.get().setConocido(isGateway ? true:false);
+                    		f.get().setConocido((isGateway||isMyDevice) ? true:false);
                     	}
                         
                         array.add(f.get());
