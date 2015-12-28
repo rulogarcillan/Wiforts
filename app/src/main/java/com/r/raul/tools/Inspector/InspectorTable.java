@@ -1,4 +1,4 @@
-public class inspectorTable {
+public class InspectorTable {
 	
 	String macdevice;  
 	String macpadre; 
