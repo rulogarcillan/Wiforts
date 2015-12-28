@@ -1,3 +1,5 @@
+package com.r.raul.tools.Inspector;
+
 public class InspectorTable {
 	
 	String macdevice;  

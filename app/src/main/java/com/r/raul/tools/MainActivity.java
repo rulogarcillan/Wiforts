@@ -18,6 +18,7 @@ import android.view.MenuItem;
 
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
+import com.r.raul.tools.DB.MyDatabase;
 import com.r.raul.tools.Device.MainDeviceInfo;
 import com.r.raul.tools.Inspector.MainInspector;
 import com.r.raul.tools.Ports.MainOpenPorts;

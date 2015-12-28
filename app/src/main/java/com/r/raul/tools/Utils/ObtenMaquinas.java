@@ -6,10 +6,16 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.widget.ProgressBar;
 
+import com.r.raul.tools.DB.Consultas;
+import com.r.raul.tools.Inspector.InspectorTable;
 import com.r.raul.tools.Inspector.Machine;
+import com.r.raul.tools.R;
 
 import org.apache.commons.net.util.SubnetUtils;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -51,6 +57,7 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
         
         WifiManager wifiManager = (WifiManager) ac.getSystemService(Context.WIFI_SERVICE);
         final String macPadre = wifiManager.getConnectionInfo().getBSSID();
+        final String macMyDevice = wifiManager.getConnectionInfo().getMacAddress();
         final String gateway = con.parseIP(wifiManager.getDhcpInfo().gateway);
         final String subMask = con.parseIP(wifiManager.getDhcpInfo().netmask);
         final String loacalIp = con.getLocalAddress().getHostAddress();
@@ -95,22 +102,24 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
                     	Boolean isMyDevice=false;
                     	
                     	LogUtils.LOGI(f.get().getIp());
-                    	
+
+                        f.get().setMacPadre(macPadre); //padre
+                        f.get().setMac(getMacFromArpCache(f.get().getIp())); //propia o hija
+
                     	if (f.get().getIp().equals(gateway)) {
                             isGateway=true;
                             f.get().setTipoImg(Constantes.TIPE_GATEWAY);
                     	}else if (f.get().getIp().equals(loacalIp)){
                     	    isMyDevice=true;			
                     	    f.get().setTipoImg(Constantes.TIPE_DEVICE);
+                            f.get().setMac(macMyDevice); //propia o hija
                         } else {
                             f.get().setTipoImg(Constantes.TIPE_OTHERS);
                         }
-                        
-                        f.get().setMacPadre(macPadre); //padre
-                    	f.get().setMac(getMacFromArpCache(f.get().getIp())); //propia o hija
+
                     	
                     	for(InspectorTable item : arrayInspectorTable){
-                    		if(f.get().getMac.equals(item.getMacdevice())){
+                    		if(f.get().getMac().equals(item.getMacdevice())){
                     			isInBBDD=true;
                     			f.get().setNombre(item.getNombre());
                     			f.get().setConocido(item.getFavorito());
@@ -118,7 +127,7 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
                     		}
                     	}
                     	if (!isInBBDD){
-                    		InspectorTable itemIns = new InspectorTable(f.get().getMac, macPadre, "", (isGateway || isMyDevice) ? true : false);
+                    		InspectorTable itemIns = new InspectorTable(f.get().getMac(), macPadre, "", (isGateway || isMyDevice) ? true : false);
                     		consultas.setItemInspectorTable(itemIns);
                     		arrayInspectorTable.add(itemIns);
                     		f.get().setNombre("");
@@ -158,7 +167,7 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
 					if (mac.matches("..:..:..:..:..:..")) {
 						return mac;
 					} else {
-						return null;
+                        return ac.getString(R.string.desconocido);
 					}
 				}
 			}
@@ -171,7 +180,7 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
 				e.printStackTrace();
 			}
 		}
-		return null;
+        return ac.getString(R.string.desconocido);
 	}
 
 }

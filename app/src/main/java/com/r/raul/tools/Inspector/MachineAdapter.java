@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.r.raul.tools.R;
 import com.r.raul.tools.Utils.Constantes;
@@ -42,7 +43,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.Holder> 
         public TextView txtIp;
         public TextView txtMac;
         public ImageView imgDevice;
-        public RatingBar chkState;
+        public ToggleButton chkState;
 
         public Holder(View v) {
             super(v);
@@ -57,7 +58,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.Holder> 
             txtIp = (TextView) v.findViewById(R.id.txtIp);
             txtMac = (TextView) v.findViewById(R.id.txtMac);
             imgDevice = (ImageView) v.findViewById(R.id.imgDevice);
-            chkState = (RatingBar) v.findViewById(R.id.chkState);
+            chkState = (ToggleButton) v.findViewById(R.id.chkState);
 
         }
     }
@@ -71,23 +72,34 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.Holder> 
     }
 
     @Override
-    public void onBindViewHolder(Holder holder, int position) {
+    public void onBindViewHolder( Holder holder,final int position) {
 
         holder.txtIp.setText("" + array.get(position).getIp());
         holder.txtMac.setText("" + array.get(position).getMac());
-        
-        holder.chkState.setRating(array.get(position).isConocido() ? 1:0);
-        
-        
+        holder.chkState.setChecked(array.get(position).isConocido());
+
+
+       /* holder.chkState.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                    array.get(position).setConocido(isChecked);
+                    //notifyItemChanged(position);
+
+
+                }
+
+        });*/
         //array.get(position).setConocico();
         //consultas.upItemInspectorTable(array.get(position));
 
         switch (array.get(position).getTipoImg()){
             case Constantes.TIPE_GATEWAY:
                 holder.imgDevice.setImageResource(R.drawable.ic_router);
+                holder.chkState.setEnabled(false);
                 break;
             case Constantes.TIPE_DEVICE:
-                holder.imgDevice.setImageResource(R.drawable.ic_device);
+                holder.imgDevice.setImageResource(R.drawable.ic_device2);
+                holder.chkState.setEnabled(false);
                 break;
               case Constantes.TIPE_OTHERS:
                 holder.imgDevice.setImageResource(R.drawable.ic_devices);

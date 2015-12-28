@@ -1,6 +1,14 @@
 package com.r.raul.tools.DB;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+
+import com.r.raul.tools.Inspector.InspectorTable;
+
+import java.util.ArrayList;
+
+import static com.r.raul.tools.Utils.LogUtils.LOGI;
 
 public class Consultas {
 
@@ -19,13 +27,13 @@ public class Consultas {
     
     public ArrayList getAllInspectorTableFromMacPadre(final String macPadre) {
         String sql = "select inspector.* from inspector where inspector.mac_padre = '" + macPadre + "'";
-        LOGI("getAllInspectorTableFromMacPadre", sql);
+        LOGI(sql);
         ArrayList<InspectorTable> array = new ArrayList<>();
         Cursor cur = db.query(sql, LEER);
         if (cur.moveToFirst()) {
             // Recorremos el cursor hasta que no haya más registros
             do {
-                InspectorTable item = new Diarios(cur.getString(0), cur.getString(1), cur.getString(2), cur.getInt(3));
+                InspectorTable item = new InspectorTable(cur.getString(0), cur.getString(1), cur.getString(2), cur.getInt(3));
                 array.add(item);
             } while (cur.moveToNext());
         }
@@ -43,16 +51,16 @@ public class Consultas {
         nuevoRegistro.put("favorito",item.getFavorito() ? 1:0);
         
         //Insertamos el registro en la base de datos
-        db.insert("inspector", null, nuevoRegistro);
+       // db.insert("inspector", null, nuevoRegistro);
     }
     
       public void upItemInspectorTable (final InspectorTable item) {
         //Actualizar dos registros con update(), utilizando argumentos
         ContentValues valores = new ContentValues();
-        nuevoRegistro.put("favorito",item.getFavorito() ? 1:0);
+        valores.put("favorito",item.getFavorito() ? 1:0);
      
         String[] args = new String[]{item.getMacdevice(), item.getMacpadre()};
-        db.update("inspector", valores, "mac_device=? AND mac_padre=?", args);
+      //  db.update("inspector", valores, "mac_device=? AND mac_padre=?", args);
       }
     
 
