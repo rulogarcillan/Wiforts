@@ -10,17 +10,28 @@ public class Consultas {
     public static final String ESCRIBIR = "W";
 
     public Consultas() {
-
     }
 
     public Consultas(Context c) {
-
         this.c = c;
         db = new MyDatabase(c);
-
-
     }
-
+    
+    public ArrayList getAllInspectorTableFromMacPadre(final String macPadre) {
+        String sql = "select inspector.* from inspector where inspector.mac_padre = '" + macPadre + "'";
+        LOGI("getAllInspectorTableFromMacPadre", sql);
+        ArrayList<InspectorTable> array = new ArrayList<>();
+        Cursor cur = db.query(sql, LEER);
+        if (cur.moveToFirst()) {
+            // Recorremos el cursor hasta que no haya más registros
+            do {
+                InspectorTable item = new Diarios(cur.getString(0), cur.getString(1), cur.getString(2), cur.getInt(3));
+                array.add(item);
+            } while (cur.moveToNext());
+        }
+        db.close();
+        return array;
+    }
 
    /* public static String remove(String input) {
 
