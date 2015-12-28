@@ -86,9 +86,13 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.Holder> 
             case Constantes.TIPE_GATEWAY:
                 holder.imgDevice.setImageResource(R.drawable.ic_router);
                 break;
-            case Constantes.TIPE_OTHERS:
-                holder.imgDevice.setImageResource(R.drawable.ic_devices);
+            case Constantes.TIPE_DEVICE:
+                holder.imgDevice.setImageResource(R.drawable.ic_device);
                 break;
+              case Constantes.TIPE_OTHERS:
+                holder.imgDevice.setImageResource(R.drawable.ic_devices);
+                break;   
+                
         }
     }
 
