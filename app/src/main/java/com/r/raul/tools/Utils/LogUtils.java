@@ -5,6 +5,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.r.raul.tools.BuildConfig;
+import com.r.raul.tools.DB.MyDatabase;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -61,7 +62,7 @@ public class LogUtils {
                 File data = Environment.getDataDirectory();
 
                 if (sd.canWrite()) {
-                    String currentDBPath = "/data/data/" + BuildConfig.APPLICATION_ID + "/databases/" + TAGBBDD;
+                    String currentDBPath = "/data/data/" + BuildConfig.APPLICATION_ID + "/databases/" + MyDatabase.DATABASE_NAME;
                     String backupDBPath = BuildConfig.APPLICATION_ID + ".db";
                     File currentDB = new File(currentDBPath);
                     File backupDB = new File(sd, backupDBPath);
