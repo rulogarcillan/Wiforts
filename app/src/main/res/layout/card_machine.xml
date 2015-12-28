@@ -45,18 +45,20 @@
                 android:text="33:33:33:33"
                 android:textSize="12sp"/>
 
-            <ToggleButton
-                android:id="@+id/chkState"
-
-                android:layout_width="24sp"
-                android:layout_height="24sp"
+               
+                <RatingBar
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/toggle_selector"
-                android:textOff=""
-                android:textOn=""/>
+                android:id="@+id/chkState"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="1"
+                android:rating="0"
+                android:stepSize="1" />
+                
+                
+                
         </RelativeLayout>
 
     </LinearLayout>
