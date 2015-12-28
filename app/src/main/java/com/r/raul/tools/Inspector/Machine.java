@@ -5,8 +5,6 @@ package com.r.raul.tools.Inspector;
  */
 public class Machine {
 
-
-
     String ip;
     String mac;
     String macPadre; 
