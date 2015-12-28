@@ -29,12 +29,14 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
     private Connectivity con;
     private ArrayList<Machine> array;
     private ProgressBar progressBar;
+    private Consultas consultas;
 
 
     public ObtenMaquinas(Activity ac, ArrayList<Machine> array) {
 
         this.ac = ac;
         this.array = array;
+        this.consultas = new Consultas(ac);
     }
 
     private int calculoPercent(int valor, int tot) {
@@ -43,14 +45,18 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-
-        WifiManager wifiManager = (WifiManager) ac.getSystemService(Context.WIFI_SERVICE);
-        String gateway = con.parseIP(wifiManager.getDhcpInfo().gateway);
-        String subMask = con.parseIP(wifiManager.getDhcpInfo().netmask);
-
-        final ExecutorService es = Executors.newFixedThreadPool(NUMERO_HILOS);
+    	
+    	final ExecutorService es = Executors.newFixedThreadPool(NUMERO_HILOS);
         final List<Future<Machine>> futures = new ArrayList<Future<Machine>>();
+        
+        WifiManager wifiManager = (WifiManager) ac.getSystemService(Context.WIFI_SERVICE);
+        final String macPadre = wifiManager.getConnectionInfo().getBSSID();
+        final String gateway = con.parseIP(wifiManager.getDhcpInfo().gateway);
+        final String subMask = con.parseIP(wifiManager.getDhcpInfo().netmask);
 
+	//consultamos las conexiones guardadas para la mac padre
+        ArrayList<InspectorTable> arrayInspectorTable = consultas.getAllInspectorTableFromMacPadre(macPadre);
+        
         SubnetUtils utils = new SubnetUtils(gateway, subMask);
         SubnetUtils.SubnetInfo info = utils.getInfo();
 
@@ -82,13 +88,36 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
             if (!isCancelled()) {
                 try {
                     if (f.get().isConectado()) {
-                        LogUtils.LOGI(f.get().getIp());
-                        if (f.get().getIp().equals(gateway)) {
+                    	
+                    	Boolean isGateway=false;
+                    	Boolean isInBBDD=false;
+                    	LogUtils.LOGI(f.get().getIp());
+                    	
+                    	if (f.get().getIp().equals(gateway)) {
+                            isGateway=true;
                             f.get().setTipoImg(Constantes.TIPE_GATEWAY);
                         } else {
                             f.get().setTipoImg(Constantes.TIPE_OTHERS);
                         }
-                        f.get().setMac(getMacFromArpCache(f.get().getIp()));
+                        
+                    	f.get().setMac(getMacFromArpCache(f.get().getIp()));
+                    	
+                    	for(InspectorTable item : arrayInspectorTable){
+                    		if(f.get().getMac.equals(item.getMacdevice())){
+                    			isInBBDD=true;
+                    			f.get().setNombre(item.getNombre());
+                    			f.get().setConocido(item.getFavorito());
+                    			break;
+                    		}
+                    	}
+                    	if (!isInBBDD){
+                    		InspectorTable itemIns = new InspectorTable(f.get().getMac, macPadre, "", false);
+                    		//insertamos en bbdd pasasndole itemIns
+                    		arrayInspectorTable.add(itemIns);
+                    		f.get().setNombre("");
+                    		f.get().setConocido(false);
+                    	}
+                        
                         array.add(f.get());
                     }
 
