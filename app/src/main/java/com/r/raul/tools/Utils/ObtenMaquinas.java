@@ -160,7 +160,9 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
 		try {
 			br = new BufferedReader(new FileReader("/proc/net/arp"));
 			String line;
+
 			while ((line = br.readLine()) != null) {
+
 				String[] splitted = line.split(" +");
 				if (splitted != null && splitted.length >= 4 && ip.equals(splitted[0])) {
 					String mac = splitted[3];
