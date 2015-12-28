@@ -51,17 +51,12 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
         final ExecutorService es = Executors.newFixedThreadPool(NUMERO_HILOS);
         final List<Future<Machine>> futures = new ArrayList<Future<Machine>>();
 
-
         SubnetUtils utils = new SubnetUtils(gateway, subMask);
         SubnetUtils.SubnetInfo info = utils.getInfo();
-
-
 
         String[] addresses = utils.getInfo().getAllAddresses();
 
         for (String ipS : addresses) {
-
-
 
             InetAddress ip = null;
             try {
@@ -119,5 +114,36 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
 
         return null;
     }
+    
+    
+    private String getMacFromArpCache(String ip) {
+		if (ip == null)
+			return null;
+		BufferedReader br = null;
+		try {
+			br = new BufferedReader(new FileReader("/proc/net/arp"));
+			String line;
+			while ((line = br.readLine()) != null) {
+				String[] splitted = line.split(" +");
+				if (splitted != null && splitted.length >= 4 && ip.equals(splitted[0])) {
+					String mac = splitted[3];
+					if (mac.matches("..:..:..:..:..:..")) {
+						return mac;
+					} else {
+						return null;
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				br.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
 
 }
