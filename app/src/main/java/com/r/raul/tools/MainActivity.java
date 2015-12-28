@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.r.raul.tools.DB.MyDatabase;
-import com.r.raul.tools.DB.MyDatabaseMacs;
 import com.r.raul.tools.Device.MainDeviceInfo;
 import com.r.raul.tools.Inspector.MainInspector;
 import com.r.raul.tools.Ports.MainOpenPorts;
@@ -46,7 +45,7 @@ public class MainActivity extends BaseActivity
         
         //se crea la base de datos si no existe.
         new MyDatabase(this);
-        new MyDatabaseMacs(this);
+       // new MyDatabaseMacs(this);
         //copia debug
         copybd();
 

@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.r.raul.tools.BuildConfig;
 import com.r.raul.tools.DB.MyDatabase;
-import com.r.raul.tools.DB.MyDatabaseMacs;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -76,7 +75,7 @@ public class LogUtils {
                         dst.close();
                     }
 
-                    String currentDBPath2 = "/data/data/" + BuildConfig.APPLICATION_ID + "/databases/" + MyDatabaseMacs.DATABASE_NAME;
+                  /*  String currentDBPath2 = "/data/data/" + BuildConfig.APPLICATION_ID + "/databases/" + MyDatabaseMacs.DATABASE_NAME;
                     String backupDBPath2 = BuildConfig.APPLICATION_ID + "_mac" + ".db";
                     File currentDB2 = new File(currentDBPath2);
                     File backupDB2 = new File(sd, backupDBPath2);
@@ -87,7 +86,7 @@ public class LogUtils {
                         dst.transferFrom(src, 0, src.size());
                         src.close();
                         dst.close();
-                    }
+                    }*/
                 }
             } catch (Exception e) {
                 LOGI("BBDD No copiada");
