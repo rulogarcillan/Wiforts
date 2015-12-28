@@ -91,6 +91,7 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
                     	
                     	Boolean isGateway=false;
                     	Boolean isInBBDD=false;
+                    	
                     	LogUtils.LOGI(f.get().getIp());
                     	
                     	if (f.get().getIp().equals(gateway)) {
@@ -111,11 +112,11 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
                     		}
                     	}
                     	if (!isInBBDD){
-                    		InspectorTable itemIns = new InspectorTable(f.get().getMac, macPadre, "", false);
+                    		InspectorTable itemIns = new InspectorTable(f.get().getMac, macPadre, "", isGateway ? true:false);
                     		//insertamos en bbdd pasasndole itemIns
                     		arrayInspectorTable.add(itemIns);
                     		f.get().setNombre("");
-                    		f.get().setConocido(false);
+                    		f.get().setConocido(isGateway ? true:false);
                     	}
                         
                         array.add(f.get());
