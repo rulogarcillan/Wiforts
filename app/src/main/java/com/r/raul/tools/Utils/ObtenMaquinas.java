@@ -101,7 +101,8 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
                             f.get().setTipoImg(Constantes.TIPE_OTHERS);
                         }
                         
-                    	f.get().setMac(getMacFromArpCache(f.get().getIp()));
+                        f.get().setMacPadre(macPadre); //padre
+                    	f.get().setMac(getMacFromArpCache(f.get().getIp())); //propia o hija
                     	
                     	for(InspectorTable item : arrayInspectorTable){
                     		if(f.get().getMac.equals(item.getMacdevice())){
