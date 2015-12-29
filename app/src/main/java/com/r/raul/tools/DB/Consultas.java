@@ -85,7 +85,7 @@ public class Consultas {
     		
     		String sql = "select software.name_l from software where upper(software.mac)=  upper('" + mascara + "')";
             LOGI(sql);
-            String retorno = "desconocidooooo";
+            String retorno = c.getString(R.string.desconocido);
             Cursor cur = db.query(sql, LEER);
             if (cur.moveToFirst()) {
                 // Recorremos el cursor hasta que no haya más registros
