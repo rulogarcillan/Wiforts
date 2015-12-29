@@ -72,6 +72,32 @@ public class Consultas {
         db2.update("inspector", valores, "mac_device=? AND mac_padre=?", args);
     }
     
+    
+    public String getNameFromMac(final String mac) {
+
+    	String[] macSplit = mac.split(":");
+    		
+    	for (int i=macSplit.length; i >= 1; i--){
+    		String mascara = "";
+    		for (int j=i; j>=1; j--){
+    			  mascara =  macSplit[j-1] + mascara;
+    		}
+    		
+    		String sql = "select software.name_l from software where upper(software.mac)=  upper('" + mascara + "')";
+            LOGI(sql);
+            String retorno = "desconocidooooo";
+            Cursor cur = db.query(sql, LEER);
+            if (cur.moveToFirst()) {
+                // Recorremos el cursor hasta que no haya más registros
+                do {
+                    retorno = cur.getString(0);
+    				break;
+                } while (cur.moveToNext());
+            }
+            db.close();
+    	 }  
+         return retorno;
+    }
 
    /* public static String remove(String input) {
 
