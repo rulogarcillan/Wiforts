@@ -9,6 +9,7 @@ public class Machine {
     String mac;
     String macPadre; 
     String nombre;
+    String nombreSoft;
     boolean conocido;
     boolean conectado;
     int tipoImg;
@@ -47,6 +48,15 @@ public class Machine {
     public void setMac(String mac) {
         this.mac = mac;
     }
+    a
+    public String getNombreSoft() {
+        return nombreSoft;
+    }
+
+    public void setNombreSoft(String nombreSoft) {
+        this.nombreSoft = nombreSoft;
+    }
+    
 
     public boolean isConectado() {
         return conectado;
