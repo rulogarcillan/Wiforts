@@ -20,25 +20,27 @@
             android:layout_width="36sp"
             android:layout_height="36sp"
             android:layout_gravity="center_vertical"
-            android:paddingRight="8sp"
-            android:src="@drawable/ic_router"/>
+
+            android:src="@drawable/icon_device"/>
 
         <LinearLayout
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="8sp">
+            android:layout_marginLeft="16sp">
           
            <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_weight="1">
             <TextView
                 android:id="@+id/txtNombre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
-                android:textColor="@color/colorAccentTra"
+                android:textColor="@color/colorPrimary"
                 android:text="LG-XX"/>
             <TextView
                 android:id="@+id/txtIp"
@@ -55,8 +57,8 @@
 
             <ToggleButton
                 android:id="@+id/chkState"
-                android:layout_width="48sp"
-                android:layout_height="48sp"
+                android:layout_width="36sp"
+                android:layout_height="36sp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="10dp"
@@ -65,7 +67,7 @@
                 android:textOn=""/>
 
 
-        </RelativeLayout>
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>

@@ -2,6 +2,7 @@ package com.r.raul.tools.Inspector;
 
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.Holder> 
 
         public TextView txtIp;
         public TextView txtMac;
+        public TextView txtNombre;
         public ImageView imgDevice;
         public ToggleButton chkState;
 
@@ -61,6 +63,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.Holder> 
 
             txtIp = (TextView) v.findViewById(R.id.txtIp);
             txtMac = (TextView) v.findViewById(R.id.txtMac);
+            txtNombre = (TextView) v.findViewById(R.id.txtNombre);
             imgDevice = (ImageView) v.findViewById(R.id.imgDevice);
             chkState = (ToggleButton) v.findViewById(R.id.chkState);
 
@@ -79,8 +82,22 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.Holder> 
     public void onBindViewHolder(Holder holder, final int position) {
 
         holder.txtIp.setText("" + array.get(position).getIp());
+        String ipColorida="";
+
+       String[] splitado= array.get(position).getIp().split("\\.");
+        if (splitado.length==4) {
+            ipColorida = splitado[0]+"." + splitado[1]+ "." + splitado[2] + "." +"<font color=\"#fa437e\">" +  splitado[3]  + "</font>";
+        }else{
+            ipColorida =array.get(position).getIp();
+        }
+
+
+        holder.txtIp.setText(Html.fromHtml(ipColorida));
+
+
         holder.txtMac.setText("" + array.get(position).getMac());
         holder.chkState.setChecked(array.get(position).isConocido());
+        holder.txtNombre.setText("" + array.get(position).getNombreSoft());
 
 
         holder.chkState.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -108,15 +125,16 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.Holder> 
 
         switch (array.get(position).getTipoImg()) {
             case Constantes.TIPE_GATEWAY:
-                holder.imgDevice.setImageResource(R.drawable.ic_router);
+                holder.imgDevice.setImageResource(R.drawable.icon_router);
                 holder.chkState.setEnabled(false);
                 break;
             case Constantes.TIPE_DEVICE:
-                holder.imgDevice.setImageResource(R.drawable.ic_device2);
+                holder.imgDevice.setImageResource(R.drawable.icon_device);
                 holder.chkState.setEnabled(false);
                 break;
             case Constantes.TIPE_OTHERS:
-                holder.imgDevice.setImageResource(R.drawable.ic_devices);
+                holder.imgDevice.setImageResource(R.drawable.icon_devices);
+                holder.chkState.setEnabled(true);
                 break;
 
         }

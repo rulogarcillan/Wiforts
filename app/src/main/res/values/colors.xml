@@ -5,6 +5,8 @@
     <color name="colorAccent">#dd0149</color>
 
     <color name="colorAccentTra">#40dd0149</color>
+    <color name="colorAccentTra80">#80dd0149</color>
+    <color name="colorAccentSuave">#fa437e</color>
 
     <color name="colorPrimary2">#8bc34a</color>
     <color name="colorPrimaryDark2">#388E3C</color>

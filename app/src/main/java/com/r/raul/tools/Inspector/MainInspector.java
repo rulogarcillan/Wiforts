@@ -118,11 +118,13 @@ public class MainInspector extends Fragment {
                 protected void onPreExecute() {
                     super.onPreExecute();
                     progressBar.setVisibility(View.VISIBLE);
+                    progressBar.setIndeterminate(true);
                     progressBar.setProgress(0);
                 }
 
                 @Override
                 protected void onProgressUpdate(Integer... values) {
+                    progressBar.setIndeterminate(false);
                     super.onProgressUpdate(values[0]);
                     progressBar.setProgress(values[0]);
                     adaptador.notifyDataSetChanged();

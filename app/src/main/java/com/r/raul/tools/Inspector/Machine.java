@@ -48,7 +48,7 @@ public class Machine {
     public void setMac(String mac) {
         this.mac = mac;
     }
-    a
+
     public String getNombreSoft() {
         return nombreSoft;
     }

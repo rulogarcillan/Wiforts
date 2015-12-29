@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.r.raul.tools.Inspector.InspectorTable;
+import com.r.raul.tools.R;
 
 import java.util.ArrayList;
 
@@ -71,32 +72,36 @@ public class Consultas {
         db2 = db.getWritableDatabase();
         db2.update("inspector", valores, "mac_device=? AND mac_padre=?", args);
     }
-    
-    
+
+
     public String getNameFromMac(final String mac) {
 
-    	String[] macSplit = mac.split(":");
-    		
-    	for (int i=macSplit.length; i >= 1; i--){
-    		String mascara = "";
-    		for (int j=i; j>=1; j--){
-    			  mascara =  macSplit[j-1] + mascara;
-    		}
-    		
-    		String sql = "select software.name_l from software where upper(software.mac)=  upper('" + mascara + "')";
+        String[] macSplit = mac.split(":");
+        String retorno="";
+
+        for (int i = macSplit.length; i >= 1; i--) {
+            String mascara = "";
+            for (int j = i; j >= 1; j--) {
+                mascara = macSplit[j - 1] + mascara;
+            }
+
+            String sql = "select software.name_l from software where upper(software.mac)=  upper('" + mascara + "')";
             LOGI(sql);
-            String retorno = c.getString(R.string.desconocido);
+            retorno = c.getString(R.string.desconocido);
             Cursor cur = db.query(sql, LEER);
             if (cur.moveToFirst()) {
                 // Recorremos el cursor hasta que no haya más registros
                 do {
-                    retorno = cur.getString(0);
-    				break;
+
+                    if (cur.getString(0)!= null) {
+                        return cur.getString(0);
+                    }
+
                 } while (cur.moveToNext());
             }
             db.close();
-    	 }  
-         return retorno;
+        }
+        return retorno;
     }
 
    /* public static String remove(String input) {

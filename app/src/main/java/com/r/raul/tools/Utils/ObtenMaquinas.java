@@ -135,7 +135,7 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
                     	}
                     	
                     	//agregamos el nombre del hardware
-                    	f.get().setNombreSoft(consultas.getNameFromMac(.get().getMac()));	
+                    	f.get().setNombreSoft(consultas.getNameFromMac(f.get().getMac()));
                         
                         array.add(f.get());
                     }
