@@ -133,6 +133,9 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
                     		f.get().setNombre("");
                     		f.get().setConocido((isGateway||isMyDevice) ? true:false);
                     	}
+                    	
+                    	//agregamos el nombre del hardware
+                    	f.get().setNombreSoft(consultas.getNameFromMac(.get().getMac()));	
                         
                         array.add(f.get());
                     }
