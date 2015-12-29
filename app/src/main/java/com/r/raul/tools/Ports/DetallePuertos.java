@@ -227,11 +227,10 @@ public class DetallePuertos extends BaseActivity {
         @Override
         protected Boolean doInBackground(ArrayList<Integer>... params) {
 
-
             tamanno = params[0].size();
-            arrayAbiertos = new ArrayList<>();
-            arrayCerrados = new ArrayList<>();
-            arrayTimeOut = new ArrayList<>();
+            arrayAbiertos.clear();
+            arrayCerrados.clear();
+            arrayTimeOut.clear();
 
             final ExecutorService es = Executors.newFixedThreadPool(NUMERO_HILOS);
             final List<Future<Puerto>> futures = new ArrayList<Future<Puerto>>();
@@ -304,6 +303,7 @@ public class DetallePuertos extends BaseActivity {
             if (!isCancelled()) {
                 progressBarAsyncTask.setVisibility(View.INVISIBLE);
                 actualizaTabs(true);
+                adaptador.notifyDataSetChanged();
                 Utilidades.lanzaVibracion(ac, 500);
             }
         }
@@ -325,15 +325,12 @@ public class DetallePuertos extends BaseActivity {
                 ordena(arrayAbiertos);
                 ordena(arrayCerrados);
                 ordena(arrayTimeOut);
-
-                adaptador.notifyDataSetChanged();
                 tabLayout.getTabAt(0).setText(ac.getString(R.string.p_abiertos).replace("#", Integer.toString(totalAbiertos)));
                 tabLayout.getTabAt(1).setText(ac.getString(R.string.p_cerrados).replace("#", Integer.toString(totalCerrados)));
                 tabLayout.getTabAt(2).setText(ac.getString(R.string.p_time).replace("#", Integer.toString(totalTimeOut)));
                 tStart = System.currentTimeMillis();
-
+                adaptador.notifyDataSetChanged();
             }
-
 
         }
 
