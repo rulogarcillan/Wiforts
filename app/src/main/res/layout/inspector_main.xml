@@ -18,69 +18,68 @@
             android:layout_height="?attr/actionBarSize"
             android:minHeight="?attr/actionBarSize"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
 
-
-        </android.support.v7.widget.Toolbar>
         <ProgressBar
-        android:id="@+id/progressBar"
-        android:background="@color/trans"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_marginBottom="-6dp"
-        android:layout_marginTop="-4dp"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:max="100"/>
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="-7dp"
+            android:layout_marginTop="-6dp"
+            android:max="100"
+            android:visibility="gone"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:minHeight="?attr/actionBarSize"
+            android:padding="10dip">
+
+
+            <ImageView
+                android:id="@+id/imgDevice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_wifisi"/>
+
+            <TextView
+                android:id="@+id/TxtCon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/Txtbssid"
+                android:layout_alignTop="@+id/imgDevice"
+                android:text="wifi"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/Txtbssid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/TxtCon"
+                android:layout_toEndOf="@+id/imgDevice"
+                android:text="xx:xx:xx:xx"
+                android:textStyle="bold"/>
+        </RelativeLayout>
 
     </android.support.design.widget.AppBarLayout>
 
 
-    <FrameLayout
-        android:id="@+id/frameNoWifi"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/frameWifi"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="232sp"
-                android:layout_height="232sp"
-
-                android:scaleType="centerInside"
-                android:src="@drawable/nowifi"
-                android:layout_marginLeft="16sp"
-                android:layout_marginRight="16sp"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                android:id="@+id/imageView2"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/conectewifi"
-                android:layout_below="@+id/imageView2"
-                android:layout_centerHorizontal="true"/>
-        </RelativeLayout>
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/frameWifi"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"   app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recWifis"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal|top"/>
-    </FrameLayout>
+            android:layout_gravity="center_horizontal|top"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -54,4 +54,7 @@
 
     <string name="compilacion">Build Date</string>
     <string name="conectewifi">Please, you have to connect to a wireless network.</string>
+    <string name="midevice">MY DEVICE</string>
+    <string name="sinconexion">No network</string>
+    <string name="sinconexionamp">Not connected to a Wi-Fi network</string>
 </resources>

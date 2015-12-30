@@ -42,4 +42,7 @@
     <string name="info">Información</string>
     <string name="compilacion">Fecha de compilación</string>
     <string name="conectewifi">Por favor, conectesé a una red wifi.</string>
+    <string name="midevice">MI DISPOSITIVO</string>
+    <string name="sinconexion">Sin conexión</string>
+    <string name="sinconexionamp">No está conectado a una red Wi-Fi</string>
 </resources>

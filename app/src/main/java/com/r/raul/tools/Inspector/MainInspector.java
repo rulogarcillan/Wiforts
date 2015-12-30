@@ -1,10 +1,16 @@
 package com.r.raul.tools.Inspector;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,8 +19,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.github.pwittchen.networkevents.library.BusWrapper;
 import com.github.pwittchen.networkevents.library.NetworkEvents;
@@ -41,13 +48,15 @@ public class MainInspector extends Fragment {
     private BusWrapper busWrapper;
     private NetworkEvents networkEvents;
     private Connectivity con;
-    private FrameLayout frameWifi, frameNoWifi;
+    private SwipeRefreshLayout frameWifi;
     private ObtenMaquinas task;
     private ArrayList<Machine> array = new ArrayList<>();
     private RecyclerView recWifis;
     private MachineAdapter adaptador;
     private ProgressBar progressBar;
-
+    private TextView Txtbssid, TxtCon;
+    private ImageView imgDevice;
+    private View rootView;
 
     public void onResume() {
         super.onResume();
@@ -70,7 +79,7 @@ public class MainInspector extends Fragment {
                              Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        final View rootView = inflater.inflate(R.layout.inspector_main, container, false);
+        rootView = inflater.inflate(R.layout.inspector_main, container, false);
 
 
         EventBus bus = new EventBus();
@@ -88,10 +97,13 @@ public class MainInspector extends Fragment {
 
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
 
-        frameWifi = (FrameLayout) rootView.findViewById(R.id.frameWifi);
-        frameNoWifi = (FrameLayout) rootView.findViewById(R.id.frameNoWifi);
+        TxtCon = (TextView) rootView.findViewById(R.id.TxtCon);
+        Txtbssid = (TextView) rootView.findViewById(R.id.Txtbssid);
+
+        frameWifi = (SwipeRefreshLayout) rootView.findViewById(R.id.frameWifi);
         recWifis = (RecyclerView) rootView.findViewById(R.id.recWifis);
 
+        imgDevice = (ImageView) rootView.findViewById(R.id.imgDevice);
 
         adaptador = new MachineAdapter(getActivity(), array);
 
@@ -103,20 +115,42 @@ public class MainInspector extends Fragment {
         a.setmShowLastDivider(true);
         recWifis.addItemDecoration(a);
 
+        imgDevice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+
+            }
+        });
+
+        frameWifi.setColorSchemeResources(
+                R.color.colorAccent,
+                R.color.colorPrimary);
+
+        frameWifi.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                ejecutarTask();
+            }
+        });
         ejecutarTask();
+
 
         return rootView;
     }
 
     private void ejecutarTask() {
 
-        if (con.isConnectedWifi(getActivity())) {
+        if (con.isConnectedWifi(getActivity()) && ( (task!=null && task.getStatus() != AsyncTask.Status.RUNNING) || task==null ) ) {
+
             task = (ObtenMaquinas) new ObtenMaquinas(getActivity(), array) {
 
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
+                    array.clear();
+                    adaptador.notifyDataSetChanged();
                     progressBar.setVisibility(View.VISIBLE);
                     progressBar.setIndeterminate(true);
                     progressBar.setProgress(0);
@@ -128,16 +162,24 @@ public class MainInspector extends Fragment {
                     super.onProgressUpdate(values[0]);
                     progressBar.setProgress(values[0]);
                     adaptador.notifyDataSetChanged();
+
+                    frameWifi.setRefreshing(false);
                 }
 
                 @Override
                 protected void onPostExecute(Void aVoid) {
                     super.onPostExecute(aVoid);
-                    progressBar.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.INVISIBLE);
                     adaptador.notifyDataSetChanged();
 
                 }
             }.execute();
+        } else if (!con.isConnectedWifi(getActivity())) {
+            Snackbar.make(rootView, getResources().getString(R.string.sinconexionamp), Snackbar.LENGTH_LONG).show();
+            frameWifi.setRefreshing(false);
+        } else {
+
+            frameWifi.setRefreshing(false);
         }
     }
 
@@ -174,15 +216,23 @@ public class MainInspector extends Fragment {
     private void ocultaMuestra() {
 
         if (con.isConnectedWifi(getActivity())) {
-            frameWifi.setVisibility(View.VISIBLE);
-            frameNoWifi.setVisibility(View.INVISIBLE);
+            WifiManager wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
+            final String macPadre = wifiManager.getConnectionInfo().getBSSID();
+            final String wifi = wifiManager.getConnectionInfo().getSSID();
+            Txtbssid.setText(macPadre);
+            TxtCon.setText(wifi.replace("\"", ""));
+            imgDevice.setImageResource(R.drawable.icon_wifisi);
         } else {
-            if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
+            Txtbssid.setText(getActivity().getString(R.string.sinconexionamp));
+            TxtCon.setText(getActivity().getString(R.string.sinconexion));
+            imgDevice.setImageResource(R.drawable.icon_wifino);
+            if ( task != null && task.getStatus() == AsyncTask.Status.RUNNING){
+                progressBar.setVisibility(View.INVISIBLE);
+                adaptador.notifyDataSetChanged();
                 task.cancel(true);
             }
-            frameWifi.setVisibility(View.INVISIBLE);
-            frameNoWifi.setVisibility(View.VISIBLE);
         }
+
     }
 
 

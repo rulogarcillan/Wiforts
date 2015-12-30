@@ -26,6 +26,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import jcifs.Config;
+import jcifs.netbios.NbtAddress;
+
+import static com.r.raul.tools.Utils.LogUtils.LOGE;
+
 public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
 
     final static int NUMERO_HILOS = 100;
@@ -117,7 +122,7 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
                             f.get().setTipoImg(Constantes.TIPE_OTHERS);
                         }
 
-                    	
+                        publishProgress(calculoPercent(tot, addresses.length));
                     	for(InspectorTable item : arrayInspectorTable){
                     		if(f.get().getMac().equals(item.getMacdevice())){
                     			isInBBDD=true;
@@ -135,17 +140,38 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
                     	}
                     	
                     	//agregamos el nombre del hardware
+                        NbtAddress[] nbts = new NbtAddress[0];
+                        try {
+                            publishProgress(calculoPercent(tot, addresses.length));
+                            Config.setProperty("jcifs.smb.client.soTimeout", "100");
+                            Config.setProperty("jcifs.smb.client.responseTimeout", "100");
+                            Config.setProperty("jcifs.netbios.soTimeout", "100");
+                            Config.setProperty("jcifs.netbios.retryTimeout", "100");
+
+                            nbts = NbtAddress.getAllByAddress(f.get().getIp());
+                            String netbiosname = nbts[0].getHostName();
+
+                            f.get().setNombre(netbiosname);
+                        } catch (UnknownHostException e) {
+                            f.get().setNombre("-");
+                            if (isMyDevice){
+                                f.get().setNombre(ac.getString(R.string.midevice));
+                            }
+                            e.printStackTrace();
+                        }
+
                     	f.get().setNombreSoft(consultas.getNameFromMac(f.get().getMac()));
                         
-                        array.add(f.get());
+                        array.add(f.get());publishProgress(calculoPercent(tot, addresses.length));
                     }
 
                 } catch (InterruptedException e) {
                     LogUtils.LOGI(e.getMessage());
                 } catch (ExecutionException e) {
-                    LogUtils.LOGE(e.getMessage());
+                    LOGE(e.getMessage());
                 }
                 publishProgress(calculoPercent(tot, addresses.length));
+
 
             } else {
                 es.shutdownNow();

@@ -47,7 +47,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.Holder> 
 
         public TextView txtIp;
         public TextView txtMac;
-        public TextView txtNombre;
+        public TextView txtNombre, txtNombreS;
         public ImageView imgDevice;
         public ToggleButton chkState;
 
@@ -64,6 +64,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.Holder> 
             txtIp = (TextView) v.findViewById(R.id.txtIp);
             txtMac = (TextView) v.findViewById(R.id.txtMac);
             txtNombre = (TextView) v.findViewById(R.id.txtNombre);
+            txtNombreS = (TextView) v.findViewById(R.id.txtNombreS);
             imgDevice = (ImageView) v.findViewById(R.id.imgDevice);
             chkState = (ToggleButton) v.findViewById(R.id.chkState);
 
@@ -97,7 +98,8 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.Holder> 
 
         holder.txtMac.setText("" + array.get(position).getMac());
         holder.chkState.setChecked(array.get(position).isConocido());
-        holder.txtNombre.setText("" + array.get(position).getNombreSoft());
+        holder.txtNombre.setText("" + array.get(position).getNombre());
+        holder.txtNombreS.setText("" + array.get(position).getNombreSoft());
 
 
         holder.chkState.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
