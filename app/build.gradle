@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply from: 'auto-version.gradle'
 
 android {
     compileSdkVersion 23
@@ -8,8 +9,7 @@ android {
         applicationId "com.r.raul.tools"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 1
-        versionName "0.1"
+
     }
     buildTypes {
         release {
