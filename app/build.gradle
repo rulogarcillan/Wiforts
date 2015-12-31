@@ -4,12 +4,29 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
+
+    def Properties versionProps = new Properties()
+    def versionPropsFile = file('version.properties')
+
+    //Creates the version file if it doesn't exist
+    if(versionPropsFile.exists())
+        versionProps.load(new FileInputStream(versionPropsFile))
+
+    def code = (versionProps['VERSION_CODE']).toInteger()
+    def isRelease = versionProps['IS_RELEASE'].toString() == "true"
+
+    if (isRelease) {
+        versionProps['VERSION_CODE'] = (code + 1).toString()
+        versionProps.store(versionPropsFile.newWriter(), null)
+    }
+
+
     defaultConfig {
         applicationId "com.r.raul.tools"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 1
-        versionName "0.1"
+        versionCode code
+        versionName "1.1." + code
     }
     buildTypes {
         release {
