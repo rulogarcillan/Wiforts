@@ -301,6 +301,7 @@ public class MainDeviceInfo extends Fragment {
                 ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("label", adaptadorIpIpDetails.getArray().get(position).getContenido());
                 clipboard.setPrimaryClip(clip);
+
                 //  v.conte_card.setText(array.get(position).getContenido());   adaptadorIpIpDetails;
             }
         });
