@@ -6,14 +6,18 @@ import android.os.Vibrator;
 import com.r.raul.tools.Inspector.Machine;
 import com.r.raul.tools.Ports.Puerto;
 
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 public class Utilidades {
 
@@ -37,13 +41,13 @@ public class Utilidades {
                         socket.connect(new InetSocketAddress(ip, puertoTratar), timeOut);
                     }
                     socket.close();
-                    LogUtils.LOGE("Puerto: " + puertoTratar + " Abierto");
+                    LogUtils.LOGI("Puerto: " + puertoTratar + " Abierto");
                     return new Puerto(puertoTratar, 0);
                 } catch (SocketTimeoutException exTime) {
-                    LogUtils.LOGE("Puerto: " + puertoTratar + " TimeOut");
+                    LogUtils.LOGI("Puerto: " + puertoTratar + " TimeOut");
                     return new Puerto(puertoTratar, 2);
                 } catch (Exception ex) {
-                    LogUtils.LOGE("Puerto: " + puertoTratar + " Cerrado");
+                    LogUtils.LOGI("Puerto: " + puertoTratar + " Cerrado");
                     return new Puerto(puertoTratar, 1);
                 }
 
@@ -79,9 +83,11 @@ public class Utilidades {
     public static class ScanNet {
 
         public static Machine escaneaIps(InetAddress ip, int time) throws Exception {
-            
+
             Machine retorno = new Machine();
             retorno.setIp(ip.getHostName());
+            final ExecutorService es = Executors.newFixedThreadPool(5);
+            final List<Future<Puerto>> futures = new ArrayList<Future<Puerto>>();
 
             if (ip.isReachable(time)) {
                 retorno.setConectado(true);
@@ -90,19 +96,40 @@ public class Utilidades {
 
                 int[] puertos = {135, 139, 22, 11, 80};
 
+
                 for (int num : puertos) {
-                    try {
-                        Socket socket = new Socket();
-                        socket.connect(new InetSocketAddress(ip.getHostAddress(), num), 200);
-                        socket.close();
-                        retorno.setConectado(true);
-                        break;
-                    } catch (IOException e1) {
-                        retorno.setConectado(false);
+
+                    futures.add(Utilidades.portIsOpen(es, ip.getHostAddress(), num, 1000));
+                    es.awaitTermination(1000L, TimeUnit.MILLISECONDS);
+
+                    for (final Future<Puerto> f : futures) {
+                        try {
+                            if (f.get().getIsOpen() == 0) {
+                                retorno.setConectado(true);
+                                break;
+                            } else if (f.get().getIsOpen() == 1) {
+                                retorno.setConectado(false);
+                            } else if (f.get().getIsOpen() == 2) {
+                                retorno.setConectado(false);
+                            }
+                        } catch (InterruptedException e) {
+                            LogUtils.LOGE(e.getMessage());
+
+                        } catch (ExecutionException e) {
+                            LogUtils.LOGE(e.getMessage());
+
+                        }
+
                     }
+                    //futures.clear();
                 }
             }
+
+            es.shutdownNow();
+           // LogUtils.LOGE("FIIIIIIIIIIIIIIIIIIIN");
             return retorno;
         }
     }
+
+
 }

@@ -54,7 +54,7 @@ public class MainInspector extends Fragment {
     private RecyclerView recWifis;
     private MachineAdapter adaptador;
     private ProgressBar progressBar;
-    private TextView Txtbssid, TxtCon;
+    private TextView Txtbssid, TxtCon, TxtTot;
     private ImageView imgDevice;
     private View rootView;
 
@@ -97,8 +97,11 @@ public class MainInspector extends Fragment {
 
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
 
+        TxtTot = (TextView) rootView.findViewById(R.id.TxtTotDev);
         TxtCon = (TextView) rootView.findViewById(R.id.TxtCon);
         Txtbssid = (TextView) rootView.findViewById(R.id.Txtbssid);
+
+        TxtTot.setText(array.size()+"");
 
         frameWifi = (SwipeRefreshLayout) rootView.findViewById(R.id.frameWifi);
         recWifis = (RecyclerView) rootView.findViewById(R.id.recWifis);
@@ -154,6 +157,7 @@ public class MainInspector extends Fragment {
                     progressBar.setVisibility(View.VISIBLE);
                     progressBar.setIndeterminate(true);
                     progressBar.setProgress(0);
+                    TxtTot.setText(array.size()+"");
                 }
 
                 @Override
@@ -162,7 +166,7 @@ public class MainInspector extends Fragment {
                     super.onProgressUpdate(values[0]);
                     progressBar.setProgress(values[0]);
                     adaptador.notifyDataSetChanged();
-
+                    TxtTot.setText(array.size()+"");
                     frameWifi.setRefreshing(false);
                 }
 
@@ -171,6 +175,7 @@ public class MainInspector extends Fragment {
                     super.onPostExecute(aVoid);
                     progressBar.setVisibility(View.INVISIBLE);
                     adaptador.notifyDataSetChanged();
+                    TxtTot.setText(array.size()+"");
 
                 }
             }.execute();

@@ -9,24 +9,48 @@ android {
     def versionPropsFile = file('version.properties')
 
     //Creates the version file if it doesn't exist
-    if(versionPropsFile.exists())
+    if (versionPropsFile.exists())
         versionProps.load(new FileInputStream(versionPropsFile))
 
+    def name1 = (versionProps['NAME1_CODE']).toInteger()
+    def name2 = (versionProps['NAME2_CODE']).toInteger()
+    def name3 = (versionProps['NAME3_CODE']).toInteger()
+    def contador = (versionProps['VERSION_CODETOT']).toInteger()
     def code = (versionProps['VERSION_CODE']).toInteger()
-    def isRelease = versionProps['IS_RELEASE'].toString() == "true"
 
-    if (isRelease) {
+
+    if (contador >= 9) {
         versionProps['VERSION_CODE'] = (code + 1).toString()
-        versionProps.store(versionPropsFile.newWriter(), null)
+        versionProps['VERSION_CODETOT'] = 0.toString()
+
+    } else {
+        versionProps['VERSION_CODE'] = (code).toString()
+        versionProps['VERSION_CODETOT'] = (contador + 1).toString()
     }
 
+    if (name3 >= 999) {
+        versionProps['NAME3_CODE'] = 0.toString()
+        if (name2 >= 9) {
+            versionProps['NAME1_CODE'] = (name1 + 1).toString()
+            versionProps['NAME2_CODE'] = 0.toString()
+        } else {
+            versionProps['NAME1_CODE'] = (name1).toString()
+            versionProps['NAME2_CODE'] = (name2 + 1).toString()
+        }
+    } else {
+        versionProps['NAME3_CODE'] = (name3 + 1).toString()
+        versionProps['NAME1_CODE'] = (name1).toString()
+        versionProps['NAME2_CODE'] = (name2).toString()
+    }
+
+    versionProps.store(versionPropsFile.newWriter(), null)
 
     defaultConfig {
         applicationId "com.r.raul.tools"
         minSdkVersion 17
         targetSdkVersion 23
         versionCode code
-        versionName "1.1." + code
+        versionName name1 + "." + name2 + "." + name3
     }
     buildTypes {
         release {
@@ -75,3 +99,4 @@ dependencies {
     }
 
 }
+
