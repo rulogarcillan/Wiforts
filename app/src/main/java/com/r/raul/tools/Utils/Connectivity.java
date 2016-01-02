@@ -75,6 +75,13 @@ public class Connectivity {
         }
     }
 
+    public String parseIP2(int i) {
+        return ( i & 0xFF) + "." +
+                (( i >> 8 ) & 0xFF) + "." +
+                (( i >> 16 ) & 0xFF) + ".1";// +
+        //(( i >> 24 ) & 0xFF);
+    }
+
     public static String getType(int type, int subType, Activity a) {
         if (type == ConnectivityManager.TYPE_WIFI) {
             return "WIFI";
