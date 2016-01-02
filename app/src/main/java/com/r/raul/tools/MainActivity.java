@@ -36,16 +36,16 @@ public class MainActivity extends BaseActivity
 
     FragmentManager fragmentManager = getSupportFragmentManager();
     Fragment fragment;
-    int ItemAnterior = R.id.nav_device;
+    int ItemAnterior = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
+
         //se crea la base de datos si no existe.
         new MyDatabase(this);
-       // new MyDatabaseMacs(this);
+        // new MyDatabaseMacs(this);
         //copia debug
         copybd();
 
@@ -81,7 +81,7 @@ public class MainActivity extends BaseActivity
         }
 
         if (savedInstanceState == null) {
-            LanzarDeviceInfo();
+            LanzarDeviceInfo(R.id.nav_device);
 
         } else {
             String tag = fragmentManager.findFragmentById(R.id.container).getTag();
@@ -90,15 +90,6 @@ public class MainActivity extends BaseActivity
                     //.addToBackStack("LISTADO")
                     .commit();
         }
-
-      /*  FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
 
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -128,15 +119,15 @@ public class MainActivity extends BaseActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_device && id != ItemAnterior) {
-            LanzarDeviceInfo();
+            LanzarDeviceInfo(id);
 
         } else if (id == R.id.nav_wifi_inspector && id != ItemAnterior) {
-            LanzarInspector();
-        } else if (id == R.id.nav_wifi && id != ItemAnterior) {
+            LanzarInspector(id);
+       /* } else if (id == R.id.nav_wifi && id != ItemAnterior) {*/
 
         } else if (id == R.id.nav_ports && id != ItemAnterior) {
-            LanzarDeviceOpenPorts();
-        } else if (id == R.id.nav_test && id != ItemAnterior) {
+            LanzarDeviceOpenPorts(id);
+      /*  } else if (id == R.id.nav_test && id != ItemAnterior) {*/
 
             // } else if (id == R.id.nav_opciones) {
 
@@ -145,32 +136,37 @@ public class MainActivity extends BaseActivity
             lanzaInfo();
 
         } else if (id == R.id.nav_changelog) {
+
             new LanzaChangelog(this).getFullLogDialog().show();
 
         }
 
-        ItemAnterior = id;
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
 
-    private void LanzarDeviceInfo() {
+    private void LanzarDeviceInfo(int id) {
+
+        ItemAnterior = id;
         fragment = new MainDeviceInfo();
         fragmentManager.beginTransaction().replace(R.id.container, fragment, "deviceInfo")
                 //.addToBackStack("LISTADO")
                 .commit();
     }
 
-    private void LanzarInspector() {
+    private void LanzarInspector(int id) {
+        ItemAnterior = id;
         fragment = new MainInspector();
         fragmentManager.beginTransaction().replace(R.id.container, fragment, "inspector")
                 //.addToBackStack("LISTADO")
                 .commit();
     }
 
-    private void LanzarDeviceOpenPorts() {
+    private void LanzarDeviceOpenPorts(int id) {
+        ItemAnterior = id;
         fragment = new MainOpenPorts();
         fragmentManager.beginTransaction().replace(R.id.container, fragment, "deviceOpenPorts")
                 //.addToBackStack("LISTADO")
@@ -187,6 +183,7 @@ public class MainActivity extends BaseActivity
     }
 
     private void lanzaInfo() {
+
         String s = "";
         try {
             ApplicationInfo ai = getPackageManager().getApplicationInfo(getPackageName(), 0);

@@ -73,6 +73,22 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
         SubnetUtils utils = new SubnetUtils(gateway, subMask);
         SubnetUtils.SubnetInfo info = utils.getInfo();
 
+       /* InetAddress localHost = null;
+        try {
+            localHost = Inet4Address.getLocalHost();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        NetworkInterface networkInterface = null;
+        try {
+            networkInterface = NetworkInterface.getByInetAddress(localHost);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+        String ipAddress = localHost.getHostAddress();
+        String subnetMask = "/"+networkInterface.getInterfaceAddresses().get(0).getNetworkPrefixLength();
+        System.out.println(ipAddress + subnetMask);*/
+
         String[] addresses = utils.getInfo().getAllAddresses();
 	
         for (String ip : addresses) {
