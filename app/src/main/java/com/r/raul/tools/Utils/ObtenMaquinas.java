@@ -24,9 +24,11 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import jcifs.Config;
@@ -44,6 +46,15 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
     private ArrayList<Machine> array;
     private ProgressBar progressBar;
     private Consultas consultas;
+  //  private final ExecutorService es = Executors.newFixedThreadPool(NUMERO_HILOS);
+    private final List<Future<Machine>> futures = new ArrayList<Future<Machine>>();
+
+    private static final int CORE_POOL_SIZE = 100;
+    private static final int MAXIMUM_POOL_SIZE = 128;
+    private static final int KEEP_ALIVE = 1;
+    public static final Executor THREAD_POOL_EXECUTOR
+            = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
+            TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
 
 
     public ObtenMaquinas(Activity ac, ArrayList<Machine> array) {
@@ -59,9 +70,6 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-
-        final ExecutorService es = Executors.newFixedThreadPool(NUMERO_HILOS);
-        final List<Future<Machine>> futures = new ArrayList<Future<Machine>>();
 
         WifiManager wifiManager = (WifiManager) ac.getSystemService(Context.WIFI_SERVICE);
         final String macPadre = wifiManager.getConnectionInfo().getBSSID();
@@ -85,41 +93,6 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
 
         }
 
-
-
-
-
-    /*    NetworkInterface networkInterface = null;
-        try {
-            networkInterface = NetworkInterface.getByInetAddress(InetAddress.getByName("192.168.0.1"));
-        } catch (SocketException e) {
-            e.printStackTrace();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-        for (InterfaceAddress address : networkInterface.getInterfaceAddresses()) {
-            short netPrefix = address.getNetworkPrefixLength();
-            LOGE("sadsa " + netPrefix + "  dwasd");
-        }*/
-
-
-
-       /* InetAddress localHost = null;
-        try {
-            localHost = Inet4Address.getLocalHost();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-        NetworkInterface networkInterface = null;
-        try {
-            networkInterface = NetworkInterface.getByInetAddress(localHost);
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
-        String ipAddress = localHost.getHostAddress();
-        String subnetMask = "/"+networkInterface.getInterfaceAddresses().get(0).getNetworkPrefixLength();
-        System.out.println(ipAddress + subnetMask);*/
-
         SubnetUtils utils = new SubnetUtils(gateway, subMask);
         SubnetUtils.SubnetInfo info = utils.getInfo();
         String[] addresses;
@@ -141,17 +114,13 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
                 e.printStackTrace();
             }
             if (!isCancelled()) {
-                futures.add(Utilidades.machineExist(es, ipA, TIME_UP));
+                futures.add(Utilidades.machineExist((ExecutorService) THREAD_POOL_EXECUTOR, ipA, TIME_UP));
             } else {
-                es.shutdownNow();
+
             }
         }
 
-        try {
-            es.awaitTermination(TIME_UP, TimeUnit.MILLISECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
 
         int tot = 0; //total ips analizadas para barra de progreso
         for (final Future<Machine> f : futures) {
@@ -230,16 +199,25 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
                     LOGE(e.getMessage());
                 }
                 publishProgress(calculoPercent(tot, addresses.length));
-
-
             } else {
-                es.shutdownNow();
+              //  es.shutdownNow();
             }
         }
 
         return null;
     }
 
+    @Override
+    protected void onCancelled() {
+       // es.shutdownNow();
+        super.onCancelled();
+    }
+
+    @Override
+    protected void onCancelled(Void aVoid) {
+       // es.shutdownNow();
+        super.onCancelled(aVoid);
+    }
 
     private String getMacFromArpCache(String ip) {
         if (ip == null)

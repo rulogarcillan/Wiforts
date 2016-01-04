@@ -69,9 +69,10 @@ public class MainInspector extends Fragment {
         super.onPause();
         busWrapper.unregister(this);
         networkEvents.unregister();
-        if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
+        if (task != null) {
             task.cancel(true);
         }
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override

@@ -41,13 +41,13 @@ public class Utilidades {
                         socket.connect(new InetSocketAddress(ip, puertoTratar), timeOut);
                     }
                     socket.close();
-                    LogUtils.LOGI("Puerto: " + puertoTratar + " Abierto");
+                   // LogUtils.LOGI("Puerto: " + puertoTratar + " Abierto");
                     return new Puerto(puertoTratar, 0);
                 } catch (SocketTimeoutException exTime) {
-                    LogUtils.LOGI("Puerto: " + puertoTratar + " TimeOut");
+                   // LogUtils.LOGI("Puerto: " + puertoTratar + " TimeOut");
                     return new Puerto(puertoTratar, 2);
                 } catch (Exception ex) {
-                    LogUtils.LOGI("Puerto: " + puertoTratar + " Cerrado");
+                   // LogUtils.LOGI("Puerto: " + puertoTratar + " Cerrado");
                     return new Puerto(puertoTratar, 1);
                 }
 
@@ -100,7 +100,7 @@ public class Utilidades {
                 for (int num : puertos) {
 
                     futures.add(Utilidades.portIsOpen(es, ip.getHostAddress(), num, 1000));
-                    es.awaitTermination(1000L, TimeUnit.MILLISECONDS);
+                    es.awaitTermination(200L, TimeUnit.MILLISECONDS);
 
                     for (final Future<Puerto> f : futures) {
                         try {
