@@ -16,6 +16,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.r.raul.tools.DB.MyDatabase;
@@ -48,6 +50,12 @@ public class MainActivity extends BaseActivity
         // new MyDatabaseMacs(this);
         //copia debug
         copybd();
+
+        /***PUBLI**/
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //code

@@ -1,4 +1,7 @@
 <resources>
+
+    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-9438738341601496/2316137167</string>
+
     <string name="app_name" translatable="false">myNetworks</string>
 
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
