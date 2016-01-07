@@ -2,6 +2,7 @@ package com.r.raul.tools.Inspector;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -241,5 +242,13 @@ public class MainInspector extends Fragment {
 
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
 
+         adaptador = new MachineAdapter(getActivity(), array);
+        recWifis.setAdapter(adaptador);
+        adaptador.notifyDataSetChanged();
+
+    }
 }
