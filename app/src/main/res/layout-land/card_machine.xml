@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4sp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8sp"
+        android:layout_marginLeft="8sp"
+        android:layout_marginRight="8sp"
+        android:layout_marginTop="8sp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imgDevice"
+            android:layout_width="36sp"
+            android:layout_height="36sp"
+
+
+            android:src="@drawable/icon_device"/>
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16sp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:orientation="vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/txtNombre"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="LG-XX"
+                        android:textColor="@color/fondo"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/txtNombreS"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="LG-XX"
+                        android:textColor="@color/colorPrimary"
+                        android:textStyle="bold"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:orientation="vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/txtIp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="192.168.0.XX"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/txtMac"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="XX:XX:XX:XX"/>
+
+                </LinearLayout>
+
+
+
+
+
+
+            </LinearLayout>
+
+            <ToggleButton
+
+                android:id="@+id/chkState"
+                android:layout_width="36sp"
+                android:layout_height="36sp"
+
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/toggle_selector"
+                android:textOff=""
+                android:textOn=""
+                android:checked="false"/>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>
