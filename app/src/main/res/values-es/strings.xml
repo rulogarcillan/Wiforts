@@ -45,4 +45,6 @@
     <string name="midevice">MI DISPOSITIVO</string>
     <string name="sinconexion">Sin conexión</string>
     <string name="sinconexionamp">No está conectado a una red Wi-Fi</string>
+    <string name="share_app">Prueba la App \"myNetworwk\", toda la información de tu red al alcance de tu mano.\n-Información de conexión.\n-Visualiza intrusos en tu red.\n-Escanea puertos.\n-Muchas más opciones.\n\nhttps://goo.gl/NeFOIq</string>
+    <string name="contacto">Contacto</string>
 </resources>

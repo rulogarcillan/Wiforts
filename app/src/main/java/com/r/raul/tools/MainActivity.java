@@ -16,6 +16,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -55,6 +57,8 @@ public class MainActivity extends BaseActivity
 
         /***PUBLI**/
         final AdView mAdView = (AdView) findViewById(R.id.adView);
+
+
 
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
@@ -109,9 +113,29 @@ public class MainActivity extends BaseActivity
         }
 
 
+
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_device);
+
+        ImageButton navShare = (ImageButton) navigationView.getHeaderView(0).findViewById(R.id.navShare);
+        navShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                compartirApp();
+            }
+        });
+
+        TextView mailCabecera = (TextView) navigationView.getHeaderView(0).findViewById(R.id.mailCabecera);
+        mailCabecera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                contactApp();
+            }
+        });
+
+
 
 
     }
@@ -252,6 +276,8 @@ public class MainActivity extends BaseActivity
             super(new ContextThemeWrapper(context, R.style.AppTheme), DEFAULT_CSS);
         }
     }
+
+
 
 
 }
