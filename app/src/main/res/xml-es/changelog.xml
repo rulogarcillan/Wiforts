@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="0.0.126 beta" versioncode="13">
+        <change>Añadido contacto</change>
+        <change>Añadido compartir app</change>
+        <change>Añadido informacion de la app</change>
+        <change>Pequeños cambios en la UI</change>
+        <change>Corrección de errores</change>
+    </release>
     <release version="0.0.58 alfa" versioncode="6">
         <change>Añadido información del dispositivo</change>
         <change>Añadido inspector wifi</change>

@@ -25,8 +25,8 @@ public class BaseActivity extends AppCompatActivity {
 
 
     protected void contactApp() {
-        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + R.string.my_mail));
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, R.string.app_name);
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + this.getResources().getString(R.string.my_mail)));
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, this.getResources().getString(R.string.app_name));
         startActivity(Intent.createChooser(emailIntent, this.getResources().getString(R.string.contacto)));
     }
 
