@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="1.0.0 RC1" versioncode="16">
+        <change>Corrección de errores</change>
+    </release>
     <release version="0.0.126 beta" versioncode="13">
         <change>Añadido contacto</change>
         <change>Añadido compartir app</change>

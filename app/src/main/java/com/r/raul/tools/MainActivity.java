@@ -58,15 +58,13 @@ public class MainActivity extends BaseActivity
         /***PUBLI**/
         final AdView mAdView = (AdView) findViewById(R.id.adView);
 
-
-
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
         mAdView.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
-                mAdView.setVisibility(View.VISIBLE);
+             //   mAdView.setVisibility(View.VISIBLE);
             }
         });
 
@@ -112,9 +110,6 @@ public class MainActivity extends BaseActivity
                     .commit();
         }
 
-
-
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_device);
@@ -135,9 +130,10 @@ public class MainActivity extends BaseActivity
             }
         });
 
-
-
-
+        ChangeLog cl = new ChangeLog(this);
+        if (cl.isFirstRun()) {
+            new LanzaChangelog(this).getLogDialog().show();
+        }
     }
 
     @Override

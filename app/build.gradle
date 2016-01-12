@@ -50,7 +50,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 23
         versionCode code
-        versionName name1 + "." + name2 + "." + name3 +" beta"
+        versionName name1 + "." + name2 + "." + name3 +" RC1"
     }
     buildTypes {
         release {

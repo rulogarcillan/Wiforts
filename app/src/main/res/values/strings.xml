@@ -60,7 +60,7 @@
     <string name="midevice">MY DEVICE</string>
     <string name="sinconexion">No network</string>
     <string name="sinconexionamp">Not connected to a Wi-Fi network</string>
-    <string name="share_app">Try the App \"myNetworwk\", all the information about your network at a glance.\n-Information about your net.\n-Check if someone is using your net.\n-Scan any port.\n-Many other things.\n\nhttps://goo.gl/NeFOIq</string>
+    <string name="share_app">Try the App \"myNetworwk\", all the information about your network at a glance.\n -Information about your net.\n-Check if someone is using your net.\n-Scan any port.\n-Many other things.\n\n</string>
     <string name="contacto">Contact</string>
 
 
