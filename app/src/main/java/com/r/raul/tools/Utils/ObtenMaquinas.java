@@ -337,11 +337,20 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
             e.printStackTrace();
         }
 
-        //     item.setNombreSoft(consultas.getNameFromMac(item.getMac()));
+        //
 
         array.add(item);
         publishProgress(calculoPercent(tot, 255));
 
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        for (Machine ips:array){
+            ips.setNombreSoft(consultas.getNameFromMac(ips.getMac()));
+
+        }
     }
 
     @Override

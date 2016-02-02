@@ -77,19 +77,21 @@ public class IpScan {
             InetAddress h = InetAddress.getByName(ip);
             if (h.isReachable(timeout)) {
                 scanResult.onActiveIp(ip);
+            }else{
+                scanResult.onIpScanned(ip);
             }
         } catch (UnknownHostException e) {
             if (Constants.ENABLE_LOGGING) {
                 e.printStackTrace();
 
             }
-            scanResult.onIpScanned(ip);
+
         } catch (IOException e) {
             if (Constants.ENABLE_LOGGING) {
                 e.printStackTrace();
 
             }
-            scanResult.onIpScanned(ip);
+
         }
 
     }
