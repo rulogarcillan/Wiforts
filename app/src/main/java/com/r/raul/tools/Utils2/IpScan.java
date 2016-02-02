@@ -81,14 +81,15 @@ public class IpScan {
         } catch (UnknownHostException e) {
             if (Constants.ENABLE_LOGGING) {
                 e.printStackTrace();
-                scanResult.onIpScanned(ip);
+
             }
+            scanResult.onIpScanned(ip);
         } catch (IOException e) {
             if (Constants.ENABLE_LOGGING) {
                 e.printStackTrace();
-                scanResult.onIpScanned(ip);
+
             }
-            ;
+            scanResult.onIpScanned(ip);
         }
 
     }
