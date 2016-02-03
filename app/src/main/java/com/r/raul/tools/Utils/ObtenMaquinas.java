@@ -85,7 +85,6 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
         //consultamos las conexiones guardadas para la mac padre
         arrayInspectorTable = consultas.getAllInspectorTableFromMacPadre(macPadre);
 
-
         DhcpInfo dhcpInfo = wifiManager.getDhcpInfo();
         try {
             InetAddress inetAddress = InetAddress.getByName(con.parseIP(dhcpInfo.ipAddress));
@@ -97,22 +96,11 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
 
         }
 
-        SubnetUtils utils = new SubnetUtils(gateway, subMask);
-        SubnetUtils.SubnetInfo info = utils.getInfo();
-        String[] addresses;
+        SubnetUtils utils = new SubnetUtils(gateway + "/" + prefix);
+        
+        ScanRange scanRange = null; 
         try {
-            addresses = utils.getInfo().getAllAddresses();
-            LOGE("BIEN");
-        } catch (Exception e) {
-            LOGE("MAL");
-            utils = new SubnetUtils(gateway + "/" + prefix);
-            addresses = utils.getInfo().getAllAddresses();
-        }
-
-        //Discover all cameras
-        ScanRange scanRange = null; //subnet mask
-        try {
-            scanRange = new ScanRange("192.168.0.1", "255.255.255.0");
+            scanRange = new ScanRange(gateway, utils.getInfo().getNetmask());
         } catch (Exception e) {
             e.printStackTrace();
         }
