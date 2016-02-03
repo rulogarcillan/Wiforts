@@ -15,16 +15,6 @@ public class ScanRange {
 	setUpStartAndEnd(cidr);
     }
 
-    // TODO: Temporary disabled this because get cidr from interface is not
-    // working sometimes
-    // public ScanRange(NetworkInterface networkInterface) throws Exception
-    // {
-    // scanIp = IpTranslator.getUnsignedLongFromIp(NetworkInfo
-    // .getIpFromInterface(networkInterface));
-    // int cidr = NetworkInfo.getCidrFromInterface(networkInterface);
-    // setUpStartAndEnd(cidr);
-    // }
-
     private void setUpStartAndEnd(int cidr) {
 	int shift = (32 - cidr);
 	if (cidr < 31) {
@@ -35,10 +25,7 @@ public class ScanRange {
 	    scanEnd = (scanStart | ((1 << shift) - 1));
 	}
     }
-
-    /**
-     * @return true if the given IP is in this scan range
-     */
+    
     public boolean containIp(String ip) throws Exception {
 	int shift = (32 - cidr);
 	long ipLong = IpTranslator.getUnsignedLongFromIp(ip);
