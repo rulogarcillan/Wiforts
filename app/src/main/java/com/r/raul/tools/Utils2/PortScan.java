@@ -16,9 +16,9 @@ public class PortScan {
     
     public void start(String ip) throws Exception {
         
-        ArrayList<Port> standardPorts = getStandardPortList(); //puertos a tratar
+        ArrayList<Puerto> standardPorts = getStandardPortList(); //puertos a tratar
         boolean activo = false;
-        for (Port port : standardPorts) {
+        for (Puerto port : standardPorts) {
             if (scanPort(ip, port)){
                 activo = true;
                 if (scanResult != null) {
@@ -34,18 +34,18 @@ public class PortScan {
         }
     }
 
-    private ArrayList<Port> getStandardPortList() {
-        ArrayList<Port> portList = new ArrayList<>();
-        portList.add(new Port(Port.TYPE_HTTP, 80));
-        portList.add(new Port(Port.TYPE_HTTP, 135));
-        portList.add(new Port(Port.TYPE_HTTP, 139));
-        portList.add(new Port(Port.TYPE_HTTP, 22));
-        portList.add(new Port(Port.TYPE_HTTP, 11));
+    private ArrayList<Puerto> getStandardPortList() {
+        ArrayList<Puerto> portList = new ArrayList<Puerto>();
+        portList.add(new Puerto(80,0));
+        portList.add(new Puerto(123,0));
+        portList.add(new Puerto(139,0));
+        portList.add(new Puerto(22,0));
+        portList.add(new Puerto(11,0));
         return portList;
     }
 
-    private Boolean scanPort(String ip, Port port) throws Exception {
-        if (Port.isReachable(ip, port.getValue())) {
+    private Boolean scanPort(String ip, Puerto port) throws Exception {
+        if (Puerto.isReachable(ip, port.getValue())) {
             return true;
         }
         return false;
