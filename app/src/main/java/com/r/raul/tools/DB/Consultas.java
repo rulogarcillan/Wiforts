@@ -99,7 +99,7 @@ public class Consultas {
 
                 } while (cur.moveToNext());
             }
-            db.close();
+            //db.close();
         }
         return retorno;
     }

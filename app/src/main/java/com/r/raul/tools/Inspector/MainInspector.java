@@ -31,6 +31,7 @@ import com.r.raul.tools.R;
 import com.r.raul.tools.Utils.Connectivity;
 import com.r.raul.tools.Utils.ObtenMaquinas;
 import com.r.raul.tools.Utils.SampleDivider;
+import com.r.raul.tools.Utils.Utilidades;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -136,6 +137,7 @@ public class MainInspector extends Fragment {
         frameWifi.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                Utilidades.lanzaVibracion(getActivity(), 100);
                 ejecutarTask();
             }
         });
@@ -150,6 +152,7 @@ public class MainInspector extends Fragment {
         if (con.isConnectedWifi(getActivity()) && ( (task!=null && task.getStatus() != AsyncTask.Status.RUNNING) || task==null ) ) {
 
             task = (ObtenMaquinas) new ObtenMaquinas(getActivity(), array) {
+
 
                 @Override
                 protected void onPreExecute() {
@@ -177,7 +180,8 @@ public class MainInspector extends Fragment {
                     super.onPostExecute(aVoid);
                     progressBar.setVisibility(View.INVISIBLE);
                     adaptador.notifyDataSetChanged();
-                    TxtTot.setText(array.size()+"");
+                    TxtTot.setText(array.size() + "");
+                    Utilidades.lanzaVibracion(getActivity(), 500);
 
                 }
             }.execute();

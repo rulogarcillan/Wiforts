@@ -13,9 +13,9 @@ import com.r.raul.tools.Inspector.InspectorTable;
 import com.r.raul.tools.Inspector.Machine;
 import com.r.raul.tools.R;
 import com.r.raul.tools.Utils2.IpScan;
-import com.r.raul.tools.Utils2.Port;
+
 import com.r.raul.tools.Utils2.PortScan;
-import com.r.raul.tools.Utils2.PortScanCallback;
+
 import com.r.raul.tools.Utils2.ScanRange;
 import com.r.raul.tools.Utils2.ScanResult;
 
@@ -29,6 +29,8 @@ import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
@@ -68,7 +70,7 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
 	}
 
 	private int calculoPercent(int valor, float tot) {
-		return (valor * 100 / tot);
+		return (int) (valor * 100 / tot);
 	}
 
 	@Override
@@ -120,7 +122,7 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
 
 					@Override
 					public void onActiveIp(String ip2) {
-						encontrada(ip);
+						encontrada(ip2);
 						publishProgress(calculoPercent(tot++, totalMachine));
 					}
 
@@ -271,12 +273,13 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
 			e.printStackTrace();
 		}
 
+		//item.setNombreSoft(consultas.getNameFromMac(item.getMac()));
 		array.add(item);
 		ordenarIps(array);
 		
 	}
 	
-	private void ordenarIps(){
+	private void ordenarIps(ArrayList ips){
 		Collections.sort(ips, new Comparator<Machine>() {
 
 			@Override
@@ -324,14 +327,7 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
 		});
 	}
 
-	@Override
-	protected void finalize() throws Throwable {
-		super.finalize();
-		for (Machine ips : array) {
-			ips.setNombreSoft(consultas.getNameFromMac(ips.getMac()));
 
-		}
-	}
 
 	@Override
 	protected void onCancelled() {

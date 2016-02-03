@@ -8,6 +8,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import static com.r.raul.tools.Utils.LogUtils.LOGE;
+
 public class IpScan {
     private ScanResult scanResult;
     public static final int DEFAULT_TIME_OUT = 2500;
@@ -86,12 +88,12 @@ public class IpScan {
             }
         } catch (UnknownHostException e) {
            
-           LOGE(e.printStackTrace());
+           LOGE(e.getMessage());
            
 
         } catch (IOException e) {
             
-        	LOGE(e.printStackTrace());
+        	LOGE(e.getMessage());
             
         }
     }

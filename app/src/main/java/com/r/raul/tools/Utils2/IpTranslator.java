@@ -3,6 +3,8 @@ package com.r.raul.tools.Utils2;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import static com.r.raul.tools.Utils.LogUtils.LOGE;
+
 public class IpTranslator {
     public static final String EMPTY_IP = "0.0.0.0";
 
@@ -55,7 +57,7 @@ public class IpTranslator {
 	    netAddr = InetAddress.getByAddress(bytes);
 	    return netAddr.getHostAddress();
 	} catch (UnknownHostException e) {
-		LOGE(e.printStackTrace());
+		LOGE(e.getMessage());
 	}
 
 	return EMPTY_IP;

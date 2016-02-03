@@ -1,6 +1,8 @@
 
 package com.r.raul.tools.Utils2;
 
+import com.r.raul.tools.Ports.Puerto;
+
 import java.util.ArrayList;
 
 public class PortScan {

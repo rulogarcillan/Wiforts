@@ -64,7 +64,7 @@ public class MainActivity extends BaseActivity
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
-             //   mAdView.setVisibility(View.VISIBLE);
+                mAdView.setVisibility(View.VISIBLE);
             }
         });
 

@@ -1,5 +1,10 @@
 package com.r.raul.tools.Ports;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+
 public class Puerto {
     
     private int puerto;
