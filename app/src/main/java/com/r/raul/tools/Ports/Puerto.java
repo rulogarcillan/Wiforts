@@ -4,9 +4,12 @@ public class Puerto {
     
     private int puerto;
     private int isOpen;
+    private int value = 0;
+    private boolean isActive;
 
     public Puerto(int puerto, int isOpen) {
         super();
+        setValue(puerto);		
         this.puerto = puerto;
         this.isOpen = isOpen;
     }
@@ -27,13 +30,6 @@ public class Puerto {
         this.isOpen = isOpen;
     }
     
-    private int value = 0;
-	private boolean isActive;
-
-	public Puerto(int value) {
-		setValue(value);		
-	}
-
 	public int getValue() {
 		return value;
 	}
@@ -74,5 +70,6 @@ public class Puerto {
 		}
 	}
 }
+
 
 
