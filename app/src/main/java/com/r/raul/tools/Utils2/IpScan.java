@@ -78,22 +78,18 @@ public class IpScan {
             if (h.isReachable(timeout)) {
                 scanResult.onActiveIp(ip);
             }else{
-                scanResult.onIpScanned(ip);
+                scanResult.onInActiveIp(ip);
             }
         } catch (UnknownHostException e) {
             if (Constants.ENABLE_LOGGING) {
                 e.printStackTrace();
-
             }
 
         } catch (IOException e) {
             if (Constants.ENABLE_LOGGING) {
                 e.printStackTrace();
-
             }
-
         }
-
     }
 
     private class SingleRunnable implements Runnable {
