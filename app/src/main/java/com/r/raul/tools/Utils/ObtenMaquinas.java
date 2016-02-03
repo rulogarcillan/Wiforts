@@ -273,7 +273,7 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
 			e.printStackTrace();
 		}
 
-		//item.setNombreSoft(consultas.getNameFromMac(item.getMac()));
+		item.setNombreSoft(consultas.getNameFromMac(item.getMac()));
 		array.add(item);
 		ordenarIps(array);
 		
