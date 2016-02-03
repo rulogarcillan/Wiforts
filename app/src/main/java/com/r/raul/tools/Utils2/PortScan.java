@@ -37,12 +37,12 @@ public class PortScan {
     private ArrayList<Puerto> getStandardPortList() {
         ArrayList<Puerto> portList = new ArrayList<Puerto>();
         portList.add(new Puerto(80,0));
-        portList.add(new Puerto(123,0));
+        portList.add(new Puerto(135,0));
         portList.add(new Puerto(139,0));
         portList.add(new Puerto(22,0));
         portList.add(new Puerto(11,0));
         return portList;
-    }
+    } 
 
     private Boolean scanPort(String ip, Puerto port) throws Exception {
         if (Puerto.isReachable(ip, port.getValue())) {
