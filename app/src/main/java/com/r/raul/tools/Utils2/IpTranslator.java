@@ -55,9 +55,7 @@ public class IpTranslator {
 	    netAddr = InetAddress.getByAddress(bytes);
 	    return netAddr.getHostAddress();
 	} catch (UnknownHostException e) {
-	    if (Constants.ENABLE_LOGGING) {
-		e.printStackTrace();
-	    }
+		LOGE(e.printStackTrace());
 	}
 
 	return EMPTY_IP;
