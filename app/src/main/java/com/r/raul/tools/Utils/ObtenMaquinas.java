@@ -106,7 +106,7 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
         }
 
 
-        IpScan ipScan = new IpScan(new ScanResult() {
+      /*  IpScan ipScan = new IpScan(new ScanResult() {
 
 
             @Override
@@ -152,12 +152,49 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
                     e.printStackTrace();
                 }
             }
-        });
+        });ipScan.scanAll(scanRange);*/
 
 
 
-        ipScan.scanAll(scanRange);
+            IpScan ipScan = new IpScan(new ScanResult() {
 
+			@Override
+			public void onActiveIp(String ip) {
+				// TODO Auto-generated method stub
+			    tot++;
+                encontrada(ip);
+                publishProgress(calculoPercent(tot, 255));
+			}
+
+			@Override
+			public void onInActiveIp(String ip) {
+				// TODO Auto-generated method stub
+
+				PortScan portScan = new PortScan(new ScanResult() {
+					
+					@Override
+					public void onActiveIp(String ip2) {
+						tot++;
+                        encontrada(ip2);
+                        publishProgress(calculoPercent(tot, 255));
+					}
+					
+					@Override
+					public void onInActiveIp(String ip2) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
+				try {
+					portScan.start(ip);
+				} catch (Exception e) {
+				
+					e.printStackTrace();
+				}				
+			}
+
+		});
+		ipScan.scanAll(scanRange);
 
         /*for (String ip : addresses) {
             InetAddress ipA = null;
