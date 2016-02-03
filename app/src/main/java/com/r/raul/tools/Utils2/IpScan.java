@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 public class IpScan {
     private ScanResult scanResult;
     public static final int DEFAULT_TIME_OUT = 2500;
-    public static final int DEFAULT_FIXED_POOL = 40;
+    public static final int DEFAULT_FIXED_POOL = 80;
     public ExecutorService pool;
     private int pt_move = 2; // 1=backward 2=forward
 
@@ -64,6 +64,10 @@ public class IpScan {
             Thread.currentThread().interrupt();
         }
     }
+    
+    public void stop(){
+    	pool.shutdownNow();
+    }
 
     private void launch(long i) {
         if (!pool.isShutdown()) {
@@ -81,14 +85,14 @@ public class IpScan {
                 scanResult.onInActiveIp(ip);
             }
         } catch (UnknownHostException e) {
-            if (Constants.ENABLE_LOGGING) {
-                e.printStackTrace();
-            }
+           
+           LOGE(e.printStackTrace());
+           
 
         } catch (IOException e) {
-            if (Constants.ENABLE_LOGGING) {
-                e.printStackTrace();
-            }
+            
+        	LOGE(e.printStackTrace());
+            
         }
     }
 
@@ -106,3 +110,4 @@ public class IpScan {
 
     }
 }
+
