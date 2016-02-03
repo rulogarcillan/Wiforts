@@ -5,10 +5,10 @@ import java.util.ArrayList;
 
 public class PortScan {
   
-    private PortScanCallback portScanCallback;
+    private ScanResult scanResult;
 
-    public PortScan(PortScanCallback portScanCallback) {
-        this.portScanCallback = portScanCallback;
+    public PortScan(ScanResult scanResult) {
+        this.scanResult = scanResult;
     }
     
     public PortScan() {
@@ -21,16 +21,16 @@ public class PortScan {
         for (Port port : standardPorts) {
             if (scanPort(ip, port)){
                 activo = true;
-                if (portScanCallback != null) {
-                    portScanCallback.onActivePort(ip);
+                if (scanResult != null) {
+                    scanResult.onActiveIp(ip);
                 }
                 break;
             }
         }
         if (!activo){
-            if (portScanCallback != null) {
-                    portScanCallback.onActivePort(ip);
-                }
+            if (scanResult != null) {
+                scanResult.onInActiveIp(ip);
+            }
         }
     }
 
