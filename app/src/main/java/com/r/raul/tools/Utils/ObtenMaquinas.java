@@ -45,20 +45,18 @@ import static com.r.raul.tools.Utils.LogUtils.LOGE;
 
 public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
 
-	
-
 	private Activity ac;
 	private Connectivity con;
 	private ArrayList<Machine> array;
 
 	private Consultas consultas;
-
 	private ArrayList<InspectorTable> arrayInspectorTable;
 
 	private String macPadre;
 	private String gateway;
 	private String loacalIp;
 	private String macMyDevice;
+	private IpScan ipScan = null;
 	
 	private int tot = 0; // total ips analizadas para barra de progreso
 	private float totalMachine;
@@ -106,7 +104,7 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
 		}
 		
 		////////////////////////**********************INICIO ESCANEO*********************////////////////////////
-		IpScan ipScan = new IpScan(new ScanResult() {
+		ipScan = new IpScan(new ScanResult() {
 
 			@Override
 			public void onActiveIp(String ip) {
@@ -287,13 +285,13 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
 
 	@Override
 	protected void onCancelled() {
-		// es.shutdownNow();
+		ipScan.stop();
 		super.onCancelled();
 	}
 
 	@Override
 	protected void onCancelled(Void aVoid) {
-		// es.shutdownNow();
+		ipScan.stop();
 		super.onCancelled(aVoid);
 	}
 
