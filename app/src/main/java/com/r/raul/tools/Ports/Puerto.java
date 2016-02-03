@@ -1,7 +1,7 @@
 package com.r.raul.tools.Ports;
 
 public class Puerto {
-
+    
     private int puerto;
     private int isOpen;
 
@@ -26,6 +26,53 @@ public class Puerto {
     public void setIsOpen(int isOpen) {
         this.isOpen = isOpen;
     }
+    
+    private int value = 0;
+	private boolean isActive;
+
+	public Puerto(int value) {
+		setValue(value);		
+	}
+
+	public int getValue() {
+		return value;
+	}
+
+	public void setValue(int value) {
+		this.value = value;
+	}
+	
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setIsOpen(boolean isActive) {
+		this.isActive = isActive;
+	}
+
+	public static boolean isReachable(String ip, int port) throws Exception {
+		try {
+			Socket socket = new Socket();
+			socket.connect(new InetSocketAddress(ip, port), 1000);
+			socket.setSoTimeout(1000);
+
+			int result;
+			try {
+				InputStream inputStream = socket.getInputStream();
+				result = inputStream.read();
+				socket.close();
+
+			} catch (Exception e) {
+
+				return true;
+			}
+
+			return result != -1;
+		} catch (IOException e) {
+
+			return false;
+		}
+	}
 }
 
 
