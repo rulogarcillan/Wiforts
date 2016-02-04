@@ -13,7 +13,7 @@ import static com.r.raul.tools.Utils.LogUtils.LOGE;
 public class IpScan {
     private ScanResult scanResult;
     public static final int DEFAULT_TIME_OUT = 2500;
-    public static final int DEFAULT_FIXED_POOL = 80;
+    public static final int DEFAULT_FIXED_POOL = 100;
     public ExecutorService pool;
     private int pt_move = 2; // 1=backward 2=forward
 
