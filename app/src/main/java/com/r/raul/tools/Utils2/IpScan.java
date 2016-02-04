@@ -79,7 +79,7 @@ public class IpScan {
 
 	public void scanSingleIp(String ip, int timeout) {
 		try {
-			final String CMD = "/system/bin/ping -q -n -w 10 -c 1 %s";
+			final String CMD = "/system/bin/ping -q -n -w 100 -c 1 %s";
 			Process myProcess = Runtime.getRuntime().exec(String.format(CMD, ip));
 			myProcess.waitFor();
 			if (myProcess.exitValue() == 0) {
