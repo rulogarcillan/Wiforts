@@ -18,6 +18,7 @@ public class Consultas {
     Context c;
     public static final String LEER = "R";
     public static final String ESCRIBIR = "W";
+    private String string;
 
     public Consultas() {
     }
@@ -77,32 +78,39 @@ public class Consultas {
     public String getNameFromMac(final String mac) {
 
         String[] macSplit = mac.split(":");
-        String retorno="";
-
+        String retorno = "";
+        String filtro = string;
+        ArrayList<String> macs = new ArrayList<>();
         for (int i = macSplit.length; i >= 1; i--) {
             String mascara = "";
+
             for (int j = i; j >= 1; j--) {
                 mascara = macSplit[j - 1] + mascara;
             }
-
-            String sql = "select software.name_l from software where upper(software.mac)=  upper('" + mascara + "')";
-            LOGI(sql);
-            retorno = c.getString(R.string.desconocido);
-            Cursor cur = db.query(sql, LEER);
-            if (cur.moveToFirst()) {
-                // Recorremos el cursor hasta que no haya más registros
-                do {
-
-                    if (cur.getString(0)!= null) {
-                        return cur.getString(0);
-                    }
-
-                } while (cur.moveToNext());
-            }
-            //db.close();
+            macs.add(mascara);
         }
-        return retorno;
-    }
+
+        for (String macFilter : macs) {
+
+            filtro = filtro + ",upper('" + macFilter + "')";
+        }
+
+        String sql = "select software.name_l from software where upper(software.mac) in (" + filtro + ")  order by length(mac) desc";
+        LOGI(sql);
+        retorno = c.getString(R.string.desconocido);
+        Cursor cur = db.query(sql, LEER);
+        if (cur.moveToFirst()) {
+            // Recorremos el cursor hasta que no haya más registros
+            do {
+                if (cur.getString(0) != null) {
+                    return cur.getString(0);
+                }
+            } while (cur.moveToNext());
+        }
+        //db.close();
+
+    return retorno;
+}
 
    /* public static String remove(String input) {
 

@@ -117,6 +117,7 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
 
 			@Override
 			public void onInActiveIp(String ip) {
+				//publishProgress(calculoPercent(tot++, totalMachine));
 				// TODO Auto-generated method stub
 				PortScan portScan = new PortScan(new ScanResult() {
 

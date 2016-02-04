@@ -9,10 +9,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import static com.r.raul.tools.Utils.LogUtils.LOGE;
+import static com.r.raul.tools.Utils.LogUtils.LOGI;
 
 public class IpScan {
 	private ScanResult scanResult;
-	public static final int DEFAULT_TIME_OUT = 2500;
+	public static final int DEFAULT_TIME_OUT = 2000;
 	public static final int DEFAULT_FIXED_POOL = 100;
 	public ExecutorService pool;
 	private int pt_move = 2; // 1=backward 2=forward
@@ -83,15 +84,16 @@ public class IpScan {
 			Process myProcess = Runtime.getRuntime().exec(String.format(CMD, ip));
 			myProcess.waitFor();
 			if (myProcess.exitValue() == 0) {
-				LOGI("IP OK PING " + host);
+				LOGI("IP OK PING " + ip);
 				scanResult.onActiveIp(ip);
 			} else {
 				try {
-					if (InetAddress.getByName(host).isReachable(TIMEOUT)) {
-						LOGI("IP OK isReachable 1 " + host);
+					InetAddress h = InetAddress.getByName(ip);
+					if (h.isReachable(timeout)) {
+						LOGI("IP OK isReachable 1 " + ip);
 						scanResult.onActiveIp(ip);
 					} else {
-						LOGI("IP KO isReachable 1 " + host);
+						LOGI("IP KO isReachable 1 " + ip);
 						scanResult.onInActiveIp(ip);
 					}
 				} catch (Exception e) {
@@ -104,16 +106,16 @@ public class IpScan {
 			try {
 				InetAddress h = InetAddress.getByName(ip);
 				if (h.isReachable(timeout)) {
-					LOGI("IP OK isReachable 2 " + host);
+					LOGI("IP OK isReachable 2 " + ip);
 					scanResult.onActiveIp(ip);
 				} else {
-					LOGI("IP KO isReachable 2 " + host);
+					LOGI("IP KO isReachable 2 " + ip);
 					scanResult.onInActiveIp(ip);
 				}
-			} catch (UnknownHostException e) {
-				LOGE(e.getMessage());
-			} catch (IOException e) {
-				LOGE(e.getMessage());
+			} catch (UnknownHostException e2) {
+				LOGE(e2.getMessage());
+			} catch (IOException e2) {
+				LOGE(e2.getMessage());
 			}
 		}
 	}
