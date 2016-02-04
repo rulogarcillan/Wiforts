@@ -79,17 +79,36 @@ public class IpScan {
     }
 
     public void scanSingleIp(String ip, int timeout) {
-        
         try {
-            final String CMD = "/system/bin/ping -q -n -w 1 -c 1 %s";
-            Runtime.getRuntime().exec(String.format(CMD, ip));
-            scanResult.onActiveIp(ip);
-        } catch (Exception e) {
+			final String CMD = "/system/bin/ping -q -n -w 10 -c 1 %s";
+			Process myProcess = Runtime.getRuntime().exec(String.format(CMD, ip));
+			myProcess.waitFor();
+			if (myProcess.exitValue() == 0) {
+                LOGI("IP OK PING " + host);
+                 scanResult.onActiveIp(ip);
+			} else {
+				try {
+					if (InetAddress.getByName(host).isReachable(TIMEOUT)) {
+						LOGI("IP OK isReachable 1 " + host);
+						scanResult.onActiveIp(ip);
+					} else {
+						LOGI("IP KO isReachable 1 " + host);
+						scanResult.onInActiveIp(ip);
+					}
+				} catch (Exception e1) {
+					System.out.println("Error");
+				}
+			}
+
+		} catch (Exception e) {
+		    LOGE("NO SE PUEDE HACER PING NATIVO");
             try {
                 InetAddress h = InetAddress.getByName(ip);
                 if (h.isReachable(timeout)) {
+                    LOGI("IP OK isReachable 2 " + host);
                     scanResult.onActiveIp(ip);
                 }else{
+                    LOGI("IP KO isReachable 2 " + host);
                     scanResult.onInActiveIp(ip);
                 }
             } catch (UnknownHostException e) {
