@@ -79,22 +79,24 @@ public class IpScan {
     }
 
     public void scanSingleIp(String ip, int timeout) {
+        
         try {
-            InetAddress h = InetAddress.getByName(ip);
-            if (h.isReachable(timeout)) {
-                scanResult.onActiveIp(ip);
-            }else{
-                scanResult.onInActiveIp(ip);
+            final String CMD = "/system/bin/ping -q -n -w 1 -c 1 %s";
+            Runtime.getRuntime().exec(String.format(CMD, ip));
+            scanResult.onActiveIp(ip);
+        } catch (Exception e) {
+            try {
+                InetAddress h = InetAddress.getByName(ip);
+                if (h.isReachable(timeout)) {
+                    scanResult.onActiveIp(ip);
+                }else{
+                    scanResult.onInActiveIp(ip);
+                }
+            } catch (UnknownHostException e) {
+               LOGE(e.getMessage());
+            } catch (IOException e) {
+            	LOGE(e.getMessage());
             }
-        } catch (UnknownHostException e) {
-           
-           LOGE(e.getMessage());
-           
-
-        } catch (IOException e) {
-            
-        	LOGE(e.getMessage());
-            
         }
     }
 
@@ -109,7 +111,6 @@ public class IpScan {
         public void run() {
             scanSingleIp(ip, DEFAULT_TIME_OUT);
         }
-
     }
 }
 
