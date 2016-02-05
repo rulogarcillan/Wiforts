@@ -1,4 +1,4 @@
-package com.r.raul.tools.Utils2;
+package com.r.raul.tools.Inspector;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

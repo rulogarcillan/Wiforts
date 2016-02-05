@@ -1,4 +1,4 @@
-package com.r.raul.tools.Utils2;
+package com.r.raul.tools.Inspector;
 
 
 import java.io.IOException;
@@ -13,7 +13,7 @@ import static com.r.raul.tools.Utils.LogUtils.LOGI;
 
 public class IpScan {
 	private ScanResult scanResult;
-	public static final int DEFAULT_TIME_OUT = 2000;
+	public static final int DEFAULT_TIME_OUT = 1800;
 	public static final int DEFAULT_FIXED_POOL = 100;
 	public ExecutorService pool;
 	private int pt_move = 2; // 1=backward 2=forward

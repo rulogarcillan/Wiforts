@@ -1,11 +1,14 @@
 package com.r.raul.tools.Device;
 
+import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
 import android.net.DhcpInfo;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -14,7 +17,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -48,10 +50,6 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.pwittchen.networkevents.library.BusWrapper;
-import com.github.pwittchen.networkevents.library.NetworkEvents;
-import com.github.pwittchen.networkevents.library.event.ConnectivityChanged;
-import com.github.pwittchen.networkevents.library.event.WifiSignalStrengthChanged;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -65,7 +63,6 @@ import com.r.raul.tools.Utils.ItemClickSupport;
 import com.r.raul.tools.Utils.LogUtils;
 import com.r.raul.tools.Utils.MyLinearLayoutManager;
 import com.r.raul.tools.Utils.SampleDivider;
-import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
 
@@ -73,8 +70,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * Created by Rulo on 15/11/2015.
@@ -105,9 +100,12 @@ public class MainDeviceInfo extends Fragment {
     private NetworkInfo info; // esta llama a con
 
     private TelephonyManager tlfMan;
-    private BusWrapper busWrapper;
-    private NetworkEvents networkEvents;
-    //
+    // private BusWrapper busWrapper;
+    // private NetworkEvents networkEvents;
+    private BroadcastReceiver reciver;
+    private IntentFilter intentFilter = new IntentFilter();
+
+
     private MyPhoneStateListener MyListener;
     CargaIps cargaIps = new CargaIps("");
 
@@ -118,12 +116,25 @@ public class MainDeviceInfo extends Fragment {
 
     }
 
+    private void setupReciver() {
+        this.reciver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                onConnectivityChanged();
+            }
+        };
+        this.intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        getActivity().registerReceiver(reciver, this.intentFilter);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
+        getActivity().registerReceiver(reciver, this.intentFilter);
         tlfMan.listen(MyListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
-        busWrapper.register(this);
-        networkEvents.register();
+        // busWrapper.register(this);
+        // networkEvents.register();
 
         if (con.isConnectedWifi(getContext())) {
             recuperaDatosInet(Constantes.TIPE_WIFI);
@@ -143,9 +154,12 @@ public class MainDeviceInfo extends Fragment {
     public void onPause() {
         cargaIps.cancel(true);
         super.onPause();
+        if (this.reciver != null) {
+            getActivity().unregisterReceiver(this.reciver);
+        }
         tlfMan.listen(MyListener, PhoneStateListener.LISTEN_NONE);
-        busWrapper.unregister(this);
-        networkEvents.unregister();
+        //  busWrapper.unregister(this);
+        //  networkEvents.unregister();
 
     }
 
@@ -166,10 +180,12 @@ public class MainDeviceInfo extends Fragment {
 
         final View rootView = inflater.inflate(R.layout.info_device, container, false);
 
-        EventBus bus = new EventBus();
+        setupReciver();
 
-        busWrapper = getGreenRobotBusWrapper(bus);
-        networkEvents = new NetworkEvents(getActivity(), busWrapper).enableWifiScan();
+        //EventBus bus = new EventBus();
+
+        //busWrapper = getGreenRobotBusWrapper(bus);
+        //networkEvents = new NetworkEvents(getActivity(), busWrapper).enableWifiScan();
 
         txtNombreRed = (TextView) rootView.findViewById(R.id.txtNombreRed);
         txtTipoRed = (TextView) rootView.findViewById(R.id.txtRed);
@@ -184,14 +200,14 @@ public class MainDeviceInfo extends Fragment {
         adaptadorIp = new DetalleFilaTarjetaAdapter(misDatos.get(Constantes.TIPE_WIFI).getInfoRed());
         recIp.setAdapter(adaptadorIp);
         recIp.setLayoutManager(new MyLinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        recIp.addItemDecoration(new SampleDivider(getActivity(),null));
+        recIp.addItemDecoration(new SampleDivider(getActivity(), null));
 
         recIpDetails = (RecyclerView) rootView.findViewById(R.id.recIpDetails);
         recIpDetails.setHasFixedSize(true);
         adaptadorIpIpDetails = new DetalleFilaTarjetaAdapter(misDatos.get(Constantes.TIPE_WIFI).getInfoRed());
         recIpDetails.setAdapter(adaptadorIpIpDetails);
         recIpDetails.setLayoutManager(new MyLinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        recIpDetails.addItemDecoration(new SampleDivider(getActivity(),null));
+        recIpDetails.addItemDecoration(new SampleDivider(getActivity(), null));
 
 
         chart = (LineChart) rootView.findViewById(R.id.chart);
@@ -275,11 +291,11 @@ public class MainDeviceInfo extends Fragment {
         ItemClickSupport.addTo(recIp).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                Snackbar.make(rootView, adaptadorIp.getArray().get(position).getTitulo().replace(":" ," ") + getResources().getString(R.string.copied), Snackbar.LENGTH_LONG)
+                Snackbar.make(rootView, adaptadorIp.getArray().get(position).getTitulo().replace(":", " ") + getResources().getString(R.string.copied), Snackbar.LENGTH_LONG)
                         .show();
 
 
-                        ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("label", adaptadorIp.getArray().get(position).getContenido());
                 clipboard.setPrimaryClip(clip);
                 //  v.conte_card.setText(array.get(position).getContenido());   adaptadorIpIpDetails;
@@ -290,7 +306,7 @@ public class MainDeviceInfo extends Fragment {
         ItemClickSupport.addTo(recIpDetails).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                Snackbar.make(rootView, adaptadorIpIpDetails.getArray().get(position).getTitulo().replace(":" ," ") + getResources().getString(R.string.copied), Snackbar.LENGTH_LONG)
+                Snackbar.make(rootView, adaptadorIpIpDetails.getArray().get(position).getTitulo().replace(":", " ") + getResources().getString(R.string.copied), Snackbar.LENGTH_LONG)
                         .show();
 
 
@@ -410,9 +426,8 @@ public class MainDeviceInfo extends Fragment {
         return set;
     }
 
-    @Subscribe
-    @SuppressWarnings("unused")
-    public void onEvent(ConnectivityChanged event) {
+
+    public void onConnectivityChanged() {
 
 
         if (con.isConnectedWifi(getContext())) {
@@ -430,7 +445,7 @@ public class MainDeviceInfo extends Fragment {
         LogUtils.LOG("Conecxion");
     }
 
-    @Subscribe
+  /*  @Subscribe
     @SuppressWarnings("unused")
     public void onEvent(WifiSignalStrengthChanged event) {
 
@@ -441,7 +456,7 @@ public class MainDeviceInfo extends Fragment {
             ActualizaDatosSincon();
             printData();
         }
-    }
+    }*/
 
 
     private class MyPhoneStateListener extends PhoneStateListener {
@@ -461,7 +476,7 @@ public class MainDeviceInfo extends Fragment {
         }
     }
 
-    @NonNull
+  /*  @NonNull
     private BusWrapper getGreenRobotBusWrapper(final EventBus bus) {
         return new BusWrapper() {
             @Override
@@ -479,7 +494,7 @@ public class MainDeviceInfo extends Fragment {
                 bus.post(event);
             }
         };
-    }
+    }*/
 
     public void showHideFragment(final Fragment fragment, Boolean esconder) {
 

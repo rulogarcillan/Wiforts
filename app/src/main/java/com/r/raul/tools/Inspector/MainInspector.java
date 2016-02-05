@@ -1,13 +1,16 @@
 package com.r.raul.tools.Inspector;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -24,19 +27,14 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.github.pwittchen.networkevents.library.BusWrapper;
-import com.github.pwittchen.networkevents.library.NetworkEvents;
-import com.github.pwittchen.networkevents.library.event.ConnectivityChanged;
 import com.r.raul.tools.R;
 import com.r.raul.tools.Utils.Connectivity;
-import com.r.raul.tools.Utils.ObtenMaquinas;
 import com.r.raul.tools.Utils.SampleDivider;
 import com.r.raul.tools.Utils.Utilidades;
-import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
-import de.greenrobot.event.EventBus;
+import static com.r.raul.tools.Utils.LogUtils.LOGE;
 
 /**
  * Created by Rulo on 22/12/2015.
@@ -47,8 +45,9 @@ public class MainInspector extends Fragment {
 
     }
 
-    private BusWrapper busWrapper;
-    private NetworkEvents networkEvents;
+    private BroadcastReceiver reciver;
+    private IntentFilter intentFilter = new IntentFilter();
+
     private Connectivity con;
     private SwipeRefreshLayout frameWifi;
     private ObtenMaquinas task;
@@ -62,15 +61,18 @@ public class MainInspector extends Fragment {
 
     public void onResume() {
         super.onResume();
-        busWrapper.register(this);
-        networkEvents.register();
+        getActivity().registerReceiver(reciver, this.intentFilter);
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        busWrapper.unregister(this);
-        networkEvents.unregister();
+
+        if (this.reciver != null) {
+            getActivity().unregisterReceiver(this.reciver);
+        }
+
         if (task != null) {
             task.cancel(true);
         }
@@ -84,11 +86,8 @@ public class MainInspector extends Fragment {
         super.onCreate(savedInstanceState);
         rootView = inflater.inflate(R.layout.inspector_main, container, false);
 
+        setupReciver();
 
-        EventBus bus = new EventBus();
-
-        busWrapper = getGreenRobotBusWrapper(bus);
-        networkEvents = new NetworkEvents(getActivity(), busWrapper).enableWifiScan();
 
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.appbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -104,7 +103,7 @@ public class MainInspector extends Fragment {
         TxtCon = (TextView) rootView.findViewById(R.id.TxtCon);
         Txtbssid = (TextView) rootView.findViewById(R.id.Txtbssid);
 
-        TxtTot.setText(array.size()+"");
+        TxtTot.setText(array.size() + "");
 
         frameWifi = (SwipeRefreshLayout) rootView.findViewById(R.id.frameWifi);
         recWifis = (RecyclerView) rootView.findViewById(R.id.recWifis);
@@ -149,7 +148,7 @@ public class MainInspector extends Fragment {
 
     private void ejecutarTask() {
 
-        if (con.isConnectedWifi(getActivity()) && ( (task!=null && task.getStatus() != AsyncTask.Status.RUNNING) || task==null ) ) {
+        if (con.isConnectedWifi(getActivity()) && ((task != null && task.getStatus() != AsyncTask.Status.RUNNING) || task == null)) {
 
             task = (ObtenMaquinas) new ObtenMaquinas(getActivity(), array) {
 
@@ -160,20 +159,24 @@ public class MainInspector extends Fragment {
                     array.clear();
                     adaptador.notifyDataSetChanged();
                     progressBar.setVisibility(View.VISIBLE);
-                    progressBar.setIndeterminate(true);
                     progressBar.setProgress(0);
-                    TxtTot.setText(array.size()+"");
+                    progressBar.setIndeterminate(true);
+                    TxtTot.setText(array.size() + "");
                 }
 
                 @Override
                 protected void onProgressUpdate(Integer... values) {
                     progressBar.setIndeterminate(false);
                     super.onProgressUpdate(values[0]);
-                    progressBar.setProgress(values[0]);
-                    if (Integer.parseInt(TxtTot.getText)!=array.size()){
-                        adaptador.notifyDataSetChanged();
-                        TxtTot.setText(array.size()+"");
+
+                    if (progressBar.getProgress()<values[0]){
+                        progressBar.setProgress(values[0]);
                     }
+                    if (Integer.parseInt(TxtTot.getText().toString()) != array.size()) {
+                        adaptador.notifyDataSetChanged();
+                        TxtTot.setText(array.size() + "");
+                    }
+
                     frameWifi.setRefreshing(false);
                 }
 
@@ -196,35 +199,6 @@ public class MainInspector extends Fragment {
     }
 
 
-    @Subscribe
-    @SuppressWarnings("unused")
-    public void onEvent(ConnectivityChanged event) {
-        ocultaMuestra();
-    }
-
-
-    @NonNull
-    private BusWrapper getGreenRobotBusWrapper(final EventBus bus) {
-        return new BusWrapper() {
-            @Override
-            public void register(Object object) {
-                bus.register(object);
-                ocultaMuestra();
-
-            }
-
-            @Override
-            public void unregister(Object object) {
-                bus.unregister(object);
-            }
-
-            @Override
-            public void post(Object event) {
-                bus.post(event);
-            }
-        };
-    }
-
     private void ocultaMuestra() {
 
         if (con.isConnectedWifi(getActivity())) {
@@ -238,7 +212,7 @@ public class MainInspector extends Fragment {
             Txtbssid.setText(getActivity().getString(R.string.sinconexionamp));
             TxtCon.setText(getActivity().getString(R.string.sinconexion));
             imgDevice.setImageResource(R.drawable.icon_wifino);
-            if ( task != null && task.getStatus() == AsyncTask.Status.RUNNING){
+            if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
                 progressBar.setVisibility(View.INVISIBLE);
                 adaptador.notifyDataSetChanged();
                 task.cancel(true);
@@ -251,9 +225,34 @@ public class MainInspector extends Fragment {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-         adaptador = new MachineAdapter(getActivity(), array);
+        adaptador = new MachineAdapter(getActivity(), array);
         recWifis.setAdapter(adaptador);
         adaptador.notifyDataSetChanged();
 
     }
+
+
+    private void setupReciver() {
+        this.reciver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                NetworkInfo info = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+
+                if (info != null) {
+                    if (info.isConnected()) {
+                        LOGE(String.valueOf(Connectivity.isConnectedWifi(context)));
+                        ocultaMuestra();
+                    } else {
+                        ocultaMuestra();
+                    }
+                }
+            }
+        };
+        this.intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        getActivity().registerReceiver(reciver, this.intentFilter);
+    }
+
+
 }

@@ -1,5 +1,5 @@
 
-package com.r.raul.tools.Utils2;
+package com.r.raul.tools.Inspector;
 
 public interface ScanResult {
     public void onActiveIp(String ip);

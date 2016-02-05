@@ -4,6 +4,7 @@ import android.Manifest.permission;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -43,6 +44,7 @@ public class MainActivity extends BaseActivity
     FragmentManager fragmentManager = getSupportFragmentManager();
     Fragment fragment;
     int ItemAnterior = 0;
+    public static AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +58,7 @@ public class MainActivity extends BaseActivity
         copybd();
 
         /***PUBLI**/
-        final AdView mAdView = (AdView) findViewById(R.id.adView);
+        mAdView = (AdView) findViewById(R.id.adView);
 
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
@@ -273,7 +275,16 @@ public class MainActivity extends BaseActivity
         }
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
 
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+
+        }
+    }
 
 
 }
