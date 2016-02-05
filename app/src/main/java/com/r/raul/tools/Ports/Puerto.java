@@ -76,6 +76,33 @@ public class Puerto {
 			return false;
 		}
 	}
+	
+	public static boolean isOpenCloseTimeOut(String ip, int port) throws Exception {
+		try {
+			Socket socket = new Socket();
+			socket.setPerformancePreferences(1, 0, 0);
+                	socket.setTcpNoDelay(true);
+			socket.connect(new InetSocketAddress(ip, port), 500);
+			socket.setSoTimeout(500);
+
+			int result;
+			try {
+				InputStream inputStream = socket.getInputStream();
+				result = inputStream.read();
+				socket.close();
+
+			} catch (Exception e) {
+
+				return true;
+			}
+
+			return result != -1;
+		} catch (IOException e) {
+
+			return false;
+		}
+	}
+	
 }
 
 
