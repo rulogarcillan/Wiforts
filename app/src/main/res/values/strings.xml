@@ -30,7 +30,7 @@
     <string name="longitude">Longitude:</string>
     <string name="infonet">Network info</string>
     <string name="infoip">IP info</string>
-    <string name="my_mail" translatable="false">innovation.4.apps@gmail.com</string>
+    <string name="my_mail" translatable="false">android-support@tuppersoft.com</string>
     <string name="common">COMMON</string>
     <string name="trojans">TROJANS</string>
     <string name="games">GAMES</string>
@@ -62,6 +62,8 @@
     <string name="sinconexionamp">Not connected to a Wi-Fi network</string>
     <string name="share_app">Try the App \"myNetworwk\", all the information about your network at a glance.\n -Information about your net.\n-Check if someone is using your net.\n-Scan any port.\n-Many other things.\n\n</string>
     <string name="contacto">Contact</string>
+    <string name="ports">Ports</string>
+    <string name="iphost">Ip or Hostname</string>
 
 
 </resources>

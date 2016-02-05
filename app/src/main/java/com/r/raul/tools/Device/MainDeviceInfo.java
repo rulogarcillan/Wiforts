@@ -64,9 +64,13 @@ import com.r.raul.tools.Utils.LogUtils;
 import com.r.raul.tools.Utils.MyLinearLayoutManager;
 import com.r.raul.tools.Utils.SampleDivider;
 
+import org.apache.commons.net.util.SubnetUtils;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -133,8 +137,7 @@ public class MainDeviceInfo extends Fragment {
         super.onResume();
         getActivity().registerReceiver(reciver, this.intentFilter);
         tlfMan.listen(MyListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
-        // busWrapper.register(this);
-        // networkEvents.register();
+
 
         if (con.isConnectedWifi(getContext())) {
             recuperaDatosInet(Constantes.TIPE_WIFI);
@@ -158,8 +161,7 @@ public class MainDeviceInfo extends Fragment {
             getActivity().unregisterReceiver(this.reciver);
         }
         tlfMan.listen(MyListener, PhoneStateListener.LISTEN_NONE);
-        //  busWrapper.unregister(this);
-        //  networkEvents.unregister();
+
 
     }
 
@@ -930,7 +932,20 @@ public class MainDeviceInfo extends Fragment {
         misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.ippublica), dataDeviceInfo.getTxtIpPublic()));
         misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.iplocal), dataDeviceInfo.getTxtIpLocal()));
         misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.gateway), dataDeviceInfo.getTxtGateway()));
-        misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.masacarasubred), dataDeviceInfo.getTxtMasSubred()));
+
+        String prefix = "";
+        DhcpInfo dhcpInfo = wifiManager.getDhcpInfo();
+        try {
+            InetAddress inetAddress = InetAddress.getByName(con.parseIP(dhcpInfo.ipAddress));
+            NetworkInterface networkInterface = NetworkInterface.getByInetAddress(inetAddress);
+            for (InterfaceAddress address : networkInterface.getInterfaceAddresses()) {
+                prefix = String.valueOf(address.getNetworkPrefixLength());
+            }
+            SubnetUtils utils = new SubnetUtils(dataDeviceInfo.getTxtGateway() + "/" + prefix);
+            misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.masacarasubred), utils.getInfo().getNetmask()));
+        } catch (IOException e) {
+            misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.masacarasubred), dataDeviceInfo.getTxtMasSubred()));
+        }
         misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.dns1), dataDeviceInfo.getTxtDns1()));
         misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.dns2), dataDeviceInfo.getTxtDns2()));
 

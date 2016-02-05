@@ -169,7 +169,7 @@ public class MainInspector extends Fragment {
                     progressBar.setIndeterminate(false);
                     super.onProgressUpdate(values[0]);
 
-                    if (progressBar.getProgress()<values[0]){
+                    if (progressBar.getProgress() < values[0]) {
                         progressBar.setProgress(values[0]);
                     }
                     if (Integer.parseInt(TxtTot.getText().toString()) != array.size()) {

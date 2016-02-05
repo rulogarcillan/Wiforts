@@ -47,4 +47,6 @@
     <string name="sinconexionamp">No está conectado a una red Wi-Fi</string>
     <string name="share_app">Prueba la App \"myNetworwk\", toda la información de tu red al alcance de tu mano.\n-Información de conexión.\n-Visualiza intrusos en tu red.\n-Escanea puertos.\n-Muchas más opciones.\n\n</string>
     <string name="contacto">Contacto</string>
+    <string name="ports">Puertos</string>
+    <string name="iphost">Ip / Host</string>
 </resources>

@@ -29,7 +29,7 @@
                 android:background="#00000000"
                 android:ems="10"
 
-                android:hint="Ip or Hostname"
+                android:hint="@string/iphost"
                 android:paddingBottom="@dimen/margins"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
@@ -51,7 +51,7 @@
                 android:background="#00000000"
                 android:ems="10"
 
-                android:hint="Ports"
+                android:hint="@string/ports"
                 android:paddingBottom="@dimen/margins"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
@@ -103,10 +103,6 @@
                 android:layout_marginBottom="4sp"
                 android:layout_marginTop="4sp"
                 android:background="@android:color/darker_gray" />
-
-
-
-
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
