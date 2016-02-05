@@ -170,8 +170,10 @@ public class MainInspector extends Fragment {
                     progressBar.setIndeterminate(false);
                     super.onProgressUpdate(values[0]);
                     progressBar.setProgress(values[0]);
-                    adaptador.notifyDataSetChanged();
-                    TxtTot.setText(array.size()+"");
+                    if (Integer.parseInt(TxtTot.getText)!=array.size()){
+                        adaptador.notifyDataSetChanged();
+                        TxtTot.setText(array.size()+"");
+                    }
                     frameWifi.setRefreshing(false);
                 }
 
@@ -182,7 +184,6 @@ public class MainInspector extends Fragment {
                     adaptador.notifyDataSetChanged();
                     TxtTot.setText(array.size() + "");
                     Utilidades.lanzaVibracion(getActivity(), 500);
-
                 }
             }.execute();
         } else if (!con.isConnectedWifi(getActivity())) {
