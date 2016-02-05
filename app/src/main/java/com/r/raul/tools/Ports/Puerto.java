@@ -77,32 +77,24 @@ public class Puerto {
 		}
 	}
 	
-	public static boolean isOpenCloseTimeOut(String ip, int port) throws Exception {
+	public static int isOpenCloseTimeOut(final String ip, final int puertoTratar, final int timeOut) throws Exception {
 		try {
-			Socket socket = new Socket();
-			socket.setPerformancePreferences(1, 0, 0);
-                	socket.setTcpNoDelay(true);
-			socket.connect(new InetSocketAddress(ip, port), 500);
-			socket.setSoTimeout(500);
-
-			int result;
-			try {
-				InputStream inputStream = socket.getInputStream();
-				result = inputStream.read();
-				socket.close();
-
-			} catch (Exception e) {
-
-				return true;
-			}
-
-			return result != -1;
-		} catch (IOException e) {
-
-			return false;
-		}
+                    Socket socket = new Socket();
+                    socket.setPerformancePreferences(1, 0, 0);
+                    socket.setTcpNoDelay(true);
+                    if (timeOut == 0) {
+                        socket.connect(new InetSocketAddress(ip, puertoTratar));
+                    } else {
+                        socket.connect(new InetSocketAddress(ip, puertoTratar), timeOut);
+                    }
+                    socket.close();
+                    return  0;
+                } catch (SocketTimeoutException exTime) {
+                    return 2;
+                } catch (Exception ex) {
+                    return 1;
+                }
 	}
-	
 }
 
 
