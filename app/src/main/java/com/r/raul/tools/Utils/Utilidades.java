@@ -35,6 +35,8 @@ public class Utilidades {
                 // tratamiento
                 try {
                     Socket socket = new Socket();
+                    socket.setPerformancePreferences(1, 0, 0);
+                	socket.setTcpNoDelay(true);
                     if (timeOut == 0) {
                         socket.connect(new InetSocketAddress(ip, puertoTratar));
                     } else {
