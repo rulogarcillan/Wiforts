@@ -54,8 +54,10 @@ public class Puerto {
 	public static boolean isReachable(String ip, int port) throws Exception {
 		try {
 			Socket socket = new Socket();
-			socket.connect(new InetSocketAddress(ip, port), 800);
-			socket.setSoTimeout(800);
+			socket.setPerformancePreferences(1, 0, 0);
+                	socket.setTcpNoDelay(true);
+			socket.connect(new InetSocketAddress(ip, port), 500);
+			socket.setSoTimeout(500);
 
 			int result;
 			try {
