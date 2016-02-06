@@ -1,11 +1,12 @@
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/cardIp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:layout_margin="8sp"
-    card_view:cardCornerRadius="4dp">
+<android.support.v7.widget.CardView android:id="@+id/cardIp"
+                                    xmlns:android="http://schemas.android.com/apk/res/android"
+                                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                                    xmlns:tools="http://schemas.android.com/tools"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_margin="8sp"
+                                    card_view:cardCornerRadius="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,7 +26,7 @@
                 android:adjustViewBounds="true"
                 android:paddingLeft="16sp"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_ipinfo" />
+                android:src="@drawable/ic_ipinfo"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -43,18 +44,24 @@
                     android:gravity="left"
                     android:text="@string/infoip"
                     android:textColor="@android:color/background_dark"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"/>
 
             </LinearLayout>
         </LinearLayout>
 
 
+
+
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/map"
-            class="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="180sp"
-            android:layout_marginBottom="16sp" />
+                  xmlns:tools="http://schemas.android.com/tools"
+                  android:layout_width="match_parent"
+                  android:layout_height="180sp"
+                  android:layout_marginBottom="16sp"
+                  android:id="@+id/map"
+                  tools:context="com.r.raul.tools.MainActivity"
+
+
+                  android:name="com.google.android.gms.maps.SupportMapFragment" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -69,7 +76,6 @@
 
             </android.support.v7.widget.RecyclerView>
         </LinearLayout>
-
 
 
     </LinearLayout>

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+    >
 
     <include
         android:id="@+id/toolbar"
@@ -48,7 +49,7 @@
                         android:gravity="left"
                         android:text="Nexus 5"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@android:color/white" />
+                        android:textColor="@android:color/white"/>
 
                     <TextView
                         android:id="@+id/txtVersion"
@@ -59,7 +60,7 @@
                         android:gravity="right"
                         android:text="Android 6.0"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@android:color/white" />
+                        android:textColor="@android:color/white"/>
                 </LinearLayout>
 
                 <RelativeLayout
@@ -84,7 +85,7 @@
                             android:text="LTE"
                             android:textAlignment="center"
                             android:textColor="@android:color/white"
-                            android:textSize="16dp" />
+                            android:textSize="16dp"/>
 
                         <TextView
                             android:id="@+id/txtNombreRed"
@@ -97,7 +98,7 @@
                             android:text="pepephone"
                             android:textAlignment="center"
                             android:textColor="@android:color/white"
-                            android:textSize="28dp" />
+                            android:textSize="28dp"/>
                     </LinearLayout>
                 </RelativeLayout>
             </LinearLayout>
@@ -117,11 +118,11 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <include layout="@layout/card_sennal" />
+                <include layout="@layout/card_sennal"/>
 
-                <include layout="@layout/card_red" />
+                <include layout="@layout/card_red"/>
 
-                <include layout="@layout/card_ip" />
+                <include layout="@layout/card_ip"/>
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
 
@@ -130,10 +131,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
-            app:elevation="6dp"
             android:src="@drawable/ic_wifi1"
+            app:elevation="6dp"
             app:layout_anchor="@id/app_bar"
-            app:layout_anchorGravity="bottom|end" />
+            app:layout_anchorGravity="bottom|end"/>
 
     </android.support.design.widget.CoordinatorLayout>
 </LinearLayout>

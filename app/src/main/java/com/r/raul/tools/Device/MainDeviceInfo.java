@@ -43,6 +43,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -52,6 +53,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -78,11 +80,12 @@ import java.util.Map;
 /**
  * Created by Rulo on 15/11/2015.
  */
-public class MainDeviceInfo extends Fragment {
+public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
 
     public static final int SIGNAL_STRENGTH_OUT = -150;
     private GoogleMap mMap;
-    SupportMapFragment fragment;
+    SupportMapFragment mapFragment;
+    private String lastConection="";
 
 
     private Map<String, DetalleTarjeta> misDatos = new HashMap<String, DetalleTarjeta>();
@@ -124,7 +127,25 @@ public class MainDeviceInfo extends Fragment {
         this.reciver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                onConnectivityChanged();
+
+                String tipoConActual ="";
+
+                if (con.isConnectedWifi(getContext())) {
+                    tipoConActual= Constantes.TIPE_WIFI;
+
+                } else if (con.isConnectedMobile(getActivity())) {
+                    tipoConActual= Constantes.TIPE_MOBILE;
+
+                } else if (!con.isConnected(getActivity())) {
+                    tipoConActual= Constantes.TIPE_AIRPLANE;
+                }
+
+                if (!lastConection.equals(tipoConActual)){
+                    lastConection=tipoConActual;
+                    onConnectivityChanged();
+                }
+
+
             }
         };
         this.intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
@@ -269,7 +290,7 @@ public class MainDeviceInfo extends Fragment {
             }
         });*/
 
-        android.support.v4.app.FragmentManager fm = getChildFragmentManager();
+       /* android.support.v4.app.FragmentManager fm = getChildFragmentManager();
         fragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
 
 
@@ -280,13 +301,24 @@ public class MainDeviceInfo extends Fragment {
 
         this.mMap = fragment.getMap();
 
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                lanzaMaps();
-            }
-        });
-        configureMaps();
+
+        */
+
+
+         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap map) {
+                    mMap = map;
+                    configureMaps();
+                }
+            });
+        } else {
+            Toast.makeText(getActivity(), "Error - Map Fragment was null!!", Toast.LENGTH_SHORT).show();
+        }
+
+
         configureChar();
 
 
@@ -332,6 +364,13 @@ public class MainDeviceInfo extends Fragment {
         mMap.getUiSettings().setZoomControlsEnabled(false);
         mMap.getUiSettings().setAllGesturesEnabled(false);
         mMap.getUiSettings().setCompassEnabled(false);
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                lanzaMaps();
+            }
+        });
 
     }
 
@@ -447,18 +486,11 @@ public class MainDeviceInfo extends Fragment {
         LogUtils.LOG("Conecxion");
     }
 
-  /*  @Subscribe
-    @SuppressWarnings("unused")
-    public void onEvent(WifiSignalStrengthChanged event) {
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
 
-        if (con.isConnectedWifi(getContext())) {
-            ActualizaDatosWifi();
-            printData();
-        } else if (!con.isConnected(getActivity())) {
-            ActualizaDatosSincon();
-            printData();
-        }
-    }*/
+
+    }
 
 
     private class MyPhoneStateListener extends PhoneStateListener {
@@ -478,42 +510,23 @@ public class MainDeviceInfo extends Fragment {
         }
     }
 
-  /*  @NonNull
-    private BusWrapper getGreenRobotBusWrapper(final EventBus bus) {
-        return new BusWrapper() {
-            @Override
-            public void register(Object object) {
-                bus.register(object);
-            }
-
-            @Override
-            public void unregister(Object object) {
-                bus.unregister(object);
-            }
-
-            @Override
-            public void post(Object event) {
-                bus.post(event);
-            }
-        };
-    }*/
 
     public void showHideFragment(final Fragment fragment, Boolean esconder) {
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
+        if (fragment != null) {
+            if (esconder) {
+                ft.hide(fragment);
 
-        if (esconder) {
-            ft.hide(fragment);
+            } else {
+                ft.show(fragment);
+            }
+            try {
+                ft.commit();
+            } catch (Exception e) {
 
-        } else {
-            ft.show(fragment);
+            }
         }
-        try {
-            ft.commit();
-        } catch (Exception e) {
-
-        }
-
     }
 
     private void printData() {
@@ -860,23 +873,24 @@ public class MainDeviceInfo extends Fragment {
 
 
                         if (getResources().getString(R.string.nodisponible).equals(dataDeviceInfo.getTxtLat()) || getResources().getString(R.string.desconocido).equals(dataDeviceInfo.getTxtLat())) {
-                            showHideFragment(fragment, true);
+                            showHideFragment(mapFragment, true);
                         } else {
-                            showHideFragment(fragment, false);
+                            showHideFragment(mapFragment, false);
                             if (con.isConnected(getActivity())) {
 
                                 LatLng position = new LatLng(Double.parseDouble(dataDeviceInfo.getTxtLat()), Double.parseDouble(dataDeviceInfo.getTxtLon()));
+                                if (mMap != null) {
+                                    mMap.clear();
 
-                                mMap.clear();
-
-                                mMap.addMarker(new MarkerOptions().position(position).title(dataDeviceInfo.getTxtIpPublic())).showInfoWindow();
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 16));
-                                mMap.addCircle(new CircleOptions()
-                                        .center(position)
-                                        .radius(100)
-                                        .strokeWidth((float) 0.5)
-                                        .strokeColor(getResources().getColor(R.color.colorAccentTra))
-                                        .fillColor(getResources().getColor(R.color.colorAccentTra)));
+                                    mMap.addMarker(new MarkerOptions().position(position).title(dataDeviceInfo.getTxtIpPublic())).showInfoWindow();
+                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 16));
+                                    mMap.addCircle(new CircleOptions()
+                                            .center(position)
+                                            .radius(100)
+                                            .strokeWidth((float) 0.5)
+                                            .strokeColor(getResources().getColor(R.color.colorAccentTra))
+                                            .fillColor(getResources().getColor(R.color.colorAccentTra)));
+                                }
                             }
                         }
                     }
