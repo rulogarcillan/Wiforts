@@ -16,6 +16,7 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -85,7 +86,7 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
     public static final int SIGNAL_STRENGTH_OUT = -150;
     private GoogleMap mMap;
     SupportMapFragment mapFragment;
-    private String lastConection="";
+    private String lastConection = "";
 
 
     private Map<String, DetalleTarjeta> misDatos = new HashMap<String, DetalleTarjeta>();
@@ -107,8 +108,6 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
     private NetworkInfo info; // esta llama a con
 
     private TelephonyManager tlfMan;
-    // private BusWrapper busWrapper;
-    // private NetworkEvents networkEvents;
     private BroadcastReceiver reciver;
     private IntentFilter intentFilter = new IntentFilter();
 
@@ -117,6 +116,8 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
     CargaIps cargaIps = new CargaIps("");
 
     private DataDeviceInfo dataDeviceInfo = new DataDeviceInfo();
+
+    private Handler mHandler = new Handler();
 
 
     public MainDeviceInfo() {
@@ -128,20 +129,22 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
             @Override
             public void onReceive(Context context, Intent intent) {
 
-                String tipoConActual ="";
+                String tipoConActual = "";
 
                 if (con.isConnectedWifi(getContext())) {
-                    tipoConActual= Constantes.TIPE_WIFI;
+                    tipoConActual = Constantes.TIPE_WIFI;
 
                 } else if (con.isConnectedMobile(getActivity())) {
-                    tipoConActual= Constantes.TIPE_MOBILE;
+                    mHandler.removeCallbacksAndMessages(null);
+                    tipoConActual = Constantes.TIPE_MOBILE;
 
                 } else if (!con.isConnected(getActivity())) {
-                    tipoConActual= Constantes.TIPE_AIRPLANE;
+                    mHandler.removeCallbacksAndMessages(null);
+                    tipoConActual = Constantes.TIPE_AIRPLANE;
                 }
 
-                if (!lastConection.equals(tipoConActual)){
-                    lastConection=tipoConActual;
+                if (!lastConection.equals(tipoConActual)) {
+                    lastConection = tipoConActual;
                     onConnectivityChanged();
                 }
 
@@ -158,7 +161,6 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
         super.onResume();
         getActivity().registerReceiver(reciver, this.intentFilter);
         tlfMan.listen(MyListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
-
 
         if (con.isConnectedWifi(getContext())) {
             recuperaDatosInet(Constantes.TIPE_WIFI);
@@ -181,6 +183,7 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
         if (this.reciver != null) {
             getActivity().unregisterReceiver(this.reciver);
         }
+        mHandler.removeCallbacksAndMessages(null);
         tlfMan.listen(MyListener, PhoneStateListener.LISTEN_NONE);
 
 
@@ -205,10 +208,6 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
 
         setupReciver();
 
-        //EventBus bus = new EventBus();
-
-        //busWrapper = getGreenRobotBusWrapper(bus);
-        //networkEvents = new NetworkEvents(getActivity(), busWrapper).enableWifiScan();
 
         txtNombreRed = (TextView) rootView.findViewById(R.id.txtNombreRed);
         txtTipoRed = (TextView) rootView.findViewById(R.id.txtRed);
@@ -282,30 +281,8 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
             }
         });
 
-     /*   CardView cardIp = (CardView) rootView.findViewById(R.id.cardIp);
-        cardIp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                lanzaMaps();
-            }
-        });*/
 
-       /* android.support.v4.app.FragmentManager fm = getChildFragmentManager();
-        fragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
-
-
-        if (fragment == null) {
-            fragment = SupportMapFragment.newInstance();
-            fm.beginTransaction().replace(R.id.map, fragment).commit();
-        }
-
-        this.mMap = fragment.getMap();
-
-
-        */
-
-
-         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(new OnMapReadyCallback() {
                 @Override
@@ -469,9 +446,17 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
 
 
     public void onConnectivityChanged() {
-
-
         if (con.isConnectedWifi(getContext())) {
+
+            this.mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ActualizaDatosWifi();
+                    printData();
+                    mHandler.postDelayed(this, 1500);
+                }
+            }, 0);
+
             recuperaDatosInet(Constantes.TIPE_WIFI);
             printData();
         } else if (con.isConnectedMobile(getActivity())) {
@@ -491,7 +476,6 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
 
 
     }
-
 
     private class MyPhoneStateListener extends PhoneStateListener {
 
@@ -734,49 +718,61 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
 
                 try {
                     String ip = con.getPublicIp();
-                    dataDeviceInfo.setTxtHost(con.obtenerHostName(ip));
+                    if (ip != null) {
+                        dataDeviceInfo.setTxtHost(con.obtenerHostName(ip));
 
-                    if (!ip.equals(dataDeviceInfo.getTxtIpPublic())) {
-                        dataDeviceInfo.setTxtIpPublic(ip);
-                        String url = "http://ip-api.com/json/" + ip;
-                        try {
-                            ArrayList<String> listdata = new ArrayList<String>();
-                            listdata = con.readJsonFromUrl(url);
-                            if (!listdata.isEmpty()) {
+                        if (!ip.equals(dataDeviceInfo.getTxtIpPublic())) {
+                            dataDeviceInfo.setTxtIpPublic(ip);
+                            String url = "http://ip-api.com/json/" + ip;
+                            try {
+                                ArrayList<String> listdata;
+                                listdata = con.readJsonFromUrl(url);
+                                if (!listdata.isEmpty()) {
 
-                                try {
-                                    dataDeviceInfo.setTxtIsp(listdata.get(0).isEmpty() ? getResources().getString(R.string.desconocido) : listdata.get(0));
-                                    dataDeviceInfo.setTxtCountry(listdata.get(1).isEmpty() ? getResources().getString(R.string.desconocido) : listdata.get(1));
-                                    dataDeviceInfo.setTxtCountryCode(listdata.get(2).isEmpty() ? getResources().getString(R.string.desconocido) : listdata.get(2));
-                                    dataDeviceInfo.setTxtCity(listdata.get(3).isEmpty() ? getResources().getString(R.string.desconocido) : listdata.get(3));
-                                    dataDeviceInfo.setTxtRegion(listdata.get(4).isEmpty() ? getResources().getString(R.string.desconocido) : listdata.get(4));
-                                    dataDeviceInfo.setTxtRegionName(listdata.get(5).isEmpty() ? getResources().getString(R.string.desconocido) : listdata.get(5));
-                                    dataDeviceInfo.setTxtZip(listdata.get(6).isEmpty() ? getResources().getString(R.string.desconocido) : listdata.get(6));
-                                    dataDeviceInfo.setTxtLat(listdata.get(7).isEmpty() ? getResources().getString(R.string.desconocido) : listdata.get(7));
-                                    dataDeviceInfo.setTxtLon(listdata.get(8).isEmpty() ? getResources().getString(R.string.desconocido) : listdata.get(8));
-                                } catch (Exception e) {
-                                    LogUtils.LOG(e.getMessage());
+                                    try {
+                                        dataDeviceInfo.setTxtIsp(listdata.get(0).isEmpty() ? getResources().getString(R.string.desconocido) : listdata.get(0));
+                                        dataDeviceInfo.setTxtCountry(listdata.get(1).isEmpty() ? getResources().getString(R.string.desconocido) : listdata.get(1));
+                                        dataDeviceInfo.setTxtCountryCode(listdata.get(2).isEmpty() ? getResources().getString(R.string.desconocido) : listdata.get(2));
+                                        dataDeviceInfo.setTxtCity(listdata.get(3).isEmpty() ? getResources().getString(R.string.desconocido) : listdata.get(3));
+                                        dataDeviceInfo.setTxtRegion(listdata.get(4).isEmpty() ? getResources().getString(R.string.desconocido) : listdata.get(4));
+                                        dataDeviceInfo.setTxtRegionName(listdata.get(5).isEmpty() ? getResources().getString(R.string.desconocido) : listdata.get(5));
+                                        dataDeviceInfo.setTxtZip(listdata.get(6).isEmpty() ? getResources().getString(R.string.desconocido) : listdata.get(6));
+                                        dataDeviceInfo.setTxtLat(listdata.get(7).isEmpty() ? getResources().getString(R.string.desconocido) : listdata.get(7));
+                                        dataDeviceInfo.setTxtLon(listdata.get(8).isEmpty() ? getResources().getString(R.string.desconocido) : listdata.get(8));
+                                    } catch (Exception e) {
+                                        LogUtils.LOG(e.getMessage());
+                                    }
+
+                                } else {
+
+                                    dataDeviceInfo.setTxtIsp(getResources().getString(R.string.desconocido));
+                                    dataDeviceInfo.setTxtCountry(getResources().getString(R.string.desconocido));
+                                    dataDeviceInfo.setTxtCountryCode(getResources().getString(R.string.desconocido));
+                                    dataDeviceInfo.setTxtCity(getResources().getString(R.string.desconocido));
+                                    dataDeviceInfo.setTxtRegion(getResources().getString(R.string.desconocido));
+                                    dataDeviceInfo.setTxtRegionName(getResources().getString(R.string.desconocido));
+                                    dataDeviceInfo.setTxtZip(getResources().getString(R.string.desconocido));
+                                    dataDeviceInfo.setTxtLat(getResources().getString(R.string.desconocido));
+                                    dataDeviceInfo.setTxtLon(getResources().getString(R.string.desconocido));
                                 }
 
-                            } else {
 
-                                dataDeviceInfo.setTxtIsp(getResources().getString(R.string.desconocido));
-                                dataDeviceInfo.setTxtCountry(getResources().getString(R.string.desconocido));
-                                dataDeviceInfo.setTxtCountryCode(getResources().getString(R.string.desconocido));
-                                dataDeviceInfo.setTxtCity(getResources().getString(R.string.desconocido));
-                                dataDeviceInfo.setTxtRegion(getResources().getString(R.string.desconocido));
-                                dataDeviceInfo.setTxtRegionName(getResources().getString(R.string.desconocido));
-                                dataDeviceInfo.setTxtZip(getResources().getString(R.string.desconocido));
-                                dataDeviceInfo.setTxtLat(getResources().getString(R.string.desconocido));
-                                dataDeviceInfo.setTxtLon(getResources().getString(R.string.desconocido));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
-
-
+                    }else{
+                        dataDeviceInfo.setTxtHost(getResources().getString(R.string.timeip));
+                        dataDeviceInfo.setTxtIpPublic(getResources().getString(R.string.timeip));
+                        dataDeviceInfo.setTxtIsp(getResources().getString(R.string.desconocido));
+                        dataDeviceInfo.setTxtCountry(getResources().getString(R.string.desconocido));
+                        dataDeviceInfo.setTxtCountryCode(getResources().getString(R.string.desconocido));
+                        dataDeviceInfo.setTxtCity(getResources().getString(R.string.desconocido));
+                        dataDeviceInfo.setTxtRegion(getResources().getString(R.string.desconocido));
+                        dataDeviceInfo.setTxtRegionName(getResources().getString(R.string.desconocido));
+                        dataDeviceInfo.setTxtZip(getResources().getString(R.string.desconocido));
+                        dataDeviceInfo.setTxtLat(getResources().getString(R.string.desconocido));
+                        dataDeviceInfo.setTxtLon(getResources().getString(R.string.desconocido));
                     }
 
                 } catch (IOException e) {

@@ -3,7 +3,6 @@ package com.r.raul.tools.Inspector;
 import android.app.Activity;
 import android.content.Context;
 import android.net.DhcpInfo;
-
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 

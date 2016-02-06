@@ -64,6 +64,7 @@
     <string name="contacto">Contact</string>
     <string name="ports">Ports</string>
     <string name="iphost">Ip or Hostname</string>
+    <string name="timeip" translatable="false">TimeOut</string>
 
 
 </resources>

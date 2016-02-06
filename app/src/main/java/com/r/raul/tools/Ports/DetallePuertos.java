@@ -40,7 +40,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class DetallePuertos extends BaseActivity {
 
-
     private String ip;
     private int timeOut;
     private ProgressBar progressBar;
@@ -70,7 +69,7 @@ public class DetallePuertos extends BaseActivity {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         // tabLayout.postInvalidate();
 
@@ -131,7 +130,7 @@ public class DetallePuertos extends BaseActivity {
         recdetalle.setHasFixedSize(true);
         recdetalle.setAdapter(adaptador);
         recdetalle.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        recdetalle.addItemDecoration(new SampleDivider(this,null));
+        recdetalle.addItemDecoration(new SampleDivider(this, null));
 
         parsea(ports);
         tarea = new AnalizarPuertos(progressBar, this, ip, timeOut);
@@ -263,12 +262,15 @@ public class DetallePuertos extends BaseActivity {
                         if (f.get().getIsOpen() == 0) {
                             totalAbiertos++;
                             arrayAbiertos.add(f.get());
+
                         } else if (f.get().getIsOpen() == 1) {
                             totalCerrados++;
                             arrayCerrados.add(f.get());
+
                         } else if (f.get().getIsOpen() == 2) {
                             totalTimeOut++;
                             arrayTimeOut.add(f.get());
+
                         }
                     } catch (InterruptedException e) {
                         LogUtils.LOGE(e.getMessage());
@@ -301,6 +303,9 @@ public class DetallePuertos extends BaseActivity {
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
             if (!isCancelled()) {
+                ordena(arrayAbiertos);
+                ordena(arrayCerrados);
+                ordena(arrayTimeOut);
                 progressBarAsyncTask.setVisibility(View.INVISIBLE);
                 actualizaTabs(true);
                 adaptador.notifyDataSetChanged();
@@ -313,7 +318,6 @@ public class DetallePuertos extends BaseActivity {
             super.onProgressUpdate(values[0]);
             progressBarAsyncTask.setProgress((values[0] * 100 / tamanno));
             actualizaTabs(false);
-
         }
 
         private void actualizaTabs(Boolean pintaSiempre) {
@@ -321,10 +325,6 @@ public class DetallePuertos extends BaseActivity {
             long tDelta = tEnd - tStart;
             double elapsedSeconds = tDelta / 1000.0;
             if ((ac != null && elapsedSeconds >= 1) || (ac != null && pintaSiempre)) {
-
-                ordena(arrayAbiertos);
-                ordena(arrayCerrados);
-                ordena(arrayTimeOut);
                 tabLayout.getTabAt(0).setText(ac.getString(R.string.p_abiertos).replace("#", Integer.toString(totalAbiertos)));
                 tabLayout.getTabAt(1).setText(ac.getString(R.string.p_cerrados).replace("#", Integer.toString(totalCerrados)));
                 tabLayout.getTabAt(2).setText(ac.getString(R.string.p_time).replace("#", Integer.toString(totalTimeOut)));
@@ -440,7 +440,7 @@ public class DetallePuertos extends BaseActivity {
                 ColorDrawable background = new ColorDrawable(blended);
                 getSupportActionBar().setBackgroundDrawable(background);
                 tabLayout.setBackground(background);
-               progressBar.setBackgroundColor(statusBarToColor);
+                progressBar.setBackgroundColor(statusBarToColor);
             }
         });
 

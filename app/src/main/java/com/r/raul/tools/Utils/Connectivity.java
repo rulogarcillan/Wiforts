@@ -21,10 +21,10 @@ import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
@@ -76,9 +76,9 @@ public class Connectivity {
     }
 
     public String parseIP2(int i) {
-        return ( i & 0xFF) + "." +
-                (( i >> 8 ) & 0xFF) + "." +
-                (( i >> 16 ) & 0xFF) + ".1";// +
+        return (i & 0xFF) + "." +
+                ((i >> 8) & 0xFF) + "." +
+                ((i >> 16) & 0xFF) + ".1";// +
         //(( i >> 24 ) & 0xFF);
     }
 
@@ -136,13 +136,28 @@ public class Connectivity {
     }
 
     public static String getPublicIp(boolean useHttps) throws IOException {
-        URL ipify = useHttps ? new URL("https://api.ipify.org") : new URL("http://api.ipify.org");
-        URLConnection conn = ipify.openConnection();
-        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        String ip = null;
-        ip = in.readLine();
-        in.close();
-        return ip;
+
+        int TIMEOUT_VALUE = 10000;
+        try {
+            URL ipify = useHttps ? new URL("https://api.ipify.org") : new URL("http://api.ipify.org");
+
+
+            URLConnection conn = ipify.openConnection();
+            conn.setConnectTimeout(TIMEOUT_VALUE);
+            conn.setReadTimeout(TIMEOUT_VALUE);
+            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+            String ip;
+            ip = in.readLine();
+            in.close();
+
+
+            return ip;
+        } catch (SocketTimeoutException e) {
+            System.out.println("More than " + TIMEOUT_VALUE + " elapsed.");
+            return null;
+        }
+
     }
 
     public static InetAddress getLocalAddress() {
@@ -172,15 +187,19 @@ public class Connectivity {
     }
 
     public static ArrayList<String> readJsonFromUrl(String url) throws IOException, JSONException {
+
         InputStream is = new URL(url).openStream();
-        ArrayList<String> listdata = new ArrayList<String>();
+        ArrayList<String> listdata = new ArrayList<>();
 
+        int TIMEOUT_VALUE = 10000;
         try {
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+            URL ipify = new URL(url);
+            URLConnection conn = ipify.openConnection();
+            conn.setConnectTimeout(TIMEOUT_VALUE);
+            conn.setReadTimeout(TIMEOUT_VALUE);
+            BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String jsonText = readAll(rd);
-
             JSONObject json = new JSONObject(jsonText);
-
             listdata.add(0, json.getString("isp"));
             listdata.add(1, json.getString("country"));
             listdata.add(2, json.getString("countryCode"));
@@ -190,23 +209,13 @@ public class Connectivity {
             listdata.add(6, json.getString("zip"));
             listdata.add(7, json.getString("lat"));
             listdata.add(8, json.getString("lon"));
-
             LogUtils.LOG(String.valueOf(listdata.size()));
-
             return listdata;
-        } finally {
-          /*  listdata.add(0,"");
-            listdata.add(1,"");
-            listdata.add(2,"");
-            listdata.add(3,"");
-            listdata.add(4,"");
-            listdata.add(5,"");
-            listdata.add(6,"");
-            listdata.add(7,"");
-            listdata.add(8,"");*/
 
+        } catch (SocketTimeoutException e) {
             LogUtils.LOG(String.valueOf(listdata.size()));
             is.close();
+            return listdata;
         }
     }
 
