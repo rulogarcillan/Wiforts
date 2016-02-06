@@ -1,5 +1,6 @@
 package com.r.raul.tools.Device;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -7,6 +8,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.DhcpInfo;
@@ -20,8 +22,10 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -77,6 +81,8 @@ import java.net.NetworkInterface;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.r.raul.tools.Utils.LogUtils.LOGE;
 
 /**
  * Created by Rulo on 15/11/2015.
@@ -468,7 +474,6 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
             printData();
         }
 
-        LogUtils.LOG("Conecxion");
     }
 
     @Override
@@ -488,8 +493,8 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
                 ActualizaDatosMobile(signalStrength);
                 printData();
             } else if (con.isConnectedWifi(getContext())) {
-               // ActualizaDatosWifi();
-               // printData();
+                // ActualizaDatosWifi();
+                // printData();
             }
         }
     }
@@ -557,75 +562,151 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
         int dBm = SIGNAL_STRENGTH_OUT;
 
         try {
+
             tlfMan = (TelephonyManager) getActivity().getSystemService(
                     Context.TELEPHONY_SERVICE);
 
-            for (CellInfo info2 : tlfMan.getAllCellInfo()) {
-                if (info2 instanceof CellInfoGsm) {
 
-                    CellSignalStrengthGsm gsm = ((CellInfoGsm) info2).getCellSignalStrength();
-                    level = gsm.getLevel();
-                    dBm = gsm.getDbm();
-                    LogUtils.LOG("GSM " + dBm);
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ContextCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    LOGE("asdasda");
 
-                } else if (info2 instanceof CellInfoCdma) {
-                    CellSignalStrengthCdma cdma = ((CellInfoCdma) info2).getCellSignalStrength();
+                    for (CellInfo info2 : tlfMan.getAllCellInfo()) {
+                        if (info2 instanceof CellInfoGsm) {
 
-                    level = cdma.getLevel();
-                    dBm = cdma.getDbm();
-                    LogUtils.LOG("cdma1 " + dBm);
+                            CellSignalStrengthGsm gsm = ((CellInfoGsm) info2).getCellSignalStrength();
+                            level = gsm.getLevel();
+                            dBm = gsm.getDbm();
+                            LogUtils.LOG("GSM " + dBm);
 
-                } else if (info2 instanceof CellInfoLte) {
+                        } else if (info2 instanceof CellInfoCdma) {
+                            CellSignalStrengthCdma cdma = ((CellInfoCdma) info2).getCellSignalStrength();
 
-                    CellSignalStrengthLte lte = ((CellInfoLte) info2).getCellSignalStrength();
-                    dBm = lte.getDbm();
-                    level = lte.getLevel();
-                    LogUtils.LOG("lte " + dBm);
+                            level = cdma.getLevel();
+                            dBm = cdma.getDbm();
+                            LogUtils.LOG("cdma1 " + dBm);
 
-                } else if (info2 instanceof CellInfoWcdma) {
-                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                        final CellSignalStrengthWcdma wcdma = ((CellInfoWcdma) info2)
-                                .getCellSignalStrength();
+                        } else if (info2 instanceof CellInfoLte) {
 
-                        dBm = wcdma.getDbm();
-                        level = wcdma.getLevel();
-                        LogUtils.LOG("cdma2 " + dBm);
+                            CellSignalStrengthLte lte = ((CellInfoLte) info2).getCellSignalStrength();
+                            dBm = lte.getDbm();
+                            level = lte.getLevel();
+                            LogUtils.LOG("lte " + dBm);
+
+                        } else if (info2 instanceof CellInfoWcdma) {
+                            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                                final CellSignalStrengthWcdma wcdma = ((CellInfoWcdma) info2)
+                                        .getCellSignalStrength();
+
+                                dBm = wcdma.getDbm();
+                                level = wcdma.getLevel();
+                                LogUtils.LOG("cdma2 " + dBm);
+
+                            } else {
+
+                                dBm = signalStrength.getGsmSignalStrength() * 2 - 113;
+
+                                if (dBm <= -113) {
+                                    level = -1;
+                                } else if (dBm <= -111) {
+                                    level = 0;
+                                } else if (dBm <= -97) {
+                                    level = 1;
+                                } else if (dBm <= -87) {
+                                    level = 2;
+                                } else if (dBm <= -71) {
+                                    level = 3;
+                                } else if (dBm > -71) {
+                                    level = 4;
+                                }
+                                LogUtils.LOG("cdma2 api < " + dBm);
+                            }
+                        }
+                    }
+                } else {
+
+                    ActivityCompat.requestPermissions(getActivity(),
+                            new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                            0);
+                }
+
+            } else {
+                for (CellInfo info2 : tlfMan.getAllCellInfo()) {
+                    if (info2 instanceof CellInfoGsm) {
+
+                        CellSignalStrengthGsm gsm = ((CellInfoGsm) info2).getCellSignalStrength();
+                        level = gsm.getLevel();
+                        dBm = gsm.getDbm();
+                        LogUtils.LOG("GSM " + dBm);
+
+                    } else if (info2 instanceof CellInfoCdma) {
+                        CellSignalStrengthCdma cdma = ((CellInfoCdma) info2).getCellSignalStrength();
+
+                        level = cdma.getLevel();
+                        dBm = cdma.getDbm();
+                        LogUtils.LOG("cdma1 " + dBm);
+
+                    } else if (info2 instanceof CellInfoLte) {
+
+                        CellSignalStrengthLte lte = ((CellInfoLte) info2).getCellSignalStrength();
+                        dBm = lte.getDbm();
+                        level = lte.getLevel();
+                        LogUtils.LOG("lte " + dBm);
+
+                    } else if (info2 instanceof CellInfoWcdma) {
+                        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                            final CellSignalStrengthWcdma wcdma = ((CellInfoWcdma) info2)
+                                    .getCellSignalStrength();
+
+                            dBm = wcdma.getDbm();
+                            level = wcdma.getLevel();
+                            LogUtils.LOG("cdma2 " + dBm);
+
+                        } else {
+
+                            dBm = signalStrength.getGsmSignalStrength() * 2 - 113;
+
+                            if (dBm <= -113) {
+                                level = -1;
+                            } else if (dBm <= -111) {
+                                level = 0;
+                            } else if (dBm <= -97) {
+                                level = 1;
+                            } else if (dBm <= -87) {
+                                level = 2;
+                            } else if (dBm <= -71) {
+                                level = 3;
+                            } else if (dBm > -71) {
+                                level = 4;
+                            }
+                            LogUtils.LOG("cdma2 api < " + dBm);
+                        }
 
                     } else {
 
-                        dBm = signalStrength.getGsmSignalStrength() * 2 - 113;
-
-                        if (dBm <= -113) {
-                            level = -1;
-                        } else if (dBm <= -111) {
-                            level = 0;
-                        } else if (dBm <= -97) {
-                            level = 1;
-                        } else if (dBm <= -87) {
-                            level = 2;
-                        } else if (dBm <= -71) {
-                            level = 3;
-                        } else if (dBm > -71) {
-                            level = 4;
-                        }
-                        LogUtils.LOG("cdma2 api < " + dBm);
+                        dBm = SIGNAL_STRENGTH_OUT;
+                        dataDeviceInfo.setTxtSeñal(getResources().getString(
+                                R.string.nodisponible));
+                        level = -1;
+                        LogUtils.LOG("Red desconocida " + dBm);
                     }
-
-                } else {
-
-                    dBm = SIGNAL_STRENGTH_OUT;
-                    dataDeviceInfo.setTxtSeñal(getResources().getString(
-                            R.string.nodisponible));
-                    level = -1;
-                    LogUtils.LOG("Red desconocida " + dBm);
                 }
             }
+
+
             if (dBm != -113) {
+
                 dataDeviceInfo.iconoDataMovil(level);
                 dataDeviceInfo.setdBm(dBm);
             }
 
-        } catch (Exception e) {
+        } catch (
+                Exception e
+                )
+
+        {
 
             LogUtils.LOG(e.getMessage());
             dataDeviceInfo.setTipoIcono(R.drawable.ic_sigmobile0); // modificar
@@ -761,7 +842,7 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
                                 e.printStackTrace();
                             }
                         }
-                    }else{
+                    } else {
                         dataDeviceInfo.setTxtHost(getResources().getString(R.string.timeip));
                         dataDeviceInfo.setTxtIpPublic(getResources().getString(R.string.timeip));
                         dataDeviceInfo.setTxtIsp(getResources().getString(R.string.desconocido));
@@ -789,6 +870,7 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
         protected void onPostExecute(Boolean fueOk) {
             super.onPostExecute(fueOk);
         }
+
     }
 
 
@@ -904,7 +986,6 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
         misDatos.put(Constantes.TIPE_MOBILE, new DetalleTarjeta());
         misDatos.put(Constantes.TIPE_WIFI, new DetalleTarjeta());
 
-
         misDatos.get(Constantes.TIPE_AIRPLANE).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.host), getResources().getString(R.string.nodisponible)));
         misDatos.get(Constantes.TIPE_AIRPLANE).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.ippublica), getResources().getString(R.string.nodisponible)));
         misDatos.get(Constantes.TIPE_AIRPLANE).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.iplocal), getResources().getString(R.string.nodisponible)));
@@ -912,7 +993,6 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
         misDatos.get(Constantes.TIPE_AIRPLANE).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.masacarasubred), getResources().getString(R.string.nodisponible)));
         misDatos.get(Constantes.TIPE_AIRPLANE).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.dns1), getResources().getString(R.string.nodisponible)));
         misDatos.get(Constantes.TIPE_AIRPLANE).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.dns2), getResources().getString(R.string.nodisponible)));
-
 
         misDatos.get(Constantes.TIPE_AIRPLANE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.isp), getResources().getString(R.string.nodisponible)));
         misDatos.get(Constantes.TIPE_AIRPLANE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.country), getResources().getString(R.string.nodisponible)));
@@ -923,7 +1003,6 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
         misDatos.get(Constantes.TIPE_AIRPLANE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.zip), getResources().getString(R.string.nodisponible)));
         misDatos.get(Constantes.TIPE_AIRPLANE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.latitude), getResources().getString(R.string.nodisponible)));
         misDatos.get(Constantes.TIPE_AIRPLANE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.longitude), getResources().getString(R.string.nodisponible)));
-
 
     }
 
