@@ -488,8 +488,8 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
                 ActualizaDatosMobile(signalStrength);
                 printData();
             } else if (con.isConnectedWifi(getContext())) {
-                ActualizaDatosWifi();
-                printData();
+               // ActualizaDatosWifi();
+               // printData();
             }
         }
     }
