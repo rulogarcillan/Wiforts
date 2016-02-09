@@ -28,6 +28,8 @@ import java.util.Comparator;
 import jcifs.Config;
 import jcifs.netbios.NbtAddress;
 
+import static com.r.raul.tools.Utils.LogUtils.LOGE;
+
 public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
 
     private Activity ac;
@@ -59,31 +61,42 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
     @Override
     protected Void doInBackground(Void... params) {
 
+
         WifiManager wifiManager = (WifiManager) ac.getSystemService(Context.WIFI_SERVICE);
         macPadre = wifiManager.getConnectionInfo().getBSSID();
         macMyDevice = wifiManager.getConnectionInfo().getMacAddress();
         gateway = con.parseIP(wifiManager.getDhcpInfo().gateway);
         loacalIp = con.getLocalAddress().getHostAddress();
         // consultamos las conexiones guardadas para la mac padre
+
         arrayInspectorTable = consultas.getAllInspectorTableFromMacPadre(macPadre);
         String prefix = "";
+        String ipBro = "";
         DhcpInfo dhcpInfo = wifiManager.getDhcpInfo();
         try {
             InetAddress inetAddress = InetAddress.getByName(con.parseIP(dhcpInfo.ipAddress));
             NetworkInterface networkInterface = NetworkInterface.getByInetAddress(inetAddress);
             for (InterfaceAddress address : networkInterface.getInterfaceAddresses()) {
                 prefix = String.valueOf(address.getNetworkPrefixLength());
+                ipBro = String.valueOf(address.getAddress());
+
+                LOGE("Adress " + String.valueOf(address.getAddress()));
+                LOGE("Broadcast " + String.valueOf(address.getBroadcast()));
+                LOGE("Prefix " + String.valueOf(address.getNetworkPrefixLength()));
+
             }
+
+
         } catch (IOException e) {
 
         }
 
-        SubnetUtils utils = new SubnetUtils(gateway + "/" + prefix);
+        SubnetUtils utils = new SubnetUtils(loacalIp + "/" + prefix);
         totalMachine = utils.getInfo().getAddressCountLong();
-
+        LOGE("Subnet " + utils.getInfo().getNetmask());
         ScanRange scanRange = null;
         try {
-            scanRange = new ScanRange(gateway, utils.getInfo().getNetmask());
+            scanRange = new ScanRange(loacalIp, utils.getInfo().getNetmask());
         } catch (Exception e) {
             e.printStackTrace();
         }

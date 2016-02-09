@@ -8,7 +8,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.DhcpInfo;
@@ -25,7 +24,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -69,6 +67,7 @@ import com.r.raul.tools.Utils.Constantes;
 import com.r.raul.tools.Utils.ItemClickSupport;
 import com.r.raul.tools.Utils.LogUtils;
 import com.r.raul.tools.Utils.MyLinearLayoutManager;
+import com.r.raul.tools.Utils.PermissionUtils;
 import com.r.raul.tools.Utils.SampleDivider;
 
 import org.apache.commons.net.util.SubnetUtils;
@@ -81,8 +80,6 @@ import java.net.NetworkInterface;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.r.raul.tools.Utils.LogUtils.LOGE;
 
 /**
  * Created by Rulo on 15/11/2015.
@@ -547,13 +544,6 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
         dataDeviceInfo.setTxtMasSubred(con.parseIP(info.netmask));
         dataDeviceInfo.setTxtDns1(con.parseIP(info.dns1));
         dataDeviceInfo.setTxtDns2(con.parseIP(info.dns2));
-
-		/*
-         * List<ScanResult> wifiList = wifiManager.getScanResults(); for
-		 * (ScanResult scanResult : wifiList) { int level =
-		 * WifiManager.calculateSignalLevel(scanResult.level, 5); }
-		 */
-
     }
 
 
@@ -568,10 +558,7 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
 
 
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ContextCompat.checkSelfPermission(getActivity(),
-                        Manifest.permission.ACCESS_COARSE_LOCATION)
-                        == PackageManager.PERMISSION_GRANTED) {
-                    LOGE("asdasda");
+                if (PermissionUtils.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)) {
 
                     for (CellInfo info2 : tlfMan.getAllCellInfo()) {
                         if (info2 instanceof CellInfoGsm) {

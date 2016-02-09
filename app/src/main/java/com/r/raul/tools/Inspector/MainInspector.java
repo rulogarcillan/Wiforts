@@ -34,8 +34,6 @@ import com.r.raul.tools.Utils.Utilidades;
 
 import java.util.ArrayList;
 
-import static com.r.raul.tools.Utils.LogUtils.LOGE;
-
 /**
  * Created by Rulo on 22/12/2015.
  */
@@ -241,7 +239,7 @@ public class MainInspector extends Fragment {
 
                 if (info != null) {
                     if (info.isConnected()) {
-                        LOGE(String.valueOf(Connectivity.isConnectedWifi(context)));
+
                         ocultaMuestra();
                     } else {
                         ocultaMuestra();
