@@ -13,8 +13,8 @@ import static com.r.raul.tools.Utils.LogUtils.LOGI;
 
 public class IpScan {
 	private ScanResult scanResult;
-	public static final int DEFAULT_TIME_OUT = 1800;
-	public static final int DEFAULT_FIXED_POOL = 100;
+	public static final int DEFAULT_TIME_OUT = 2500;
+	public static final int DEFAULT_FIXED_POOL = 80;
 	public ExecutorService pool;
 	private int pt_move = 2; // 1=backward 2=forward
 
@@ -22,40 +22,12 @@ public class IpScan {
 		this.scanResult = scanResult;
 	}
 
-	public void scanAll(ScanRange scanRange) {
-		long ip = scanRange.getRouterIp();
-		long start = scanRange.getScanStart();
-		long end = scanRange.getScanEnd();
+	public void scanAll(String[] scanRange) {
+
 		pool = Executors.newFixedThreadPool(DEFAULT_FIXED_POOL);
-		if (ip <= end && ip >= start) {
-			launch(start);
+		for (String ip: scanRange){
+			launch(ip);
 
-			long pt_backward = ip;
-			long pt_forward = ip + 1;
-			long size_hosts = scanRange.size() - 1;
-
-			for (int i = 0; i < size_hosts; i++) {
-				// Set pointer if of limits
-				if (pt_backward <= start) {
-					pt_move = 2;
-				} else if (pt_forward > end) {
-					pt_move = 1;
-				}
-				// Move back and forth
-				if (pt_move == 1) {
-					launch(pt_backward);
-					pt_backward--;
-					pt_move = 2;
-				} else if (pt_move == 2) {
-					launch(pt_forward);
-					pt_forward++;
-					pt_move = 1;
-				}
-			}
-		} else {
-			for (long i = start; i <= end; i++) {
-				launch(i);
-			}
 		}
 		pool.shutdown();
 		try {
@@ -72,15 +44,15 @@ public class IpScan {
 		pool.shutdownNow();
 	}
 
-	private void launch(long i) {
+	private void launch(String i) {
 		if (!pool.isShutdown()) {
-			pool.execute(new SingleRunnable(IpTranslator.getIpFromLongUnsigned(i), scanResult));
+			pool.execute(new SingleRunnable(i, scanResult));
 		}
 	}
 
 	public void scanSingleIp(String ip, int timeout) {
 		try {
-			final String CMD = "/system/bin/ping -q -n -w 100 -c 1 %s";
+			final String CMD = "/system/bin/ping -q -n -w 1000 -c 1 %s";
 			Process myProcess = Runtime.getRuntime().exec(String.format(CMD, ip));
 			myProcess.waitFor();
 			if (myProcess.exitValue() == 0) {

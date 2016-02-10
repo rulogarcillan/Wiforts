@@ -78,12 +78,9 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
             NetworkInterface networkInterface = NetworkInterface.getByInetAddress(inetAddress);
             for (InterfaceAddress address : networkInterface.getInterfaceAddresses()) {
                 prefix = String.valueOf(address.getNetworkPrefixLength());
-                ipBro = String.valueOf(address.getAddress());
-
                 LOGE("Adress " + String.valueOf(address.getAddress()));
                 LOGE("Broadcast " + String.valueOf(address.getBroadcast()));
                 LOGE("Prefix " + String.valueOf(address.getNetworkPrefixLength()));
-
             }
 
 
@@ -92,14 +89,13 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
         }
 
         SubnetUtils utils = new SubnetUtils(loacalIp + "/" + prefix);
-        totalMachine = utils.getInfo().getAddressCountLong();
+
         LOGE("Subnet " + utils.getInfo().getNetmask());
-        ScanRange scanRange = null;
-        try {
-            scanRange = new ScanRange(loacalIp, utils.getInfo().getNetmask());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String[] addresses;
+        utils = new SubnetUtils(gateway + "/" + prefix);
+        addresses = utils.getInfo().getAllAddresses();
+        totalMachine = addresses.length;
+        LOGE("TOTAL IPS: " + totalMachine);
 
         ////////////////////////**********************INICIO ESCANEO*********************////////////////////////
         ipScan = new IpScan(new ScanResult() {
@@ -113,9 +109,9 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
 
             @Override
             public void onInActiveIp(String ip) {
-                //publishProgress(calculoPercent(tot++, totalMachine));
+                publishProgress(calculoPercent(tot++, totalMachine));
                 // TODO Auto-generated method stub
-                PortScan portScan = new PortScan(new ScanResult() {
+               /* PortScan portScan = new PortScan(new ScanResult() {
 
                     @Override
                     public void onActiveIp(String ip2) {
@@ -132,11 +128,11 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
                     portScan.start(ip);
                 } catch (Exception e) {
                     e.printStackTrace();
-                }
+                }*/
             }
 
         });
-        ipScan.scanAll(scanRange);
+        ipScan.scanAll(addresses);
 
 
         return null;
