@@ -1,10 +1,11 @@
 package com.r.raul.tools.Ports;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+
+import static com.r.raul.tools.Utils.LogUtils.LOGI;
 
 public class Puerto {
     
@@ -53,29 +54,19 @@ public class Puerto {
 	}
 
 	public static boolean isReachable(String ip, int port) throws Exception {
-		try {
-			Socket socket = new Socket();
-			socket.setPerformancePreferences(1, 0, 0);
-                	socket.setTcpNoDelay(true);
-			socket.connect(new InetSocketAddress(ip, port), 500);
-			socket.setSoTimeout(500);
 
-			int result;
-			try {
-				InputStream inputStream = socket.getInputStream();
-				result = inputStream.read();
-				socket.close();
-
-			} catch (Exception e) {
-
-				return true;
-			}
-
-			return result != -1;
-		} catch (IOException e) {
-
-			return false;
-		}
+           int result=-1;
+           try {
+                Socket socket = new Socket();
+                socket.setPerformancePreferences(1, 0, 0);
+                socket.setTcpNoDelay(true);
+                socket.connect(new InetSocketAddress(ip, port), 250);
+                socket.close();
+            } catch (IOException ignored) {
+            } finally {
+               LOGI(result + " " + ip);
+               return result != -1;
+            }
 	}
 	
 	public static int isOpenCloseTimeOut(final String ip, final int puertoTratar, final int timeOut) throws Exception {

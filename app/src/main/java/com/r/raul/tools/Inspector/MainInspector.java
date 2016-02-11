@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
+import android.net.DhcpInfo;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -32,7 +33,15 @@ import com.r.raul.tools.Utils.Connectivity;
 import com.r.raul.tools.Utils.SampleDivider;
 import com.r.raul.tools.Utils.Utilidades;
 
+import org.apache.commons.net.util.SubnetUtils;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
 import java.util.ArrayList;
+
+import static com.r.raul.tools.Utils.LogUtils.LOGE;
 
 /**
  * Created by Rulo on 22/12/2015.
@@ -56,11 +65,11 @@ public class MainInspector extends Fragment {
     private TextView Txtbssid, TxtCon, TxtTot;
     private ImageView imgDevice;
     private View rootView;
+    private int totales=0;
 
     public void onResume() {
         super.onResume();
         getActivity().registerReceiver(reciver, this.intentFilter);
-
     }
 
     @Override
@@ -85,6 +94,8 @@ public class MainInspector extends Fragment {
         rootView = inflater.inflate(R.layout.inspector_main, container, false);
 
         setupReciver();
+
+
 
 
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.appbar);
@@ -148,6 +159,28 @@ public class MainInspector extends Fragment {
 
         if (con.isConnectedWifi(getActivity()) && ((task != null && task.getStatus() != AsyncTask.Status.RUNNING) || task == null)) {
 
+            WifiManager wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
+            DhcpInfo dhcpInfo = wifiManager.getDhcpInfo();
+            String prefix = "";
+            try {
+                InetAddress inetAddress = InetAddress.getByName(con.parseIP(dhcpInfo.ipAddress));
+                NetworkInterface networkInterface = NetworkInterface.getByInetAddress(inetAddress);
+                for (InterfaceAddress address : networkInterface.getInterfaceAddresses()) {
+                    prefix = String.valueOf(address.getNetworkPrefixLength());
+                    LOGE("Adress " + String.valueOf(address.getAddress()));
+                    LOGE("Broadcast " + String.valueOf(address.getBroadcast()));
+                    LOGE("Prefix " + String.valueOf(address.getNetworkPrefixLength()));
+                }
+
+
+            } catch (IOException e) {
+
+            }
+
+            SubnetUtils utils = new SubnetUtils(con.getLocalAddress().getHostAddress() + "/" + prefix);
+            final String tot = utils.getInfo().getAllAddresses().length+"";
+
+
             task = (ObtenMaquinas) new ObtenMaquinas(getActivity(), array) {
 
 
@@ -159,7 +192,8 @@ public class MainInspector extends Fragment {
                     progressBar.setVisibility(View.VISIBLE);
                     progressBar.setProgress(0);
                     progressBar.setIndeterminate(true);
-                    TxtTot.setText(array.size() + "");
+                    TxtTot.setText(array.size() + "/" + tot);
+                    totales=array.size();
                 }
 
                 @Override
@@ -168,11 +202,13 @@ public class MainInspector extends Fragment {
                     super.onProgressUpdate(values[0]);
 
                     if (progressBar.getProgress() < values[0]) {
+
                         progressBar.setProgress(values[0]);
                     }
-                    if (Integer.parseInt(TxtTot.getText().toString()) != array.size()) {
+                    if (totales != array.size()) {
+                        totales=array.size();
+                        TxtTot.setText(array.size() + "/" + tot);
                         adaptador.notifyDataSetChanged();
-                        TxtTot.setText(array.size() + "");
                     }
 
                     frameWifi.setRefreshing(false);

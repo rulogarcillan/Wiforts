@@ -58,6 +58,9 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
         return (int) (valor * 100 / tot);
     }
 
+
+
+
     @Override
     protected Void doInBackground(Void... params) {
 
@@ -111,7 +114,7 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
             public void onInActiveIp(String ip) {
                 publishProgress(calculoPercent(tot++, totalMachine));
                 // TODO Auto-generated method stub
-               /* PortScan portScan = new PortScan(new ScanResult() {
+             /*   PortScan portScan = new PortScan(new ScanResult() {
 
                     @Override
                     public void onActiveIp(String ip2) {
@@ -181,7 +184,7 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
         }
 
         // agregamos el nombre del hardware
-        NbtAddress[] nbts = new NbtAddress[0];
+        NbtAddress[] nbts;
         try {
             Config.setProperty("jcifs.smb.client.soTimeout", "100");
             Config.setProperty("jcifs.smb.client.responseTimeout", "100");
@@ -202,7 +205,7 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
 
         item.setNombreSoft(consultas.getNameFromMac(item.getMac()));
         array.add(item);
-        ordenarIps(array);
+       ordenarIps(array);
 
     }
 
@@ -299,4 +302,9 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
         return ac.getString(R.string.desconocido);
     }
 
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+    }
 }

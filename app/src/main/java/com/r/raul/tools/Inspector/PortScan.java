@@ -38,7 +38,8 @@ public class PortScan {
 
     private ArrayList<Puerto> getStandardPortList() {
         ArrayList<Puerto> portList = new ArrayList<Puerto>();
-        portList.add(new Puerto(80,0));
+
+       portList.add(new Puerto(80,0));
         portList.add(new Puerto(22,0));
         portList.add(new Puerto(443,0));
         portList.add(new Puerto(25,0));
