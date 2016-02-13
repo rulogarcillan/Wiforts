@@ -48,7 +48,7 @@ public class MainActivity extends BaseActivity
 
         //se crea la base de datos si no existe.
         new MyDatabase(this);
-        // new MyDatabaseMacs(this);
+
         //copia debug
         copybd();
 

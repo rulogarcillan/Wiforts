@@ -10,6 +10,7 @@ import com.r.raul.tools.R;
 
 import java.util.ArrayList;
 
+import static com.r.raul.tools.Utils.LogUtils.LOGE;
 import static com.r.raul.tools.Utils.LogUtils.LOGI;
 
 public class Consultas {
@@ -28,8 +29,27 @@ public class Consultas {
         db = new MyDatabase(c);
     }
 
+    public void insertaDevice(final String macDevice) {
+        SQLiteDatabase db2;
+
+        //Creamos el registro a insertar como objeto ContentValues
+        ContentValues nuevoRegistro = new ContentValues();
+        nuevoRegistro.put("mac_device",macDevice);
+        nuevoRegistro.put("nombre","");
+        //Insertamos el registro en la base de datos
+        db2 = db.getWritableDatabase();
+        long resultado = db2.insert("devices", null, nuevoRegistro);
+        if (resultado==-1){
+           LOGE("Ya estiste el registro: "+macDevice) ;
+        }
+    }
+
+
+
     public ArrayList getAllInspectorTableFromMacPadre(final String macPadre) {
-        String sql = "select inspector.* from inspector where inspector.mac_padre = '" + macPadre + "'";
+        String sql = "select inspector.fk_mac_device, inspector.mac_padre, ifnull(devices.nombre,'-'), inspector.favorito from inspector, devices where inspector.fk_mac_device=devices.mac_device and inspector.mac_padre = '" + macPadre + "'";
+
+
         LOGI(sql);
         ArrayList<InspectorTable> array = new ArrayList<>();
         Cursor cur = db.query(sql, LEER);
@@ -49,12 +69,10 @@ public class Consultas {
 
         SQLiteDatabase db2;
 
-
         //Creamos el registro a insertar como objeto ContentValues
         ContentValues nuevoRegistro = new ContentValues();
-        nuevoRegistro.put("mac_device", item.getMacdevice());
+        nuevoRegistro.put("fk_mac_device", item.getMacdevice());
         nuevoRegistro.put("mac_padre", item.getMacpadre());
-        nuevoRegistro.put("nombre", item.getNombre());
         nuevoRegistro.put("favorito", item.getFavorito() ? 1 : 0);
 
         //Insertamos el registro en la base de datos
@@ -71,7 +89,7 @@ public class Consultas {
 
         String[] args = new String[]{item.getMacdevice(), item.getMacpadre()};
         db2 = db.getWritableDatabase();
-        db2.update("inspector", valores, "mac_device=? AND mac_padre=?", args);
+        db2.update("inspector", valores, "fk_mac_device=? AND mac_padre=?", args);
     }
 
 

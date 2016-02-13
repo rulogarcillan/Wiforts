@@ -1,32 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<diagrama formula="fk_%c" version="8" nombreProyecto="softMac" nombreAutor="exrrocon01">
+<diagrama nombreProyecto="softMac" formula="fk_%c" version="8" nombreAutor="exrrocon01">
   <DataBase>3</DataBase>
   <ORM>1</ORM>
   <lista-item>
-    <item id="{b725ed78-1a35-4eb8-84a2-b33551e471d5}" type="modelo-tabla">
+    <item type="modelo-tabla" id="{b725ed78-1a35-4eb8-84a2-b33551e471d5}">
       <nombre>software</nombre>
       <posicion>
-        <x>-1252</x>
-        <y>-1442</y>
+        <x>-1386</x>
+        <y>-1479</y>
       </posicion>
       <lista-columnas>
-        <columna nulo="0" llaveUnica="" id="{7ed3c1d7-4496-4b15-b32e-0677c1e06463}" tipoDato="TEXT" llaveprimaria="1" notas="clave mac" nombre="mac"/>
-        <columna nulo="0" llaveUnica="" id="{6f065134-05fe-4664-b0d1-59cf0d7dd627}" tipoDato="TEXT" llaveprimaria="0" notas="Nombre corto" nombre="name_s"/>
-        <columna nulo="0" llaveUnica="" id="{be335ff2-feca-450e-aa4d-6e8e0b975242}" tipoDato="TEXT" llaveprimaria="0" notas="Nombre largo" nombre="name_l"/>
+        <columna tipoDato="TEXT" llaveUnica="" nombre="mac" id="{7ed3c1d7-4496-4b15-b32e-0677c1e06463}" llaveprimaria="1" nulo="0" notas="clave mac"/>
+        <columna tipoDato="TEXT" llaveUnica="" nombre="name_s" id="{6f065134-05fe-4664-b0d1-59cf0d7dd627}" llaveprimaria="0" nulo="0" notas="Nombre corto"/>
+        <columna tipoDato="TEXT" llaveUnica="" nombre="name_l" id="{be335ff2-feca-450e-aa4d-6e8e0b975242}" llaveprimaria="0" nulo="0" notas="Nombre largo"/>
       </lista-columnas>
     </item>
-    <item id="{769b4e53-a4ae-48d8-b204-726b2b7f08ab}" type="modelo-tabla">
+    <item type="modelo-tabla" id="{769b4e53-a4ae-48d8-b204-726b2b7f08ab}">
       <nombre>inspector</nombre>
       <posicion>
         <x>-1256</x>
         <y>-1359</y>
       </posicion>
       <lista-columnas>
-        <columna nulo="0" llaveUnica="" id="{16e17af8-7ccf-4560-82f5-df7eeeb75bc1}" tipoDato="TEXT" llaveprimaria="1" notas="Mac del dispositivo" nombre="mac_device"/>
-        <columna nulo="0" llaveUnica="" id="{5f987eed-f0e4-432a-b829-47269ff9cecc}" tipoDato="TEXT" llaveprimaria="1" notas="Mac de la red" nombre="mac_padre"/>
-        <columna nulo="0" llaveUnica="" id="{80728a55-d590-4544-a089-12bc81b97944}" tipoDato="TEXT" llaveprimaria="0" notas="Nombre" nombre="nombre"/>
-        <columna nulo="0" llaveUnica="" id="{17ae76e2-1ead-496d-8950-a12a3c7ae137}" tipoDato="INTEGER" llaveprimaria="0" notas="Marca para saber si es conocido" nombre="favorito"/>
+        <columna tipoDato="TEXT" llaveUnica="" nombre="mac_padre" id="{5f987eed-f0e4-432a-b829-47269ff9cecc}" llaveprimaria="1" nulo="0" notas="Mac de la red"/>
+        <columna tipoDato="INTEGER" llaveUnica="" nombre="favorito" id="{17ae76e2-1ead-496d-8950-a12a3c7ae137}" llaveprimaria="0" nulo="0" notas="Marca para saber si es conocido"/>
       </lista-columnas>
+    </item>
+    <item type="modelo-tabla" id="{ec517cc8-81b9-4b00-99f6-820b8fca64ad}">
+      <nombre>devices</nombre>
+      <posicion>
+        <x>-1239</x>
+        <y>-1489</y>
+      </posicion>
+      <lista-columnas>
+        <columna tipoDato="TEXT" llaveUnica="" nombre="mac_device" id="{16e17af8-7ccf-4560-82f5-df7eeeb75bc1}" llaveprimaria="1" nulo="0" notas="Mac del dispositivo"/>
+        <columna tipoDato="TEXT" llaveUnica="" nombre="nombre" id="{80728a55-d590-4544-a089-12bc81b97944}" llaveprimaria="0" nulo="0" notas="Nombre"/>
+      </lista-columnas>
+    </item>
+    <item type="modelo-relacion" id="{b47dbd2b-406f-4769-bfa9-9f50e9bcfb9a}">
+      <inicio>
+        <posicion>
+          <x>-1178.5</x>
+          <y>-1442</y>
+        </posicion>
+        <angulo>270</angulo>
+        <cardinalidad>Uno</cardinalidad>
+        <cardinalidadLinea>Puede</cardinalidadLinea>
+        <owner>{ec517cc8-81b9-4b00-99f6-820b8fca64ad}</owner>
+      </inicio>
+      <final>
+        <posicion>
+          <x>-1178.5</x>
+          <y>-1359</y>
+        </posicion>
+        <angulo>90</angulo>
+        <cardinalidad>Muchos</cardinalidad>
+        <cardinalidadLinea>Debe</cardinalidadLinea>
+        <owner>{769b4e53-a4ae-48d8-b204-726b2b7f08ab}</owner>
+      </final>
     </item>
   </lista-item>
 </diagrama>

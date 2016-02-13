@@ -215,6 +215,8 @@ public class IpScan {
 
     private void ipActiva(Machine item) {
 
+        consultas.insertaDevice(item.getMac());
+
         Boolean isGateway = false;
         Boolean isInBBDD = false;
         Boolean isMyDevice = false;
@@ -244,32 +246,35 @@ public class IpScan {
             InspectorTable itemIns = new InspectorTable(item.getMac(), macPadre, "", (isGateway || isMyDevice) ? true : false);
             consultas.setItemInspectorTable(itemIns);
             arrayInspectorTable.add(itemIns);
-            item.setNombre("");
+            item.setNombre("-");
             item.setConocido((isGateway || isMyDevice) ? true : false);
         }
 
         // agregamos el nombre del hardware
-        NbtAddress[] nbts;
-        try {
-            Config.setProperty("jcifs.smb.client.soTimeout", "100");
-            Config.setProperty("jcifs.smb.client.responseTimeout", "100");
-            Config.setProperty("jcifs.netbios.soTimeout", "100");
-            Config.setProperty("jcifs.netbios.retryTimeout", "100");
 
-            nbts = NbtAddress.getAllByAddress(item.getIp());
-            String netbiosname = nbts[0].getHostName();
+            NbtAddress[] nbts;
+            try {
+                Config.setProperty("jcifs.smb.client.soTimeout", "100");
+                Config.setProperty("jcifs.smb.client.responseTimeout", "100");
+                Config.setProperty("jcifs.netbios.soTimeout", "100");
+                Config.setProperty("jcifs.netbios.retryTimeout", "100");
 
-            item.setNombre(netbiosname);
-        } catch (UnknownHostException e) {
-            item.setNombre("-");
-            if (isMyDevice) {
-                item.setNombre(ac.getString(R.string.midevice));
+                nbts = NbtAddress.getAllByAddress(item.getIp());
+                String netbiosname = nbts[0].getHostName();
+
+
+                item.setNombre("\\n"+netbiosname);
+            } catch (UnknownHostException e) {
+               /* item.setNombre("-");
+                if (isMyDevice) {
+                    item.setNombre(ac.getString(R.string.midevice));
+                }
+                e.printStackTrace();*/
             }
-            e.printStackTrace();
-        }
+
+
 
         item.setNombreSoft(consultas.getNameFromMac(item.getMac()));
-
         scanResult.onActiveIp(item);
     }
 
