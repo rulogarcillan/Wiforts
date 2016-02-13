@@ -33,8 +33,8 @@ import static com.r.raul.tools.Utils.LogUtils.LOGI;
 
 public class IpScan {
     private ScanResult scanResult;
-    private static final int DEFAULT_TIME_OUT = 500;
-    private static final int DEFAULT_FIXED_POOL = 32;
+    private static final int DEFAULT_TIME_OUT = 400;
+    private static final int DEFAULT_FIXED_POOL = 36;
     private ExecutorService pool;
 
     private Connectivity con;
