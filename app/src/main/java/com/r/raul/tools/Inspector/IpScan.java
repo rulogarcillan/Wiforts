@@ -1,35 +1,99 @@
 package com.r.raul.tools.Inspector;
 
 
+import android.app.Activity;
+import android.content.Context;
+import android.net.DhcpInfo;
+import android.net.wifi.WifiManager;
+
+import com.r.raul.tools.DB.Consultas;
+import com.r.raul.tools.R;
+import com.r.raul.tools.Utils.Connectivity;
+import com.r.raul.tools.Utils.Constantes;
+
+import org.apache.commons.net.util.SubnetUtils;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
+import jcifs.Config;
+import jcifs.netbios.NbtAddress;
 
 import static com.r.raul.tools.Utils.LogUtils.LOGE;
 import static com.r.raul.tools.Utils.LogUtils.LOGI;
 
 public class IpScan {
     private ScanResult scanResult;
-    public static final int DEFAULT_TIME_OUT = 500;
-    public static final int DEFAULT_FIXED_POOL = 100;
-    public ExecutorService pool;
+    private static final int DEFAULT_TIME_OUT = 500;
+    private static final int DEFAULT_FIXED_POOL = 32;
+    private ExecutorService pool;
+
+    private Connectivity con;
+    private String macPadre;
+    private String gateway;
+    private String loacalIp;
+    private String macMyDevice;
+    private ArrayList<InspectorTable> arrayInspectorTable;
+    private Consultas consultas;
+    private String[] addresses;
+    private Activity ac;
 
 
-    public IpScan(ScanResult scanResult) {
+    public IpScan(ScanResult scanResult, Activity activity) {
         this.scanResult = scanResult;
+        this.ac = activity;
+        if (ac != null) {
+            WifiManager wifiManager = (WifiManager) ac.getSystemService(Context.WIFI_SERVICE);
+
+            this.macPadre = wifiManager.getConnectionInfo().getBSSID();
+            this.macMyDevice = wifiManager.getConnectionInfo().getMacAddress();
+            this.gateway = con.parseIP(wifiManager.getDhcpInfo().gateway);
+            this.loacalIp = con.getLocalAddress().getHostAddress();
+            this.consultas = new Consultas(ac);
+
+            //datos de BBDD sobre la mac del wifi
+            arrayInspectorTable = consultas.getAllInspectorTableFromMacPadre(macPadre);
+
+            String prefix = "";
+            DhcpInfo dhcpInfo = wifiManager.getDhcpInfo();
+            try {
+                InetAddress inetAddress = InetAddress.getByName(con.parseIP(dhcpInfo.ipAddress));
+                NetworkInterface networkInterface = NetworkInterface.getByInetAddress(inetAddress);
+                for (InterfaceAddress address : networkInterface.getInterfaceAddresses()) {
+                    prefix = String.valueOf(address.getNetworkPrefixLength());
+                    LOGE("Adress " + String.valueOf(address.getAddress()));
+                    LOGE("Broadcast " + String.valueOf(address.getBroadcast()));
+                    LOGE("Prefix " + String.valueOf(address.getNetworkPrefixLength()));
+                }
+            } catch (IOException e) {
+
+            }
+            SubnetUtils utils = new SubnetUtils(gateway + "/" + prefix);
+            LOGE("Subnet " + utils.getInfo().getNetmask());
+            this.addresses = utils.getInfo().getAllAddresses();
+            LOGE("TOTAL IPS: " + addresses.length);
+
+        }
     }
 
-    public void scanAll(String[] scanRange) {
+    public int totalIpsAnalizar() {
+        return addresses.length;
+    }
+
+    public void scanAll() {
 
         pool = Executors.newFixedThreadPool(DEFAULT_FIXED_POOL);
-        for (String ip : scanRange) {
+        for (String ip : addresses) {
             launch(ip);
-
         }
         pool.shutdown();
         try {
@@ -59,20 +123,17 @@ public class IpScan {
             myProcess.waitFor();
             if (myProcess.exitValue() == 0) {
                 LOGI("IP OK Ping " + ip);
-                scanResult.onActiveIp(ip);
+                ipEstimulada(new Machine(ip, true));
+
             } else {
                 try {
                     InetAddress h = InetAddress.getByName(ip);
                     if (h.isReachable(timeout)) {
                         LOGI("IP OK isReachable 1 " + ip);
-                        scanResult.onActiveIp(ip);
+                        ipEstimulada(new Machine(ip, true));
                     } else {
                         LOGI("IP KO isReachable 1 " + ip);
-                        if (ipEestimulada(ip)) {
-                            scanResult.onActiveIp(ip);
-                        } else {
-                            scanResult.onInActiveIp(ip);
-                        }
+                        ipEstimulada(new Machine(ip, false));
                     }
                 } catch (Exception e) {
                     LOGE(e.getMessage());
@@ -85,14 +146,10 @@ public class IpScan {
                 InetAddress h = InetAddress.getByName(ip);
                 if (h.isReachable(timeout)) {
                     LOGI("IP OK isReachable 2 " + ip);
-                    scanResult.onActiveIp(ip);
+                    ipEstimulada(new Machine(ip, true));
                 } else {
                     LOGI("IP KO isReachable 2 " + ip);
-                    if (ipEestimulada(ip)) {
-                        scanResult.onActiveIp(ip);
-                    } else {
-                        scanResult.onInActiveIp(ip);
-                    }
+                    ipEstimulada(new Machine(ip, false));
                 }
             } catch (UnknownHostException e2) {
                 LOGE(e2.getMessage());
@@ -103,21 +160,36 @@ public class IpScan {
     }
 
 
-    private Boolean ipEestimulada(String ipEntrada) {
+    private void ipEstimulada(Machine item) {
+
+
         try {
             BufferedReader reader = new BufferedReader(new FileReader("/proc/net/arp"));
             reader.readLine();
             String line;
 
             while ((line = reader.readLine()) != null) {
-                String[] arpLine = line.split("\\s+");
+                if (!item.isConectado()) {
+                    String[] arpLine = line.split("\\s+");
+                    final String ip = arpLine[0];
+                    String flag = arpLine[2];
+                    final String macAddress = arpLine[3];
+                    if (!"0x0".equals(flag) && !"00:00:00:00:00:00".equals(macAddress) && ip.equals(item.getIp())) {
+                        item.setConectado(true);
+                    }
+                }
 
-                final String ip = arpLine[0];
-                String flag = arpLine[2];
-                final String macAddress = arpLine[3];
+                if (item.isConectado()) {
 
-                if (!"0x0".equals(flag) && !"00:00:00:00:00:00".equals(macAddress) && ip.equals(ipEntrada)) {
-                    return true;
+                    String[] splitted = line.split(" +");
+                    if (splitted != null && splitted.length >= 4 && item.getIp().equals(splitted[0])) {
+                        String mac = splitted[3];
+                        if (mac.matches("..:..:..:..:..:..")) {
+                            item.setMac(mac);
+                        } else {
+                            item.setMac(ac.getString(R.string.desconocido));
+                        }
+                    }
                 }
             }
             reader.close();
@@ -125,9 +197,81 @@ public class IpScan {
         } catch (IOException ignored) {
 
         }
-        return false;
+
+        //ip activa o inactiva
+        if (item.isConectado()) {
+            ipActiva(item);
+        } else {
+            ipInActiva();
+        }
     }
 
+
+    //ip inactiva
+    private void ipInActiva() {
+        //llamamos al interface inactiva
+        scanResult.onInActiveIp();
+    }
+
+    private void ipActiva(Machine item) {
+
+        Boolean isGateway = false;
+        Boolean isInBBDD = false;
+        Boolean isMyDevice = false;
+
+        item.setMacPadre(macPadre); // padre
+
+        if (item.getIp().equals(gateway)) {
+            isGateway = true;
+            item.setTipoImg(Constantes.TIPE_GATEWAY);
+        } else if (item.getIp().equals(loacalIp)) {
+            isMyDevice = true;
+            item.setTipoImg(Constantes.TIPE_DEVICE);
+            item.setMac(macMyDevice); // propia o hija
+        } else {
+            item.setTipoImg(Constantes.TIPE_OTHERS);
+        }
+
+        for (InspectorTable itemTable : arrayInspectorTable) {
+            if (itemTable.getMacdevice().equals(item.getMac())) {
+                isInBBDD = true;
+                item.setNombre(itemTable.getNombre());
+                item.setConocido(itemTable.getFavorito());
+                break;
+            }
+        }
+        if (!isInBBDD) {
+            InspectorTable itemIns = new InspectorTable(item.getMac(), macPadre, "", (isGateway || isMyDevice) ? true : false);
+            consultas.setItemInspectorTable(itemIns);
+            arrayInspectorTable.add(itemIns);
+            item.setNombre("");
+            item.setConocido((isGateway || isMyDevice) ? true : false);
+        }
+
+        // agregamos el nombre del hardware
+        NbtAddress[] nbts;
+        try {
+            Config.setProperty("jcifs.smb.client.soTimeout", "100");
+            Config.setProperty("jcifs.smb.client.responseTimeout", "100");
+            Config.setProperty("jcifs.netbios.soTimeout", "100");
+            Config.setProperty("jcifs.netbios.retryTimeout", "100");
+
+            nbts = NbtAddress.getAllByAddress(item.getIp());
+            String netbiosname = nbts[0].getHostName();
+
+            item.setNombre(netbiosname);
+        } catch (UnknownHostException e) {
+            item.setNombre("-");
+            if (isMyDevice) {
+                item.setNombre(ac.getString(R.string.midevice));
+            }
+            e.printStackTrace();
+        }
+
+        item.setNombreSoft(consultas.getNameFromMac(item.getMac()));
+
+        scanResult.onActiveIp(item);
+    }
 
     private class SingleRunnable implements Runnable {
         private String ip;

@@ -219,7 +219,7 @@ public class MainInspector extends Fragment {
                     super.onPostExecute(aVoid);
                     progressBar.setVisibility(View.INVISIBLE);
                     adaptador.notifyDataSetChanged();
-                    TxtTot.setText(array.size() + "");
+                    TxtTot.setText(array.size() + "/" + tot);
                     Utilidades.lanzaVibracion(getActivity(), 500);
                 }
             }.execute();

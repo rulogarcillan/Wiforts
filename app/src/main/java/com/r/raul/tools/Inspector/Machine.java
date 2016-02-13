@@ -5,16 +5,21 @@ package com.r.raul.tools.Inspector;
  */
 public class Machine {
 
-    String ip;
-    String mac;
-    String macPadre; 
-    String nombre;
-    String nombreSoft;
-    boolean conocido;
-    boolean conectado;
-    int tipoImg;
+    private String ip;
+    private String mac;
+    private String macPadre;
+    private String nombre;
+    private String nombreSoft;
+    private boolean conocido;
+    private boolean conectado;
+    private int tipoImg;
 
     public Machine() {
+    }
+
+    public Machine(String ip, Boolean conectado) {
+        this.ip=ip;
+        setConectado(conectado);
     }
 
     public boolean isConocido() {
@@ -59,7 +64,7 @@ public class Machine {
     
 
     public boolean isConectado() {
-        return conectado;
+        return this.conectado;
     }
 
     public void setConectado(boolean conectado) {
