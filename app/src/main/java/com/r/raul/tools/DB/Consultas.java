@@ -29,36 +29,49 @@ public class Consultas {
         db = new MyDatabase(c);
     }
 
-    public void insertaDevice(final String macDevice) {
-        SQLiteDatabase db2;
+    public String insertaDeviceGetNombre(final String macDevice) {
 
+        String sql = "select ifnull(devices.nombre,'-') from devices where devices.mac_device= '" + macDevice + "'";
+        Cursor cur = db.query(sql, LEER);
+        if (cur.moveToFirst()) {
+            // Recorremos el cursor hasta que no haya más registros
+            do
+            {
+                return cur.getString(0);
+            }
+            while (cur.moveToNext());
+        }
+        db.close();
+
+
+        db.close();
+        SQLiteDatabase db2;
         //Creamos el registro a insertar como objeto ContentValues
         ContentValues nuevoRegistro = new ContentValues();
-        nuevoRegistro.put("mac_device",macDevice);
-        nuevoRegistro.put("nombre","");
+        nuevoRegistro.put("mac_device", macDevice);
         //Insertamos el registro en la base de datos
         db2 = db.getWritableDatabase();
         long resultado = db2.insert("devices", null, nuevoRegistro);
-        if (resultado==-1){
-           LOGE("Ya estiste el registro: "+macDevice) ;
+        if (resultado == -1) {
+            LOGE("Ya estiste el registro: " + macDevice);
         }
+        return "-";
     }
-
 
 
     public ArrayList getAllInspectorTableFromMacPadre(final String macPadre) {
         String sql = "select inspector.fk_mac_device, inspector.mac_padre, ifnull(devices.nombre,'-'), inspector.favorito from inspector, devices where inspector.fk_mac_device=devices.mac_device and inspector.mac_padre = '" + macPadre + "'";
-
-
         LOGI(sql);
         ArrayList<InspectorTable> array = new ArrayList<>();
         Cursor cur = db.query(sql, LEER);
         if (cur.moveToFirst()) {
             // Recorremos el cursor hasta que no haya más registros
-            do {
+            do
+            {
                 InspectorTable item = new InspectorTable(cur.getString(0), cur.getString(1), cur.getString(2), cur.getInt(3));
                 array.add(item);
-            } while (cur.moveToNext());
+            }
+            while (cur.moveToNext());
         }
         db.close();
         return array;
@@ -119,16 +132,18 @@ public class Consultas {
         Cursor cur = db.query(sql, LEER);
         if (cur.moveToFirst()) {
             // Recorremos el cursor hasta que no haya más registros
-            do {
+            do
+            {
                 if (cur.getString(0) != null) {
                     return cur.getString(0);
                 }
-            } while (cur.moveToNext());
+            }
+            while (cur.moveToNext());
         }
         //db.close();
 
-    return retorno;
-}
+        return retorno;
+    }
 
    /* public static String remove(String input) {
 

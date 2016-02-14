@@ -215,7 +215,8 @@ public class IpScan {
 
     private void ipActiva(Machine item) {
 
-        consultas.insertaDevice(item.getMac());
+        item.setNombre(consultas.insertaDeviceGetNombre(item.getMac()));
+
 
         Boolean isGateway = false;
         Boolean isInBBDD = false;
@@ -237,16 +238,14 @@ public class IpScan {
         for (InspectorTable itemTable : arrayInspectorTable) {
             if (itemTable.getMacdevice().equals(item.getMac())) {
                 isInBBDD = true;
-                item.setNombre(itemTable.getNombre());
                 item.setConocido(itemTable.getFavorito());
                 break;
             }
         }
         if (!isInBBDD) {
-            InspectorTable itemIns = new InspectorTable(item.getMac(), macPadre, "", (isGateway || isMyDevice) ? true : false);
+            InspectorTable itemIns = new InspectorTable(item.getMac(), macPadre, item.getNombre(), (isGateway || isMyDevice) ? true : false);
             consultas.setItemInspectorTable(itemIns);
             arrayInspectorTable.add(itemIns);
-            item.setNombre("-");
             item.setConocido((isGateway || isMyDevice) ? true : false);
         }
 
@@ -261,9 +260,12 @@ public class IpScan {
 
                 nbts = NbtAddress.getAllByAddress(item.getIp());
                 String netbiosname = nbts[0].getHostName();
+                if (item.getNombre().equals("-")){
+                    item.setNombre(netbiosname);
+                }else{
+                    item.setNombre("\\n"+netbiosname);
+                }
 
-
-                item.setNombre("\\n"+netbiosname);
             } catch (UnknownHostException e) {
                /* item.setNombre("-");
                 if (isMyDevice) {

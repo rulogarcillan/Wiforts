@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<diagrama nombreProyecto="softMac" formula="fk_%c" version="8" nombreAutor="exrrocon01">
+<diagrama nombreAutor="exrrocon01" formula="fk_%c" version="8" nombreProyecto="softMac">
   <DataBase>3</DataBase>
   <ORM>1</ORM>
   <lista-item>
@@ -10,9 +10,9 @@
         <y>-1479</y>
       </posicion>
       <lista-columnas>
-        <columna tipoDato="TEXT" llaveUnica="" nombre="mac" id="{7ed3c1d7-4496-4b15-b32e-0677c1e06463}" llaveprimaria="1" nulo="0" notas="clave mac"/>
-        <columna tipoDato="TEXT" llaveUnica="" nombre="name_s" id="{6f065134-05fe-4664-b0d1-59cf0d7dd627}" llaveprimaria="0" nulo="0" notas="Nombre corto"/>
-        <columna tipoDato="TEXT" llaveUnica="" nombre="name_l" id="{be335ff2-feca-450e-aa4d-6e8e0b975242}" llaveprimaria="0" nulo="0" notas="Nombre largo"/>
+        <columna nulo="0" tipoDato="TEXT" nombre="mac" llaveUnica="" notas="clave mac" id="{7ed3c1d7-4496-4b15-b32e-0677c1e06463}" llaveprimaria="1"/>
+        <columna nulo="0" tipoDato="TEXT" nombre="name_s" llaveUnica="" notas="Nombre corto" id="{6f065134-05fe-4664-b0d1-59cf0d7dd627}" llaveprimaria="0"/>
+        <columna nulo="0" tipoDato="TEXT" nombre="name_l" llaveUnica="" notas="Nombre largo" id="{be335ff2-feca-450e-aa4d-6e8e0b975242}" llaveprimaria="0"/>
       </lista-columnas>
     </item>
     <item type="modelo-tabla" id="{769b4e53-a4ae-48d8-b204-726b2b7f08ab}">
@@ -22,8 +22,8 @@
         <y>-1359</y>
       </posicion>
       <lista-columnas>
-        <columna tipoDato="TEXT" llaveUnica="" nombre="mac_padre" id="{5f987eed-f0e4-432a-b829-47269ff9cecc}" llaveprimaria="1" nulo="0" notas="Mac de la red"/>
-        <columna tipoDato="INTEGER" llaveUnica="" nombre="favorito" id="{17ae76e2-1ead-496d-8950-a12a3c7ae137}" llaveprimaria="0" nulo="0" notas="Marca para saber si es conocido"/>
+        <columna nulo="0" tipoDato="TEXT" nombre="mac_padre" llaveUnica="" notas="Mac de la red" id="{5f987eed-f0e4-432a-b829-47269ff9cecc}" llaveprimaria="1"/>
+        <columna nulo="0" tipoDato="INTEGER" nombre="favorito" llaveUnica="" notas="Marca para saber si es conocido" id="{17ae76e2-1ead-496d-8950-a12a3c7ae137}" llaveprimaria="0"/>
       </lista-columnas>
     </item>
     <item type="modelo-tabla" id="{ec517cc8-81b9-4b00-99f6-820b8fca64ad}">
@@ -33,14 +33,14 @@
         <y>-1489</y>
       </posicion>
       <lista-columnas>
-        <columna tipoDato="TEXT" llaveUnica="" nombre="mac_device" id="{16e17af8-7ccf-4560-82f5-df7eeeb75bc1}" llaveprimaria="1" nulo="0" notas="Mac del dispositivo"/>
-        <columna tipoDato="TEXT" llaveUnica="" nombre="nombre" id="{80728a55-d590-4544-a089-12bc81b97944}" llaveprimaria="0" nulo="0" notas="Nombre"/>
+        <columna nulo="0" tipoDato="TEXT" nombre="mac_device" llaveUnica="" notas="Mac del dispositivo" id="{16e17af8-7ccf-4560-82f5-df7eeeb75bc1}" llaveprimaria="1"/>
+        <columna nulo="1" tipoDato="TEXT" nombre="nombre" llaveUnica="" notas="Nombre" id="{80728a55-d590-4544-a089-12bc81b97944}" llaveprimaria="0"/>
       </lista-columnas>
     </item>
     <item type="modelo-relacion" id="{b47dbd2b-406f-4769-bfa9-9f50e9bcfb9a}">
       <inicio>
         <posicion>
-          <x>-1178.5</x>
+          <x>-1196</x>
           <y>-1442</y>
         </posicion>
         <angulo>270</angulo>
@@ -50,7 +50,7 @@
       </inicio>
       <final>
         <posicion>
-          <x>-1178.5</x>
+          <x>-1214.5</x>
           <y>-1359</y>
         </posicion>
         <angulo>90</angulo>
