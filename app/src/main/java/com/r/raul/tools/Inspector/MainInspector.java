@@ -2,6 +2,7 @@ package com.r.raul.tools.Inspector;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
@@ -17,6 +18,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,12 +26,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.r.raul.tools.DB.Consultas;
 import com.r.raul.tools.R;
 import com.r.raul.tools.Utils.Connectivity;
+import com.r.raul.tools.Utils.ItemClickSupport;
 import com.r.raul.tools.Utils.SampleDivider;
 import com.r.raul.tools.Utils.Utilidades;
 
@@ -65,7 +70,7 @@ public class MainInspector extends Fragment {
     private TextView Txtbssid, TxtCon, TxtTot;
     private ImageView imgDevice;
     private View rootView;
-    private int totales=0;
+    private int totales = 0;
 
     public void onResume() {
         super.onResume();
@@ -94,8 +99,6 @@ public class MainInspector extends Fragment {
         rootView = inflater.inflate(R.layout.inspector_main, container, false);
 
         setupReciver();
-
-
 
 
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.appbar);
@@ -151,8 +154,54 @@ public class MainInspector extends Fragment {
         });
         ejecutarTask();
 
+        ItemClickSupport.addTo(recWifis).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                setNombre(array.get(position));
+            }
+        });
+
 
         return rootView;
+    }
+
+    private void setNombre(final Machine item){
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = this.getLayoutInflater(getArguments());
+        final View dialogView = inflater.inflate(R.layout.dialog_edittext, null);
+        dialogBuilder.setView(dialogView);
+
+        final EditText edt = (EditText) dialogView.findViewById(R.id.editName);
+
+        dialogBuilder.setTitle(R.string.custom_name);
+        dialogBuilder.setMessage(R.string.enter_name);
+
+        dialogBuilder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+                Consultas consultas = new Consultas(getActivity());
+                consultas.upDeviceNombre(edt.getText().toString(), item.getMac());
+                item.setNombre(!edt.getText().toString().equals("") ? edt.getText().toString():"-");
+                adaptador.notifyDataSetChanged();
+            }
+        });
+        dialogBuilder.setNeutralButton(R.string.no_name, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                Consultas consultas = new Consultas(getActivity());
+                consultas.upDeviceNombre("", item.getMac());
+                item.setNombre("-");
+                adaptador.notifyDataSetChanged();
+            }
+        });
+        dialogBuilder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //pass
+            }
+        });
+        AlertDialog b = dialogBuilder.create();
+        b.show();
     }
 
     private void ejecutarTask() {
@@ -178,7 +227,7 @@ public class MainInspector extends Fragment {
             }
 
             SubnetUtils utils = new SubnetUtils(con.getLocalAddress().getHostAddress() + "/" + prefix);
-            final String tot = utils.getInfo().getAllAddresses().length+"";
+            final String tot = utils.getInfo().getAllAddresses().length + "";
 
 
             task = (ObtenMaquinas) new ObtenMaquinas(getActivity(), array) {
@@ -193,7 +242,7 @@ public class MainInspector extends Fragment {
                     progressBar.setProgress(0);
                     progressBar.setIndeterminate(true);
                     TxtTot.setText(array.size() + "/" + tot);
-                    totales=array.size();
+                    totales = array.size();
                 }
 
                 @Override
@@ -206,7 +255,7 @@ public class MainInspector extends Fragment {
                         progressBar.setProgress(values[0]);
                     }
                     if (totales != array.size()) {
-                        totales=array.size();
+                        totales = array.size();
                         TxtTot.setText(array.size() + "/" + tot);
                         adaptador.notifyDataSetChanged();
                     }

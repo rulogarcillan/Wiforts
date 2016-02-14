@@ -58,6 +58,18 @@ public class Consultas {
         return "-";
     }
 
+    public void upDeviceNombre(final String nombre, final String mac) {
+        SQLiteDatabase db2;
+
+        //Actualizar dos registros con update(), utilizando argumentos
+        ContentValues valores = new ContentValues();
+        valores.put("nombre", !nombre.equals("") ? nombre.toUpperCase():null);
+
+        String[] args = new String[]{mac};
+        db2 = db.getWritableDatabase();
+        db2.update("devices", valores, "mac_device=?", args);
+    }
+
 
     public ArrayList getAllInspectorTableFromMacPadre(final String macPadre) {
         String sql = "select inspector.fk_mac_device, inspector.mac_padre, ifnull(devices.nombre,'-'), inspector.favorito from inspector, devices where inspector.fk_mac_device=devices.mac_device and inspector.mac_padre = '" + macPadre + "'";

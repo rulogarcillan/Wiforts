@@ -49,4 +49,7 @@
     <string name="contacto">Contacto</string>
     <string name="ports">Puertos</string>
     <string name="iphost">Ip / Host</string>
+    <string name="no_name">Sin nombre</string>
+    <string name="custom_name">Nombre personalizado</string>
+    <string name="enter_name">Introduzca un nombre</string>
 </resources>

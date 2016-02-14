@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
+import android.text.Html;
 
 import com.r.raul.tools.DB.Consultas;
 import com.r.raul.tools.DB.MyDatabase;
@@ -265,15 +266,11 @@ public class IpScan {
                 if (item.getNombre().equals("-")){
                     item.setNombre(netbiosname);
                 }else{
-                    item.setNombre("\\n"+netbiosname);
+                    item.setNombre(item.getNombre() + Html.fromHtml("<br>") + netbiosname);
                 }
 
             } catch (UnknownHostException e) {
-               /* item.setNombre("-");
-                if (isMyDevice) {
-                    item.setNombre(ac.getString(R.string.midevice));
-                }
-                e.printStackTrace();*/
+
             }
 
 

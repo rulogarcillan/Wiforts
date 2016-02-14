@@ -65,6 +65,9 @@
     <string name="ports">Ports</string>
     <string name="iphost">Ip or Hostname</string>
     <string name="timeip" translatable="false">TimeOut</string>
+    <string name="no_name">Unnamed</string>
+    <string name="custom_name">Custom name</string>
+    <string name="enter_name">Enter a name</string>
 
 
 </resources>
