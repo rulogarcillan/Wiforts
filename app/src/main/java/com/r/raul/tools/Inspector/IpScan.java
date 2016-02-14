@@ -7,6 +7,7 @@ import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
 
 import com.r.raul.tools.DB.Consultas;
+import com.r.raul.tools.DB.MyDatabase;
 import com.r.raul.tools.R;
 import com.r.raul.tools.Utils.Connectivity;
 import com.r.raul.tools.Utils.Constantes;
@@ -51,17 +52,19 @@ public class IpScan {
     public IpScan(ScanResult scanResult, Activity activity) {
         this.scanResult = scanResult;
         this.ac = activity;
-        if (ac != null) {
-            WifiManager wifiManager = (WifiManager) ac.getSystemService(Context.WIFI_SERVICE);
+        //se crea la base de datos si no existe.
+        new MyDatabase(activity);
+        if (this.ac != null) {
+            WifiManager wifiManager = (WifiManager) this.ac.getSystemService(Context.WIFI_SERVICE);
 
             this.macPadre = wifiManager.getConnectionInfo().getBSSID();
             this.macMyDevice = wifiManager.getConnectionInfo().getMacAddress();
             this.gateway = con.parseIP(wifiManager.getDhcpInfo().gateway);
             this.loacalIp = con.getLocalAddress().getHostAddress();
-            this.consultas = new Consultas(ac);
+            this.consultas = new Consultas(activity);
 
             //datos de BBDD sobre la mac del wifi
-            arrayInspectorTable = consultas.getAllInspectorTableFromMacPadre(macPadre);
+            arrayInspectorTable = this.consultas.getAllInspectorTableFromMacPadre(macPadre);
 
             String prefix = "";
             DhcpInfo dhcpInfo = wifiManager.getDhcpInfo();
@@ -215,9 +218,6 @@ public class IpScan {
 
     private void ipActiva(Machine item) {
 
-        item.setNombre(consultas.insertaDeviceGetNombre(item.getMac()));
-
-
         Boolean isGateway = false;
         Boolean isInBBDD = false;
         Boolean isMyDevice = false;
@@ -234,6 +234,8 @@ public class IpScan {
         } else {
             item.setTipoImg(Constantes.TIPE_OTHERS);
         }
+
+        item.setNombre(consultas.insertaDeviceGetNombre(item.getMac()));
 
         for (InspectorTable itemTable : arrayInspectorTable) {
             if (itemTable.getMacdevice().equals(item.getMac())) {

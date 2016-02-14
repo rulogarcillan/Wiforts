@@ -26,7 +26,7 @@ public class Consultas {
 
     public Consultas(Context c) {
         this.c = c;
-        db = new MyDatabase(c);
+        this.db = new MyDatabase(c);
     }
 
     public String insertaDeviceGetNombre(final String macDevice) {
