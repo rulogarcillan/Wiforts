@@ -101,7 +101,7 @@ public class IpScan {
         }
         pool.shutdown();
         try {
-            if (!pool.awaitTermination(3600, TimeUnit.SECONDS)) {
+            if (!pool.awaitTermination(99000, TimeUnit.SECONDS)) {
                 pool.shutdownNow();
             }
         } catch (InterruptedException e) {
@@ -111,7 +111,14 @@ public class IpScan {
     }
 
     public void stop() {
-        pool.shutdownNow();
+        if (pool != null) {
+            pool.shutdownNow();
+        }
+    }
+
+
+    public Boolean isFinish() {
+        return pool.isTerminated();
     }
 
     private void launch(String i) {
@@ -122,7 +129,7 @@ public class IpScan {
 
     public void scanSingleIp(String ip, int timeout) {
         try {
-            final String CMD = "/system/bin/ping -q -n -w 1 -c 1 %s";
+            final String CMD = "/system/bin/ping -q -n -w 1 -c 3 %s";
             Process myProcess = Runtime.getRuntime().exec(String.format(CMD, ip));
             myProcess.waitFor();
             if (myProcess.exitValue() == 0) {
@@ -254,25 +261,24 @@ public class IpScan {
 
         // agregamos el nombre del hardware
 
-            NbtAddress[] nbts;
-            try {
-                Config.setProperty("jcifs.smb.client.soTimeout", "100");
-                Config.setProperty("jcifs.smb.client.responseTimeout", "100");
-                Config.setProperty("jcifs.netbios.soTimeout", "100");
-                Config.setProperty("jcifs.netbios.retryTimeout", "100");
+        NbtAddress[] nbts;
+        try {
+            Config.setProperty("jcifs.smb.client.soTimeout", "100");
+            Config.setProperty("jcifs.smb.client.responseTimeout", "100");
+            Config.setProperty("jcifs.netbios.soTimeout", "100");
+            Config.setProperty("jcifs.netbios.retryTimeout", "100");
 
-                nbts = NbtAddress.getAllByAddress(item.getIp());
-                String netbiosname = nbts[0].getHostName();
-                if (item.getNombre().equals("-")){
-                    item.setNombre(netbiosname);
-                }else{
-                    item.setNombre(item.getNombre() + Html.fromHtml("<br>") + netbiosname);
-                }
-
-            } catch (UnknownHostException e) {
-
+            nbts = NbtAddress.getAllByAddress(item.getIp());
+            String netbiosname = nbts[0].getHostName();
+            if (item.getNombre().equals("-")) {
+                item.setNombre(netbiosname);
+            } else {
+                item.setNombre(item.getNombre() + Html.fromHtml("<br>") + netbiosname);
             }
 
+        } catch (UnknownHostException e) {
+
+        }
 
 
         item.setNombreSoft(consultas.getNameFromMac(item.getMac()));

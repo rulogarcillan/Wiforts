@@ -88,6 +88,7 @@ public class MainInspector extends Fragment {
         if (task != null) {
             task.cancel(true);
         }
+        frameWifi.setRefreshing(false);
         progressBar.setVisibility(View.INVISIBLE);
     }
 
@@ -240,6 +241,7 @@ public class MainInspector extends Fragment {
                     adaptador.notifyDataSetChanged();
                     progressBar.setVisibility(View.VISIBLE);
                     progressBar.setProgress(0);
+                    progressBar.setMax(Integer.parseInt(tot));
                     progressBar.setIndeterminate(true);
                     TxtTot.setText(array.size() + "/" + tot);
                     totales = array.size();

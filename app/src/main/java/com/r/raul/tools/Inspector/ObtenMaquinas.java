@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import static com.r.raul.tools.Utils.LogUtils.LOGE;
+
 public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
 
     private Activity ac;
@@ -23,11 +25,6 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
         this.array = array;
     }
 
-    private int calculoPercent(int valor, float tot) {
-        return (int) (valor * 100 / tot);
-    }
-
-
     @Override
     protected Void doInBackground(Void... params) {
 
@@ -39,13 +36,13 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
                 synchronized (array){
                     array.add(item);
                     ordenarIps(array);
-                    publishProgress(calculoPercent(tot++, totalMachine));
+                    publishProgress(tot++);
                 }
             }
 
             @Override
             public void onInActiveIp() {
-                publishProgress(calculoPercent(tot++, totalMachine));
+                publishProgress(tot++);
             }
 
         }, ac);
@@ -53,6 +50,10 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
         totalMachine = ipScan.totalIpsAnalizar();
         ipScan.scanAll();
 
+        LOGE("Ha acabado? " + ipScan.isFinish());
+        while (!ipScan.isFinish()){
+            LOGE("No " + ipScan.isFinish() + tot);
+        }
         return null;
     }
 

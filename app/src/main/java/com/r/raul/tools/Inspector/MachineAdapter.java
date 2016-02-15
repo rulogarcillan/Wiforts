@@ -113,8 +113,6 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.Holder> 
                     inspectorTable.setMacdevice(array.get(position).getMac());
                     inspectorTable.setFavorito(isChecked);
                     inspectorTable.setMacpadre(array.get(position).getMacPadre());
-
-
                     consultas.upItemInspectorTable(inspectorTable);
                     // notifyItemChanged(position);
                 }
