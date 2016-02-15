@@ -83,7 +83,7 @@ public class SampleDivider extends RecyclerView.ItemDecoration {
                     return;
                 }
 
-                // Initialization needed to avoid compiler warning
+                // Inicializacvión necesaria
                 int left = 0, right = 0, top = 0, bottom = 0, size;
                 int orientation = getOrientation(parent);
                 int childCount = parent.getChildCount();
@@ -113,7 +113,7 @@ public class SampleDivider extends RecyclerView.ItemDecoration {
                     mDivider.draw(c);
                 }
 
-                // show last divider
+                // Muestra último divider
                 if (mShowLastDivider && childCount > 0) {
                     View child = parent.getChildAt(childCount - 1);
                     RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
