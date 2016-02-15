@@ -5,6 +5,9 @@ import android.view.View;
 
 import com.r.raul.tools.R;
 
+
+//para hacer click en un recycler 
+
 public class ItemClickSupport {
     private final RecyclerView mRecyclerView;
     private OnItemClickListener mOnItemClickListener;
