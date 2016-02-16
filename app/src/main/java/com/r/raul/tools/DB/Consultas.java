@@ -41,10 +41,10 @@ public class Consultas {
             }
             while (cur.moveToNext());
         }
-        db.close();
+        //db.close();
 
 
-        db.close();
+        //db.close();
         SQLiteDatabase db2;
         //Creamos el registro a insertar como objeto ContentValues
         ContentValues nuevoRegistro = new ContentValues();
