@@ -3,9 +3,11 @@ public class Ping {
     private String[] ips;
     private static final int NUM_HILOS = 36;
     private ExecutorService pool;
+    
     public Ping(String[] ips) {
         this.ips= ips;
     }
+    
     public void start() {
         pool = Executors.newFixedThreadPool(NUM_HILOS);
         for (String ip : addresses) {
@@ -23,11 +25,13 @@ public class Ping {
             Thread.currentThread().interrupt();
         }
     }
+    
     public void stop() {
         if (pool != null && !pool.isTerminated()) {
             pool.shutdownNow();
         }
     }
+    
     private class SingleRunnable implements Runnable {
         private String ip;
         SingleRunnable(String ip) {
@@ -38,13 +42,14 @@ public class Ping {
             scanIp(ip);
         }
     }
+    
     private scanIp(String ip){
         try {
             final String CMD = "/system/bin/timeout 0.1 ping -c1 %s";
             Process myProcess = Runtime.getRuntime().exec(String.format(CMD, ip));
         }
-        } catch (Exception e) {
+        catch (Exception e) {
         LOGE("NO SE PUEDE ESTIMULAR NATIVO");
+        }
     }
-}
 }
