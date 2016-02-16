@@ -17,6 +17,7 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
     private ArrayList<Machine> array;
 
     private IpScan ipScan = null;
+    private Ping hiloPing = null;
     private int tot = 0; // total ips analizadas para barra de progreso
     private int totalMachine;
 
@@ -37,6 +38,7 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
                     array.add(item);
                     ordenarIps(array);
                     publishProgress(tot++);
+                    LOGE("Sincronizado: " + tot);
                 }
             }
 
@@ -48,9 +50,13 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
         }, ac);
 
         totalMachine = ipScan.totalIpsAnalizar();
+        hiloPing = new Ping(totalMachine).start();
+        
+        LOGE("Ping finalizados");
+        
         ipScan.scanAll();
 
-        LOGE("Ha acabado? " + ipScan.isFinish());
+        LOGE("Ha acabado? " + ipScan.isFinish() + tot);
         while (!ipScan.isFinish()){
             LOGE("No " + ipScan.isFinish() + tot);
         }
@@ -108,12 +114,14 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
 
     @Override
     protected void onCancelled() {
+        hiloPing.stop();
         ipScan.stop();
         super.onCancelled();
     }
 
     @Override
     protected void onCancelled(Void aVoid) {
+        hiloPing.stop();
         ipScan.stop();
         super.onCancelled(aVoid);
     }
