@@ -191,12 +191,12 @@ public class IpScan {
                 }
 
                 if (item.isConectado()) {
-
                     String[] splitted = line.split(" +");
                     if (splitted != null && splitted.length >= 4 && item.getIp().equals(splitted[0])) {
                         String mac = splitted[3];
                         if (mac.matches("..:..:..:..:..:..")) {
                             item.setMac(mac);
+                            break;
                         } else {
                             item.setMac(ac.getString(R.string.desconocido));
                         }
