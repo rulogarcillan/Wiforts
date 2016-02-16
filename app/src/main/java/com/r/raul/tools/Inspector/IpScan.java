@@ -35,7 +35,7 @@ import static com.r.raul.tools.Utils.LogUtils.LOGI;
 
 public class IpScan {
     private ScanResult scanResult;
-    private static final int DEFAULT_TIME_OUT = 400;
+    private static final int DEFAULT_TIME_OUT = 250;
     private static final int DEFAULT_FIXED_POOL = 36;
     private ExecutorService pool;
 
@@ -101,7 +101,7 @@ public class IpScan {
         }
         pool.shutdown();
         try {
-            if (!pool.awaitTermination(99000, TimeUnit.SECONDS)) {
+            if (!pool.awaitTermination(3600, TimeUnit.SECONDS)) {
                 pool.shutdownNow();
             }
         } catch (InterruptedException e) {
