@@ -142,6 +142,8 @@ public class MainActivity extends BaseActivity
 
             new LanzaChangelog(this).getFullLogDialog().show();
 
+        } else if (id == R.id.nav_lang){
+                msgTraductor();
         }
 
 
@@ -238,6 +240,36 @@ public class MainActivity extends BaseActivity
             super(new ContextThemeWrapper(context, R.style.AppTheme), DEFAULT_CSS);
         }
     }
+    
+        private void msgTraductor(){
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = this.getLayoutInflater(getArguments());
+        final View dialogView = inflater.inflate(R.layout.dialog_idiomas, null);
+        dialogBuilder.setView(dialogView);
+
+        final TextView txt1 = (TextView) dialogView.findViewById(R.id.titu1);
+		final TextView txt2 = (TextView) dialogView.findViewById(R.id.titu2);
+		final TextView txt3 = (TextView) dialogView.findViewById(R.id.titu3);
+		final TextView txt4 = (TextView) dialogView.findViewById(R.id.titu4);
+		final TextView txt5 = (TextView) dialogView.findViewById(R.id.titu5);
+
+        dialogBuilder.setTitle(R.string.titu_idiomas); //Idiomas Languages
+		txt1.settext(R.String.idioma1);
+		txt2.settext(R.String.idioma2);
+		txt3.settext(R.String.idioma3);
+		txt4.settext(R.String.idioma4);
+		txt4.settext(R.String.idioma5);
+
+        dialogBuilder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {              
+            }
+        });  
+        AlertDialog b = dialogBuilder.create();
+        b.show();
+    }
+    
+    
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
