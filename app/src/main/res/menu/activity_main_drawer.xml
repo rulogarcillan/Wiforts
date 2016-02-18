@@ -44,6 +44,11 @@
                 android:id="@+id/nav_changelog"
                 android:icon="@drawable/ic_changelog"
                 android:title="@string/changelog"/>
+                
+                  <item
+                android:id="@+id/nav_lang"
+                android:icon="@drawable/ic_changelog"
+                android:title="@string/titu_idiomas"/>
         </menu>
     </item>
 
