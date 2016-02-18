@@ -71,8 +71,8 @@
     
     <string name="titu_idiomas">Languages</string>
     <string name="p1_idiomas">Si desea colaborar con las traducciones acceda a la siguiente página.</string>
-    <string name="p2_idiomas">Móvil</string>
-    <string name="p3_idiomas">Escritorio</string>
+    <string name="p2_idiomas">Mobile</string>
+    <string name="p3_idiomas">Desktop</string>
     <string name="url1_idiomas" translatable="false">https://mynetworks.oneskyapp.com/mobile</string>
     <string name="url2_idiomas" translatable="false">https://mynetworks.oneskyapp.com</string>
     
