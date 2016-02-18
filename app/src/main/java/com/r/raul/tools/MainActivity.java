@@ -1,6 +1,7 @@
 package com.r.raul.tools;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -9,7 +10,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -142,8 +145,8 @@ public class MainActivity extends BaseActivity
 
             new LanzaChangelog(this).getFullLogDialog().show();
 
-        } else if (id == R.id.nav_lang){
-                msgTraductor();
+        } else if (id == R.id.nav_lang) {
+            msgTraductor();
         }
 
 
@@ -240,36 +243,35 @@ public class MainActivity extends BaseActivity
             super(new ContextThemeWrapper(context, R.style.AppTheme), DEFAULT_CSS);
         }
     }
-    
-        private void msgTraductor(){
 
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = this.getLayoutInflater(getArguments());
+    private void msgTraductor() {
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.dialog_idiomas, null);
         dialogBuilder.setView(dialogView);
 
         final TextView txt1 = (TextView) dialogView.findViewById(R.id.titu1);
-		final TextView txt2 = (TextView) dialogView.findViewById(R.id.titu2);
-		final TextView txt3 = (TextView) dialogView.findViewById(R.id.titu3);
-		final TextView txt4 = (TextView) dialogView.findViewById(R.id.titu4);
-		final TextView txt5 = (TextView) dialogView.findViewById(R.id.titu5);
+        final TextView txt2 = (TextView) dialogView.findViewById(R.id.titu2);
+        final TextView txt3 = (TextView) dialogView.findViewById(R.id.titu3);
+        final TextView txt4 = (TextView) dialogView.findViewById(R.id.titu4);
+        final TextView txt5 = (TextView) dialogView.findViewById(R.id.titu5);
 
         dialogBuilder.setTitle(R.string.titu_idiomas); //Idiomas Languages
-		txt1.settext(R.String.idioma1);
-		txt2.settext(R.String.idioma2);
-		txt3.settext(R.String.idioma3);
-		txt4.settext(R.String.idioma4);
-		txt4.settext(R.String.idioma5);
+        txt1.setText(R.string.p1_idiomas);
+        txt2.setText(R.string.p2_idiomas);
+        txt3.setText(R.string.url1_idiomas);
+        txt4.setText(R.string.p3_idiomas);
+        txt5.setText(R.string.url2_idiomas);
 
         dialogBuilder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {              
+            public void onClick(DialogInterface dialog, int whichButton) {
             }
-        });  
+        });
         AlertDialog b = dialogBuilder.create();
         b.show();
     }
-    
-    
+
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
