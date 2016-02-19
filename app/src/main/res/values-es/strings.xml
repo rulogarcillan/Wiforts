@@ -58,7 +58,5 @@
     <string name="p1_idiomas">Si desea colaborar con las traducciones acceda a la siguiente página:</string>
     <string name="p2_idiomas">Versión Móvil</string>
     <string name="p3_idiomas">Versión Escritorio</string>
-    <string name="url1_idiomas" translatable="false">https://mynetworks.oneskyapp.com/mobile</string>
-    <string name="url2_idiomas" translatable="false">https://mynetworks.oneskyapp.com</string>
 
 </resources>
