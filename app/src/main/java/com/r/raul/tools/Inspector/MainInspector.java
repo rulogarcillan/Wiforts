@@ -264,7 +264,7 @@ public class MainInspector extends Fragment {
                     progressBar.setProgress(0);
                     progressBar.setMax(Integer.parseInt(tot));
                     progressBar.setIndeterminate(true);
-                    TxtTot.setText(array.size()+ tot);
+                    TxtTot.setText(array.size()+"/"+ tot);
                     totales = array.size();
                 }
 
