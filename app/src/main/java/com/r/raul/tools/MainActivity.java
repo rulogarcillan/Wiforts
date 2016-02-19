@@ -216,10 +216,10 @@ public class MainActivity extends BaseActivity
                 .withAboutVersionShown(true)
                 .withAutoDetect(true)
                 //  .withLibraries("DiscreteSeekBar", "CircleIndicator")
+                .withLibraries("jcifs","sqliteassethelper","commonsNet","commonsValidator")
                 .withActivityTitle(getResources().getString(R.string.license))
                 .withAboutAppName(getResources().getString(R.string.app_name))
                 .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
-
                 .withAboutDescription("<b>" + getResources().getString(R.string.compilacion) + ": <i>" + s + "</i></b>")
                 // .withAboutDescription(getResources().getString(R.string.escrita) + "<br/><br/><b>License GNU GPL V3.0</b><br/><br/><a href=\"https://github.com/rulogarcillan/Cadence\">Project in Github</a>")
                 //     .withActivityTheme(R.style.AppTheme)
