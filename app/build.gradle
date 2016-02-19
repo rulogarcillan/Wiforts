@@ -28,7 +28,7 @@ android {
         versionProps['VERSION_CODETOT'] = (contador + 1).toString()
     }
 
-    if (name3 >= 250) {
+    if (name3 >= 500) {
         versionProps['NAME3_CODE'] = 0.toString()
         if (name2 >= 9) {
             versionProps['NAME1_CODE'] = (name1 + 1).toString()
