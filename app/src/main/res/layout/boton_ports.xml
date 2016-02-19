@@ -12,4 +12,4 @@
     android:layout_height="32dp"
     android:background="@drawable/botonredondo"
     android:shadowRadius="5"
-    xmlns:android="http://schemas.android.com/apk/res/android" />
+    xmlns:android="http://schemas.android.com/apk/res/android"/>

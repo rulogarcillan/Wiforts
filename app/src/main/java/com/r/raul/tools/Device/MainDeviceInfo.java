@@ -244,10 +244,11 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(getActivity(), drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
+        toolbar.setTitle(R.string.devide_m);
 
         // datos de telefonía.
         tlfMan = (TelephonyManager) getActivity().getSystemService(
@@ -538,12 +539,12 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
         dataDeviceInfo.iconoDataWifi(level);
         dataDeviceInfo.setdBm(rssi);
 
-        DhcpInfo info = wifiManager.getDhcpInfo();
+        DhcpInfo infoDhcp = wifiManager.getDhcpInfo();
 
-        dataDeviceInfo.setTxtGateway(con.parseIP(info.gateway));
-        dataDeviceInfo.setTxtMasSubred(con.parseIP(info.netmask));
-        dataDeviceInfo.setTxtDns1(con.parseIP(info.dns1));
-        dataDeviceInfo.setTxtDns2(con.parseIP(info.dns2));
+        dataDeviceInfo.setTxtGateway(con.parseIP(infoDhcp.gateway));
+        dataDeviceInfo.setTxtMasSubred(con.parseIP(infoDhcp.netmask));
+        dataDeviceInfo.setTxtDns1(con.parseIP(infoDhcp.dns1));
+        dataDeviceInfo.setTxtDns2(con.parseIP(infoDhcp.dns2));
     }
 
 
@@ -943,8 +944,14 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
                             showHideFragment(mapFragment, false);
                             if (con.isConnected(getActivity())) {
 
-                                LatLng position = new LatLng(Double.parseDouble(dataDeviceInfo.getTxtLat()), Double.parseDouble(dataDeviceInfo.getTxtLon()));
-                                if (mMap != null) {
+                               LatLng position=null;
+                               if(!(dataDeviceInfo.getTxtLat().equals("") || dataDeviceInfo.getTxtLon().equals(""))){
+                                   position = new LatLng(Double.parseDouble(dataDeviceInfo.getTxtLat()), Double.parseDouble(dataDeviceInfo.getTxtLon()));
+                               }else{
+                                   showHideFragment(mapFragment, true);
+                               }
+
+                                if (mMap != null && position !=null) {
                                     mMap.clear();
 
                                     mMap.addMarker(new MarkerOptions().position(position).title(dataDeviceInfo.getTxtIpPublic())).showInfoWindow();

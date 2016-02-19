@@ -28,6 +28,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
+import static com.r.raul.tools.Utils.LogUtils.LOGI;
+
 
 public class Connectivity {
 
@@ -49,6 +51,7 @@ public class Connectivity {
         NetworkInfo info = Connectivity.getNetworkInfo(context);
         return (info != null && info.isConnected());
     }
+
 
 
     public static boolean isConnectedWifi(Context context) {
@@ -147,14 +150,20 @@ public class Connectivity {
             conn.setReadTimeout(TIMEOUT_VALUE);
             BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
-            String ip;
+            String ip = null;
             ip = in.readLine();
             in.close();
 
 
             return ip;
         } catch (SocketTimeoutException e) {
-            System.out.println("More than " + TIMEOUT_VALUE + " elapsed.");
+            LOGI("getPublicIp timeout: " + TIMEOUT_VALUE);
+            return null;
+        } catch (UnknownHostException e2){
+            LOGI("getPublicIp UnknownHostException: " + TIMEOUT_VALUE);
+            return null;
+        }catch (Exception e3){
+            LOGI("getPublicIp Exception uknow: " + e3.getMessage());
             return null;
         }
 

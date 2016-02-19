@@ -68,14 +68,13 @@
     <string name="no_name">Unnamed</string>
     <string name="custom_name">Custom name</string>
     <string name="enter_name">Enter a name</string>
-    
+
     <string name="titu_idiomas">Languages</string>
     <string name="p1_idiomas">Si desea colaborar con las traducciones acceda a la siguiente página:</string>
     <string name="p2_idiomas">Mobile Version</string>
     <string name="p3_idiomas">Desktop Version</string>
     <string name="url1_idiomas" translatable="false">https://mynetworks.oneskyapp.com/mobile</string>
     <string name="url2_idiomas" translatable="false">https://mynetworks.oneskyapp.com</string>
-    
 
 
 </resources>

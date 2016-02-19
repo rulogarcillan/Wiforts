@@ -35,18 +35,24 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
             @Override
             public void onActiveIp(Machine item) {
                 // TODO Auto-generated method stub
-                synchronized (array){
-                    array.add(item);
-                    ordenarIps(array);
-                    publishProgress(tot++);
-                    LOGE("Sincronizado: " + tot);
+                if (!isCancelled()){
+                    synchronized (array){
+                        array.add(item);
+                        ordenarIps(array);
+                        publishProgress(tot++);
+                        LOGE("Sincronizado: " + tot);
+                }
+
                 }
             }
 
             @Override
             public void onInActiveIp() {
-                publishProgress(tot++);
-                LOGE("Sincronizado: " + tot);
+                if (!isCancelled()){
+                    publishProgress(tot++);
+                    LOGE("Sincronizado: " + tot);
+                }
+
             }
 
         }, ac);
@@ -57,9 +63,7 @@ public class ObtenMaquinas extends AsyncTask<Void, Integer, Void> {
         ipScan.scanAll();
 
         LOGE("Ha acabado? " + ipScan.isFinish() + tot);
-        while (!ipScan.isFinish()){
-            LOGE("No " + ipScan.isFinish() + tot);
-        }
+
         return null;
     }
 

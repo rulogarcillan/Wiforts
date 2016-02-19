@@ -113,6 +113,7 @@ public class IpScan {
     public void stop() {
         if (pool != null) {
             pool.shutdownNow();
+            pool.shutdown();
         }
     }
 

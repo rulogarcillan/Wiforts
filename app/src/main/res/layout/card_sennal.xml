@@ -27,7 +27,7 @@
                 android:adjustViewBounds="true"
                 android:paddingLeft="16sp"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_intensidad" />
+                android:src="@drawable/ic_intensidad"/>
 
 
             <LinearLayout
@@ -45,7 +45,7 @@
                     android:gravity="left"
                     android:text="@string/intensidad_red"
                     android:textColor="@android:color/background_dark"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"/>
 
                 <TextView
                     android:id="@+id/txtSeñal"
@@ -53,7 +53,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:textColor="@android:color/darker_gray"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"/>
 
             </LinearLayout>
 
@@ -71,7 +71,7 @@
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/chart"
                 android:layout_width="match_parent"
-                android:layout_height="100dp" />
+                android:layout_height="100dp"/>
         </LinearLayout>
 
     </LinearLayout>

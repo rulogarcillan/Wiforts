@@ -84,7 +84,6 @@ public class MainInspector extends Fragment {
         if (this.reciver != null) {
             getActivity().unregisterReceiver(this.reciver);
         }
-
         if (task != null) {
             task.cancel(true);
         }
@@ -100,11 +99,10 @@ public class MainInspector extends Fragment {
         rootView = inflater.inflate(R.layout.inspector_main, container, false);
 
         setupReciver();
-
-
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.appbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+        toolbar.setTitle(R.string.inspector);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(getActivity(), drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();

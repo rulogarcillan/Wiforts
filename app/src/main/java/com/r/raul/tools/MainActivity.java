@@ -11,6 +11,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -64,7 +66,7 @@ public class MainActivity extends BaseActivity
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
-                //mAdView.setVisibility(View.VISIBLE);
+                mAdView.setVisibility(View.VISIBLE);
             }
         });
 
@@ -126,6 +128,7 @@ public class MainActivity extends BaseActivity
 
         if (id == R.id.nav_device && id != ItemAnterior) {
             LanzarDeviceInfo(id);
+
 
         } else if (id == R.id.nav_wifi_inspector && id != ItemAnterior) {
             LanzarInspector(id);
@@ -251,14 +254,17 @@ public class MainActivity extends BaseActivity
         final View dialogView = inflater.inflate(R.layout.dialog_idiomas, null);
         dialogBuilder.setView(dialogView);
 
+        final TextView txt0 = (TextView) dialogView.findViewById(R.id.titu0);
         final TextView txt1 = (TextView) dialogView.findViewById(R.id.titu1);
         final TextView txt2 = (TextView) dialogView.findViewById(R.id.titu2);
 
-        String urlM = "<a href=" + R.string.url1_idiomas + ">" + R.string.p2_idiomas +"</a>";
-        String urlD = "<a href=" + R.string.url2_idiomas + ">" + R.string.p3_idiomas +"</a>";
+        String urlM = "<a href=" + getString(R.string.url1_idiomas) + ">" + getString(R.string.p2_idiomas) +"</a>";
+        String urlD = "<a href='" + getString(R.string.url2_idiomas) + "'>" + getString(R.string.p3_idiomas) +"</a>";
 
         dialogBuilder.setTitle(R.string.titu_idiomas); //Idiomas Languages
-        dialogBuilder.setMessage(R.string.p1_idiomas);
+        txt0.setText(R.string.p1_idiomas);
+        txt1.setMovementMethod(LinkMovementMethod.getInstance());
+        txt2.setMovementMethod(LinkMovementMethod.getInstance());
         txt1.setText(Html.fromHtml(urlM));
         txt2.setText(Html.fromHtml(urlD));
         
