@@ -245,7 +245,7 @@ public class MainActivity extends BaseActivity
     }
 
     private void msgTraductor() {
-
+   
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.dialog_idiomas, null);
@@ -253,15 +253,15 @@ public class MainActivity extends BaseActivity
 
         final TextView txt2 = (TextView) dialogView.findViewById(R.id.titu2);
         final TextView txt3 = (TextView) dialogView.findViewById(R.id.titu3);
-        final TextView txt4 = (TextView) dialogView.findViewById(R.id.titu4);
-        final TextView txt5 = (TextView) dialogView.findViewById(R.id.titu5);
+
+        String urlM = "<a href=" + R.string.url1_idiomas + ">" + R.string.p2_idiomas +"</a>";
+        String urlD = "<a href=" + R.string.url2_idiomas + ">" + R.string.p3_idiomas +"</a>";
 
         dialogBuilder.setTitle(R.string.titu_idiomas); //Idiomas Languages
         dialogBuilder.setMessage(R.string.p1_idiomas);
-        txt2.setText(R.string.p2_idiomas);
-        txt3.setText(R.string.url1_idiomas);
-        txt4.setText(R.string.p3_idiomas);
-        txt5.setText(R.string.url2_idiomas);
+        txt2.setText(Html.fromHtml(urlM));
+        txt3.setText(Html.fromHtml(urlD));
+        
 
         dialogBuilder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
