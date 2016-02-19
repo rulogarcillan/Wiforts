@@ -251,16 +251,16 @@ public class MainActivity extends BaseActivity
         final View dialogView = inflater.inflate(R.layout.dialog_idiomas, null);
         dialogBuilder.setView(dialogView);
 
+        final TextView txt1 = (TextView) dialogView.findViewById(R.id.titu1);
         final TextView txt2 = (TextView) dialogView.findViewById(R.id.titu2);
-        final TextView txt3 = (TextView) dialogView.findViewById(R.id.titu3);
 
         String urlM = "<a href=" + R.string.url1_idiomas + ">" + R.string.p2_idiomas +"</a>";
         String urlD = "<a href=" + R.string.url2_idiomas + ">" + R.string.p3_idiomas +"</a>";
 
         dialogBuilder.setTitle(R.string.titu_idiomas); //Idiomas Languages
         dialogBuilder.setMessage(R.string.p1_idiomas);
-        txt2.setText(Html.fromHtml(urlM));
-        txt3.setText(Html.fromHtml(urlD));
+        txt1.setText(Html.fromHtml(urlM));
+        txt2.setText(Html.fromHtml(urlD));
         
 
         dialogBuilder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
