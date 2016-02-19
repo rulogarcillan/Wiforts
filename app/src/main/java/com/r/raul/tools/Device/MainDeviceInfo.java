@@ -944,14 +944,14 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
                             showHideFragment(mapFragment, false);
                             if (con.isConnected(getActivity())) {
 
-                               LatLng position=null;
-                               if(!(dataDeviceInfo.getTxtLat().equals("") || dataDeviceInfo.getTxtLon().equals(""))){
-                                   position = new LatLng(Double.parseDouble(dataDeviceInfo.getTxtLat()), Double.parseDouble(dataDeviceInfo.getTxtLon()));
-                               }else{
-                                   showHideFragment(mapFragment, true);
-                               }
+                                LatLng position = null;
+                                if (!(dataDeviceInfo.getTxtLat().equals("") || dataDeviceInfo.getTxtLon().equals(""))) {
+                                    position = new LatLng(Double.parseDouble(dataDeviceInfo.getTxtLat()), Double.parseDouble(dataDeviceInfo.getTxtLon()));
+                                } else {
+                                    showHideFragment(mapFragment, true);
+                                }
 
-                                if (mMap != null && position !=null) {
+                                if (mMap != null && position != null) {
                                     mMap.clear();
 
                                     mMap.addMarker(new MarkerOptions().position(position).title(dataDeviceInfo.getTxtIpPublic())).showInfoWindow();

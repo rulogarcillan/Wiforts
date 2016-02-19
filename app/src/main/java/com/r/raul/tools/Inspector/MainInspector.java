@@ -12,6 +12,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -71,10 +72,17 @@ public class MainInspector extends Fragment {
     private ImageView imgDevice;
     private View rootView;
     private int totales = 0;
+    protected PowerManager.WakeLock wakelock;
 
     public void onResume() {
         super.onResume();
         getActivity().registerReceiver(reciver, this.intentFilter);
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle icicle) {
+        super.onSaveInstanceState(icicle);
     }
 
     @Override
@@ -89,6 +97,19 @@ public class MainInspector extends Fragment {
         }
         frameWifi.setRefreshing(false);
         progressBar.setVisibility(View.INVISIBLE);
+
+        if (wakelock.isHeld()) {
+
+            this.wakelock.release();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (wakelock.isHeld()) {
+            this.wakelock.release();
+        }
     }
 
     @Override
@@ -107,6 +128,8 @@ public class MainInspector extends Fragment {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        final PowerManager pm = (PowerManager) getActivity().getSystemService(Context.POWER_SERVICE);
+        this.wakelock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "etiqueta");
 
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
 
@@ -165,7 +188,7 @@ public class MainInspector extends Fragment {
         return rootView;
     }
 
-    private void setNombre(final Machine item){
+    private void setNombre(final Machine item) {
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = this.getLayoutInflater(getArguments());
@@ -182,7 +205,7 @@ public class MainInspector extends Fragment {
 
                 Consultas consultas = new Consultas(getActivity());
                 consultas.upDeviceNombre(edt.getText().toString(), item.getMac());
-                item.setNombre(!edt.getText().toString().equals("") ? edt.getText().toString():"-");
+                item.setNombre(!edt.getText().toString().equals("") ? edt.getText().toString() : "-");
                 adaptador.notifyDataSetChanged();
             }
         });
@@ -231,9 +254,9 @@ public class MainInspector extends Fragment {
 
             task = (ObtenMaquinas) new ObtenMaquinas(getActivity(), array) {
 
-
                 @Override
                 protected void onPreExecute() {
+                    wakelock.acquire();
                     super.onPreExecute();
                     array.clear();
                     adaptador.notifyDataSetChanged();
@@ -241,7 +264,7 @@ public class MainInspector extends Fragment {
                     progressBar.setProgress(0);
                     progressBar.setMax(Integer.parseInt(tot));
                     progressBar.setIndeterminate(true);
-                    TxtTot.setText(array.size() + "/" + tot);
+                    TxtTot.setText(array.size()+ tot);
                     totales = array.size();
                 }
 
@@ -251,8 +274,8 @@ public class MainInspector extends Fragment {
                     super.onProgressUpdate(values[0]);
 
                     if (progressBar.getProgress() < values[0]) {
-
                         progressBar.setProgress(values[0]);
+                    //    TxtTot.setText(array.size() + "/" + values[0] + "/" + tot);
                     }
                     if (totales != array.size()) {
                         totales = array.size();
@@ -265,6 +288,7 @@ public class MainInspector extends Fragment {
 
                 @Override
                 protected void onPostExecute(Void aVoid) {
+                    wakelock.release();
                     super.onPostExecute(aVoid);
                     progressBar.setVisibility(View.INVISIBLE);
                     adaptador.notifyDataSetChanged();

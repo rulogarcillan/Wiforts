@@ -1,28 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
     <release
-        version="1.0.0 RC1"
-        versioncode="16">
-        <change>Corrección de errores</change>
-    </release>
-    <release
-        version="0.0.126 beta"
-        versioncode="13">
-        <change>Added contact</change>
-        <change>Added share app</change>
-        <change>Added app information</change>
-        <change>Changes in UI</change>
-        <change>Bugs fixed</change>
-    </release>
-    <release
-        version="0.0.58 alfa"
-        versioncode="6">
-        <change>Added device info</change>
-        <change>Added wifi inspector</change>
-        <change>Added ports analizer</change>
-    </release>
-    <release
-        version="0.0.1 alfa"
+        version="1.0.0"
         versioncode="1">
         <change>First Release</change>
     </release>

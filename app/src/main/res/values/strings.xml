@@ -1,12 +1,8 @@
 <resources>
-
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-9438738341601496/2316137167</string>
-
     <string name="app_name" translatable="false">myNetworks</string>
-
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
-
     <string name="action_settings">Settings</string>
     <string name="devide_m">Device Info</string>
     <string name="wifi_m">Wifi analizer</string>
@@ -54,7 +50,6 @@
     <string name="changelog" translatable="false">Changelog</string>
     <string name="license">About</string>
     <string name="info">Information</string>
-
     <string name="compilacion">Build Date</string>
     <string name="conectewifi">Please, you have to connect to a wireless network.</string>
     <string name="midevice">MY DEVICE</string>
@@ -68,13 +63,10 @@
     <string name="no_name">Unnamed</string>
     <string name="custom_name">Custom name</string>
     <string name="enter_name">Enter a name</string>
-
     <string name="titu_idiomas">Languages</string>
-    <string name="p1_idiomas">Si desea colaborar con las traducciones acceda a la siguiente página:</string>
+    <string name="p1_idiomas">If you want to collaborate with the translations you just have to click on the following link</string>
     <string name="p2_idiomas">Mobile Version</string>
     <string name="p3_idiomas">Desktop Version</string>
     <string name="url1_idiomas" translatable="false">https://mynetworks.oneskyapp.com/mobile</string>
     <string name="url2_idiomas" translatable="false">https://mynetworks.oneskyapp.com</string>
-
-
 </resources>
