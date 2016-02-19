@@ -251,14 +251,13 @@ public class MainActivity extends BaseActivity
         final View dialogView = inflater.inflate(R.layout.dialog_idiomas, null);
         dialogBuilder.setView(dialogView);
 
-        final TextView txt1 = (TextView) dialogView.findViewById(R.id.titu1);
         final TextView txt2 = (TextView) dialogView.findViewById(R.id.titu2);
         final TextView txt3 = (TextView) dialogView.findViewById(R.id.titu3);
         final TextView txt4 = (TextView) dialogView.findViewById(R.id.titu4);
         final TextView txt5 = (TextView) dialogView.findViewById(R.id.titu5);
 
         dialogBuilder.setTitle(R.string.titu_idiomas); //Idiomas Languages
-        txt1.setText(R.string.p1_idiomas);
+        dialogBuilder.setMessage(R.string.p1_idiomas);
         txt2.setText(R.string.p2_idiomas);
         txt3.setText(R.string.url1_idiomas);
         txt4.setText(R.string.p3_idiomas);
