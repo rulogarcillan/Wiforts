@@ -36,6 +36,10 @@
 
     <item android:title="@string/info">
         <menu>
+           <item
+                android:id="@+id/nav_lang"
+                android:icon="@drawable/ic_translate"
+                android:title="@string/titu_idiomas"/>
             <item
                 android:id="@+id/nav_info"
                 android:icon="@drawable/ic_info"
@@ -45,10 +49,7 @@
                 android:icon="@drawable/ic_changelog"
                 android:title="@string/changelog"/>
                 
-                  <item
-                android:id="@+id/nav_lang"
-                android:icon="@drawable/ic_translate"
-                android:title="@string/titu_idiomas"/>
+             
         </menu>
     </item>
 
