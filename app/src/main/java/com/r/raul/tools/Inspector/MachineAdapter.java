@@ -106,22 +106,19 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.Holder> 
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if (buttonView.isPressed()) {
-
-                    array.get(position).setConocido(isChecked);
-
-                    InspectorTable inspectorTable = new InspectorTable();
-                    inspectorTable.setMacdevice(array.get(position).getMac());
-                    inspectorTable.setFavorito(isChecked);
-                    inspectorTable.setMacpadre(array.get(position).getMacPadre());
-                    consultas.upItemInspectorTable(inspectorTable);
-                    // notifyItemChanged(position);
+                    
+                    synchronized (array){
+                        array.get(position).setConocido(isChecked);
+                        InspectorTable inspectorTable = new InspectorTable();
+                        inspectorTable.setMacdevice(array.get(position).getMac());
+                        inspectorTable.setFavorito(isChecked);
+                        inspectorTable.setMacpadre(array.get(position).getMacPadre());
+                        consultas.upItemInspectorTable(inspectorTable);
+                        // notifyItemChanged(position);
+                    }
                 }
-
             }
-
         });
-       
-        
 
         switch (array.get(position).getTipoImg()) {
             case Constantes.TIPE_GATEWAY:
