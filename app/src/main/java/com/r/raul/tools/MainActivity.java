@@ -29,6 +29,7 @@ import com.r.raul.tools.DB.MyDatabase;
 import com.r.raul.tools.Device.MainDeviceInfo;
 import com.r.raul.tools.Inspector.MainInspector;
 import com.r.raul.tools.Ports.MainOpenPorts;
+import com.r.raul.tools.SpeedTest.MainSpeedTest;
 
 import java.text.SimpleDateFormat;
 import java.util.zip.ZipEntry;
@@ -66,7 +67,7 @@ public class MainActivity extends BaseActivity
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
-                mAdView.setVisibility(View.VISIBLE);
+               // mAdView.setVisibility(View.VISIBLE);
             }
         });
 
@@ -138,7 +139,9 @@ public class MainActivity extends BaseActivity
             LanzarDeviceOpenPorts(id);
       /*  } else if (id == R.id.nav_test && id != ItemAnterior) {*/
 
-            // } else if (id == R.id.nav_opciones) {
+        } else if (id == R.id.nav_test && id != ItemAnterior) {
+
+            LanzarSpeedTest(id);
 
         } else if (id == R.id.nav_info) {
 
@@ -180,6 +183,14 @@ public class MainActivity extends BaseActivity
         ItemAnterior = id;
         fragment = new MainOpenPorts();
         fragmentManager.beginTransaction().replace(R.id.container, fragment, "deviceOpenPorts")
+                //.addToBackStack("LISTADO")
+                .commit();
+    }
+
+    private void LanzarSpeedTest(int id) {
+        ItemAnterior = id;
+        fragment = new MainSpeedTest();
+        fragmentManager.beginTransaction().replace(R.id.container, fragment, "speedTest")
                 //.addToBackStack("LISTADO")
                 .commit();
     }

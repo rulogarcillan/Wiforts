@@ -21,10 +21,10 @@
             android:id="@+id/nav_ports"
             android:icon="@drawable/ic_ports"
             android:title="@string/ports_m"/>
-        <!--      <item
-                android:id="@+id/nav_test"
-                android:icon="@drawable/ic_speed"
-                android:title="@string/test_m"/>-->
+        <item
+            android:id="@+id/nav_test"
+            android:icon="@drawable/ic_speed"
+            android:title="@string/test_m"/>
     </group>
 
 
