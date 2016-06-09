@@ -3,6 +3,11 @@
     <release
         version="1.0.0"
         versioncode="60">
+        <change>Fix support email</change>
+    </release>
+    <release
+        version="1.0.0"
+        versioncode="60">
         <change>First Release</change>
     </release>
 </changelog>
