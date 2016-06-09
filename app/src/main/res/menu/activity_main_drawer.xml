@@ -21,17 +21,17 @@
             android:id="@+id/nav_ports"
             android:icon="@drawable/ic_ports"
             android:title="@string/ports_m"/>
-        <item
-            android:id="@+id/nav_test"
-            android:icon="@drawable/ic_speed"
-            android:title="@string/test_m"/>
-    </group>
+    <!--   <item
+        android:id="@+id/nav_test"
+        android:icon="@drawable/ic_speed"
+        android:title="@string/test_m"/> -->
+</group>
 
 
-    <!--  <item
-     android:id="@+id/nav_opciones"
-     android:icon="@drawable/ic_settings"
-     android:title="@string/action_settings"/>
+<!--  <item
+ android:id="@+id/nav_opciones"
+ android:icon="@drawable/ic_settings"
+ android:title="@string/action_settings"/>
 -->
 
     <item android:title="@string/info">

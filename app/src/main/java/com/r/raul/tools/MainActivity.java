@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.r.raul.tools.DB.MyDatabase;
@@ -70,6 +71,10 @@ public class MainActivity extends BaseActivity
                // mAdView.setVisibility(View.VISIBLE);
             }
         });
+
+
+        FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
 
         if (savedInstanceState == null) {
             LanzarDeviceInfo(R.id.nav_device);
@@ -139,9 +144,9 @@ public class MainActivity extends BaseActivity
             LanzarDeviceOpenPorts(id);
       /*  } else if (id == R.id.nav_test && id != ItemAnterior) {*/
 
-        } else if (id == R.id.nav_test && id != ItemAnterior) {
+        /*  } else if (id == R.id.nav_test && id != ItemAnterior) {*/
 
-            LanzarSpeedTest(id);
+            //LanzarSpeedTest(id);
 
         } else if (id == R.id.nav_info) {
 

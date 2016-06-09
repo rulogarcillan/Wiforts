@@ -26,7 +26,7 @@
     <string name="longitude">Longitude:</string>
     <string name="infonet">Network info</string>
     <string name="infoip">IP info</string>
-    <string name="my_mail" translatable="false">android-support@tuppersoft.com</string>
+    <string name="my_mail" translatable="false">support@wepica.com</string>
     <string name="common">COMMON</string>
     <string name="trojans">TROJANS</string>
     <string name="games">GAMES</string>

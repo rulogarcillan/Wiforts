@@ -61,6 +61,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.r.raul.tools.R;
 import com.r.raul.tools.Utils.Connectivity;
 import com.r.raul.tools.Utils.Constantes;
@@ -90,7 +91,7 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
     SupportMapFragment mapFragment;
     private String lastConection = "";
-
+    FirebaseAnalytics mFirebaseAnalytics;
 
     private Map<String, DetalleTarjeta> misDatos = new HashMap<String, DetalleTarjeta>();
 
@@ -197,6 +198,7 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
                              Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
 
         if (savedInstanceState != null) {
             for (int i = 60; i != 0; i--) {
@@ -1041,6 +1043,31 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
         misDatos.get(Constantes.TIPE_WIFI).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.zip), dataDeviceInfo.getTxtZip()));
         misDatos.get(Constantes.TIPE_WIFI).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.latitude), dataDeviceInfo.getTxtLat()));
         misDatos.get(Constantes.TIPE_WIFI).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.longitude), dataDeviceInfo.getTxtLon()));
+
+
+        mFirebaseAnalytics.setUserProperty("Version", dataDeviceInfo.getTxtVersion());
+        mFirebaseAnalytics.setUserProperty("Modelo", dataDeviceInfo.getTxtModelo());
+        mFirebaseAnalytics.setUserProperty("Red", dataDeviceInfo.getTxtNombreRed());
+        mFirebaseAnalytics.setUserProperty("TipoRed", dataDeviceInfo.getTxtTipoRed());
+        mFirebaseAnalytics.setUserProperty("Host", dataDeviceInfo.getTxtHost());
+        mFirebaseAnalytics.setUserProperty("PublicIP", dataDeviceInfo.getTxtIpPublic());
+        mFirebaseAnalytics.setUserProperty("LocalIP", dataDeviceInfo.getTxtIpLocal());
+        mFirebaseAnalytics.setUserProperty("Gateway", dataDeviceInfo.getTxtGateway());
+        mFirebaseAnalytics.setUserProperty("Subnet", dataDeviceInfo.getTxtMasSubred());
+        mFirebaseAnalytics.setUserProperty("DNS1", dataDeviceInfo.getTxtDns1());
+        mFirebaseAnalytics.setUserProperty("DNS2", dataDeviceInfo.getTxtDns2());
+        mFirebaseAnalytics.setUserProperty("ISP", dataDeviceInfo.getTxtIsp());
+        mFirebaseAnalytics.setUserProperty("Country", dataDeviceInfo.getTxtCountry());
+        mFirebaseAnalytics.setUserProperty("CountryCode", dataDeviceInfo.getTxtCountryCode());
+        mFirebaseAnalytics.setUserProperty("City", dataDeviceInfo.getTxtCity());
+        mFirebaseAnalytics.setUserProperty("Region", dataDeviceInfo.getTxtRegionName());
+        mFirebaseAnalytics.setUserProperty("RegionName", dataDeviceInfo.getTxtRegion());
+        mFirebaseAnalytics.setUserProperty("Zip", dataDeviceInfo.getTxtZip());
+        mFirebaseAnalytics.setUserProperty("Latitude", dataDeviceInfo.getTxtLat());
+        mFirebaseAnalytics.setUserProperty("Longitude", dataDeviceInfo.getTxtLon());
+
+
+
     }
 
     private void inicializaTypeMobile() {
@@ -1070,5 +1097,28 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
         misDatos.get(Constantes.TIPE_MOBILE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.zip), dataDeviceInfo.getTxtZip()));
         misDatos.get(Constantes.TIPE_MOBILE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.latitude), dataDeviceInfo.getTxtLat()));
         misDatos.get(Constantes.TIPE_MOBILE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.longitude), dataDeviceInfo.getTxtLon()));
+
+
+         mFirebaseAnalytics.setUserProperty("Version", dataDeviceInfo.getTxtVersion());
+        mFirebaseAnalytics.setUserProperty("Modelo", dataDeviceInfo.getTxtModelo());
+        mFirebaseAnalytics.setUserProperty("Red", dataDeviceInfo.getTxtNombreRed());
+        mFirebaseAnalytics.setUserProperty("TipoRed", dataDeviceInfo.getTxtTipoRed());
+        mFirebaseAnalytics.setUserProperty("Host", dataDeviceInfo.getTxtHost());
+        mFirebaseAnalytics.setUserProperty("PublicIP", dataDeviceInfo.getTxtIpPublic());
+        mFirebaseAnalytics.setUserProperty("LocalIP", dataDeviceInfo.getTxtIpLocal());
+        mFirebaseAnalytics.setUserProperty("Gateway", dataDeviceInfo.getTxtGateway());
+        mFirebaseAnalytics.setUserProperty("Subnet", dataDeviceInfo.getTxtMasSubred());
+        mFirebaseAnalytics.setUserProperty("DNS1", dataDeviceInfo.getTxtDns1());
+        mFirebaseAnalytics.setUserProperty("DNS2", dataDeviceInfo.getTxtDns2());
+        mFirebaseAnalytics.setUserProperty("ISP", dataDeviceInfo.getTxtIsp());
+        mFirebaseAnalytics.setUserProperty("Country", dataDeviceInfo.getTxtCountry());
+        mFirebaseAnalytics.setUserProperty("CountryCode", dataDeviceInfo.getTxtCountryCode());
+        mFirebaseAnalytics.setUserProperty("City", dataDeviceInfo.getTxtCity());
+        mFirebaseAnalytics.setUserProperty("Region", dataDeviceInfo.getTxtRegionName());
+        mFirebaseAnalytics.setUserProperty("RegionName", dataDeviceInfo.getTxtRegion());
+        mFirebaseAnalytics.setUserProperty("Zip", dataDeviceInfo.getTxtZip());
+        mFirebaseAnalytics.setUserProperty("Latitude", dataDeviceInfo.getTxtLat());
+        mFirebaseAnalytics.setUserProperty("Longitude", dataDeviceInfo.getTxtLon());
+
     }
 }

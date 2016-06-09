@@ -75,6 +75,10 @@
         android:glEsVersion="0x00020000"
         android:required="true"/>
 
+    <meta-data
+        android:name="firebase_analytics_collection_deactivated"
+        android:value="true"/>
+
 
 </manifest>
 
