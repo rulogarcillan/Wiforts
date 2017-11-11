@@ -49,7 +49,7 @@ android {
         applicationId "com.r.raul.tools"
         minSdkVersion 17
         targetSdkVersion 27
-        versionCode 86
+        versionCode code
         versionName name1 + "." + name2 + "." + name3
         // Enabling multidex support.
         multiDexEnabled true
