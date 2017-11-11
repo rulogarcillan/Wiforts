@@ -230,17 +230,19 @@ public class MainInspector extends Fragment {
 
         if (con.isConnectedWifi(getActivity()) && ((task != null && task.getStatus() != AsyncTask.Status.RUNNING) || task == null)) {
 
-            WifiManager wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
+            WifiManager wifiManager = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             DhcpInfo dhcpInfo = wifiManager.getDhcpInfo();
             String prefix = "";
             try {
                 InetAddress inetAddress = InetAddress.getByName(con.parseIP(dhcpInfo.ipAddress));
                 NetworkInterface networkInterface = NetworkInterface.getByInetAddress(inetAddress);
                 for (InterfaceAddress address : networkInterface.getInterfaceAddresses()) {
-                    prefix = String.valueOf(address.getNetworkPrefixLength());
-                    LOGE("Adress " + String.valueOf(address.getAddress()));
-                    LOGE("Broadcast " + String.valueOf(address.getBroadcast()));
-                    LOGE("Prefix " + String.valueOf(address.getNetworkPrefixLength()));
+                    if (address.getNetworkPrefixLength() <= 32) {
+                        prefix = String.valueOf(address.getNetworkPrefixLength());
+                        LOGE("Adress " + String.valueOf(address.getAddress()));
+                        LOGE("Broadcast " + String.valueOf(address.getBroadcast()));
+                        LOGE("Prefix " + String.valueOf(address.getNetworkPrefixLength()));
+                    }
                 }
 
 
@@ -264,7 +266,7 @@ public class MainInspector extends Fragment {
                     progressBar.setProgress(0);
                     progressBar.setMax(Integer.parseInt(tot));
                     progressBar.setIndeterminate(true);
-                    TxtTot.setText(array.size()+"/"+ tot);
+                    TxtTot.setText(array.size() + "/" + tot);
                     totales = array.size();
                 }
 
@@ -275,7 +277,7 @@ public class MainInspector extends Fragment {
 
                     if (progressBar.getProgress() < values[0]) {
                         progressBar.setProgress(values[0]);
-                    //    TxtTot.setText(array.size() + "/" + values[0] + "/" + tot);
+                        //    TxtTot.setText(array.size() + "/" + values[0] + "/" + tot);
                     }
                     if (totales != array.size()) {
                         totales = array.size();
@@ -309,7 +311,7 @@ public class MainInspector extends Fragment {
     private void ocultaMuestra() {
 
         if (con.isConnectedWifi(getActivity())) {
-            WifiManager wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
+            WifiManager wifiManager = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             final String macPadre = wifiManager.getConnectionInfo().getBSSID();
             final String wifi = wifiManager.getConnectionInfo().getSSID();
             Txtbssid.setText(macPadre);

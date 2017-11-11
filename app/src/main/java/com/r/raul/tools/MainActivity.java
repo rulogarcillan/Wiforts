@@ -32,6 +32,8 @@ import com.r.raul.tools.Inspector.MainInspector;
 import com.r.raul.tools.Ports.MainOpenPorts;
 import com.r.raul.tools.SpeedTest.MainSpeedTest;
 
+import java.io.File;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -209,23 +211,9 @@ public class MainActivity extends BaseActivity
 
     }
 
-    private void lanzaInfo() {
+    protected void lanzaInfo() {
 
-        String s = "";
-        try {
-            ApplicationInfo ai = getPackageManager().getApplicationInfo(getPackageName(), 0);
-            ZipFile zf = new ZipFile(ai.sourceDir);
-            ZipEntry ze = zf.getEntry("classes.dex");
-            long time = ze.getTime();
-            SimpleDateFormat formatter1 = new SimpleDateFormat("DD/mm/yyyy");
-            s = formatter1.getInstance().format(new java.util.Date(time));
-            s = formatter1.format(s);
-
-
-        } catch (Exception e) {
-
-        }
-
+        String fechaCompilacion = getAppTimeStamp(getApplicationContext());
         new LibsBuilder()
                 //Pass the fields of your application to the lib so it can find all external lib information
                 .withFields(R.string.class.getFields())
@@ -235,18 +223,36 @@ public class MainActivity extends BaseActivity
                 .withAboutVersionShown(true)
                 .withAutoDetect(true)
                 //  .withLibraries("DiscreteSeekBar", "CircleIndicator")
-                .withLibraries("jcifs","sqliteassethelper","commonsNet","commonsValidator")
-                .withActivityTitle(getResources().getString(R.string.license))
+                .withLibraries("jcifs", "sqliteassethelper", "commonsNet", "commonsValidator")
+                //.withActivityTitle(getResources().getString(R.string.license))
+                .withActivityTitle("Licencia")
                 .withAboutAppName(getResources().getString(R.string.app_name))
                 .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
-                .withAboutDescription("<b>" + getResources().getString(R.string.compilacion) + ": <i>" + s + "</i></b>")
+                .withAboutDescription("<b>" + "Compilación" + ": <i>" + fechaCompilacion + "</i></b>")
                 // .withAboutDescription(getResources().getString(R.string.escrita) + "<br/><br/><b>License GNU GPL V3.0</b><br/><br/><a href=\"https://github.com/rulogarcillan/Cadence\">Project in Github</a>")
                 //     .withActivityTheme(R.style.AppTheme)
                 //start the activity
-                .withActivityTheme(R.style.AppTheme2)
+                .withActivityTheme(R.style.AboutLibrariesTheme_Light_DarkToolbar)
                 .start(this);
     }
+    public static String getAppTimeStamp(Context context) {
+        String timeStamp = "";
 
+        try {
+            ApplicationInfo appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), 0);
+            String appFile = appInfo.sourceDir;
+            long time = new File(appFile).lastModified();
+
+            DateFormat formatter = DateFormat.getDateTimeInstance();
+            timeStamp = formatter.format(time);
+
+        } catch (Exception e) {
+
+        }
+
+        return timeStamp;
+
+    }
 
     public static class LanzaChangelog extends ChangeLog {
 

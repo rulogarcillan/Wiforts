@@ -56,7 +56,7 @@ public class IpScan {
         //se crea la base de datos si no existe.
         new MyDatabase(activity);
         if (this.ac != null) {
-            WifiManager wifiManager = (WifiManager) this.ac.getSystemService(Context.WIFI_SERVICE);
+            WifiManager wifiManager = (WifiManager) this.ac.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
             this.macPadre = wifiManager.getConnectionInfo().getBSSID();
             this.macMyDevice = wifiManager.getConnectionInfo().getMacAddress();
@@ -73,11 +73,16 @@ public class IpScan {
                 InetAddress inetAddress = InetAddress.getByName(con.parseIP(dhcpInfo.ipAddress));
                 NetworkInterface networkInterface = NetworkInterface.getByInetAddress(inetAddress);
                 for (InterfaceAddress address : networkInterface.getInterfaceAddresses()) {
-                    prefix = String.valueOf(address.getNetworkPrefixLength());
-                    LOGE("Adress " + String.valueOf(address.getAddress()));
-                    LOGE("Broadcast " + String.valueOf(address.getBroadcast()));
-                    LOGE("Prefix " + String.valueOf(address.getNetworkPrefixLength()));
+                    if (address.getNetworkPrefixLength() <= 32) {
+                        prefix = String.valueOf(address.getNetworkPrefixLength());
+                        LOGE("Adress " + String.valueOf(address.getAddress()));
+                        LOGE("Broadcast " + String.valueOf(address.getBroadcast()));
+                        LOGE("Prefix " + String.valueOf(address.getNetworkPrefixLength()));
+                    }
+
                 }
+
+
             } catch (IOException e) {
 
             }

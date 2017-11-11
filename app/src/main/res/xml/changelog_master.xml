@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
     <release
-        version="1.0.0"
-        versioncode="60">
+        version="1.0.253"
+        versioncode="87">
+        <change>Fix error crash loading the network masks (returned ipv6)</change>
+        <change>Support for android oreo 8.0</change>
+    </release>
+    <release
+        version="1.0.196"
+        versioncode="61">
         <change>Fix support email</change>
     </release>
     <release

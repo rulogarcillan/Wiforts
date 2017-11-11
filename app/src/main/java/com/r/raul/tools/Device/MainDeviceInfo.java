@@ -82,6 +82,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.r.raul.tools.Utils.LogUtils.LOGE;
+
 /**
  * Created by Rulo on 15/11/2015.
  */
@@ -533,7 +535,7 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
 
     public void getLevelWifi() {
 
-        WifiManager wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
         int rssi = wifiManager.getConnectionInfo().getRssi();
         int level = WifiManager.calculateSignalLevel(rssi, 5);
@@ -1004,7 +1006,7 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
 
     private void inicializaTypeWifi() {
 
-        WifiManager wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         DhcpInfo info = wifiManager.getDhcpInfo();
 
         dataDeviceInfo.setTxtGateway(con.parseIP(info.gateway));
@@ -1024,25 +1026,122 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
             InetAddress inetAddress = InetAddress.getByName(con.parseIP(dhcpInfo.ipAddress));
             NetworkInterface networkInterface = NetworkInterface.getByInetAddress(inetAddress);
             for (InterfaceAddress address : networkInterface.getInterfaceAddresses()) {
-                prefix = String.valueOf(address.getNetworkPrefixLength());
+                if (address.getNetworkPrefixLength() <= 32) {
+                    prefix = String.valueOf(address.getNetworkPrefixLength());
+                    LOGE("Adress " + String.valueOf(address.getAddress()));
+                    LOGE("Broadcast " + String.valueOf(address.getBroadcast()));
+                    LOGE("Prefix " + String.valueOf(address.getNetworkPrefixLength()));
+                }
             }
+
             SubnetUtils utils = new SubnetUtils(dataDeviceInfo.getTxtGateway() + "/" + prefix);
             misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.masacarasubred), utils.getInfo().getNetmask()));
-        } catch (IOException e) {
+        } catch (
+                IOException e)
+
+        {
             misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.masacarasubred), dataDeviceInfo.getTxtMasSubred()));
         }
-        misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.dns1), dataDeviceInfo.getTxtDns1()));
-        misDatos.get(Constantes.TIPE_WIFI).getInfoRed().add(new DetalleFilaTarjeta(getResources().getString(R.string.dns2), dataDeviceInfo.getTxtDns2()));
+        misDatos.get(Constantes.TIPE_WIFI).
 
-        misDatos.get(Constantes.TIPE_WIFI).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.isp), dataDeviceInfo.getTxtIsp()));
-        misDatos.get(Constantes.TIPE_WIFI).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.country), dataDeviceInfo.getTxtCountry()));
-        misDatos.get(Constantes.TIPE_WIFI).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.countrycode), dataDeviceInfo.getTxtCountryCode()));
-        misDatos.get(Constantes.TIPE_WIFI).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.city), dataDeviceInfo.getTxtCity()));
-        misDatos.get(Constantes.TIPE_WIFI).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.regionname), dataDeviceInfo.getTxtRegionName()));
-        misDatos.get(Constantes.TIPE_WIFI).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.regioncode), dataDeviceInfo.getTxtRegion()));
-        misDatos.get(Constantes.TIPE_WIFI).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.zip), dataDeviceInfo.getTxtZip()));
-        misDatos.get(Constantes.TIPE_WIFI).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.latitude), dataDeviceInfo.getTxtLat()));
-        misDatos.get(Constantes.TIPE_WIFI).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.longitude), dataDeviceInfo.getTxtLon()));
+                getInfoRed().
+
+                add(new DetalleFilaTarjeta(getResources().
+
+                        getString(R.string.dns1), dataDeviceInfo.
+
+                        getTxtDns1()));
+        misDatos.get(Constantes.TIPE_WIFI).
+
+                getInfoRed().
+
+                add(new DetalleFilaTarjeta(getResources().
+
+                        getString(R.string.dns2), dataDeviceInfo.
+
+                        getTxtDns2()));
+
+        misDatos.get(Constantes.TIPE_WIFI).
+
+                getInfoIp().
+
+                add(new DetalleFilaTarjeta(getResources().
+
+                        getString(R.string.isp), dataDeviceInfo.
+
+                        getTxtIsp()));
+        misDatos.get(Constantes.TIPE_WIFI).
+
+                getInfoIp().
+
+                add(new DetalleFilaTarjeta(getResources().
+
+                        getString(R.string.country), dataDeviceInfo.
+
+                        getTxtCountry()));
+        misDatos.get(Constantes.TIPE_WIFI).
+
+                getInfoIp().
+
+                add(new DetalleFilaTarjeta(getResources().
+
+                        getString(R.string.countrycode), dataDeviceInfo.
+
+                        getTxtCountryCode()));
+        misDatos.get(Constantes.TIPE_WIFI).
+
+                getInfoIp().
+
+                add(new DetalleFilaTarjeta(getResources().
+
+                        getString(R.string.city), dataDeviceInfo.
+
+                        getTxtCity()));
+        misDatos.get(Constantes.TIPE_WIFI).
+
+                getInfoIp().
+
+                add(new DetalleFilaTarjeta(getResources().
+
+                        getString(R.string.regionname), dataDeviceInfo.
+
+                        getTxtRegionName()));
+        misDatos.get(Constantes.TIPE_WIFI).
+
+                getInfoIp().
+
+                add(new DetalleFilaTarjeta(getResources().
+
+                        getString(R.string.regioncode), dataDeviceInfo.
+
+                        getTxtRegion()));
+        misDatos.get(Constantes.TIPE_WIFI).
+
+                getInfoIp().
+
+                add(new DetalleFilaTarjeta(getResources().
+
+                        getString(R.string.zip), dataDeviceInfo.
+
+                        getTxtZip()));
+        misDatos.get(Constantes.TIPE_WIFI).
+
+                getInfoIp().
+
+                add(new DetalleFilaTarjeta(getResources().
+
+                        getString(R.string.latitude), dataDeviceInfo.
+
+                        getTxtLat()));
+        misDatos.get(Constantes.TIPE_WIFI).
+
+                getInfoIp().
+
+                add(new DetalleFilaTarjeta(getResources().
+
+                        getString(R.string.longitude), dataDeviceInfo.
+
+                        getTxtLon()));
 
 
         mFirebaseAnalytics.setUserProperty("Version", dataDeviceInfo.getTxtVersion());
@@ -1065,7 +1164,6 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
         mFirebaseAnalytics.setUserProperty("Zip", dataDeviceInfo.getTxtZip());
         mFirebaseAnalytics.setUserProperty("Latitude", dataDeviceInfo.getTxtLat());
         mFirebaseAnalytics.setUserProperty("Longitude", dataDeviceInfo.getTxtLon());
-
 
 
     }
@@ -1099,7 +1197,7 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
         misDatos.get(Constantes.TIPE_MOBILE).getInfoIp().add(new DetalleFilaTarjeta(getResources().getString(R.string.longitude), dataDeviceInfo.getTxtLon()));
 
 
-         mFirebaseAnalytics.setUserProperty("Version", dataDeviceInfo.getTxtVersion());
+        mFirebaseAnalytics.setUserProperty("Version", dataDeviceInfo.getTxtVersion());
         mFirebaseAnalytics.setUserProperty("Modelo", dataDeviceInfo.getTxtModelo());
         mFirebaseAnalytics.setUserProperty("Red", dataDeviceInfo.getTxtNombreRed());
         mFirebaseAnalytics.setUserProperty("TipoRed", dataDeviceInfo.getTxtTipoRed());

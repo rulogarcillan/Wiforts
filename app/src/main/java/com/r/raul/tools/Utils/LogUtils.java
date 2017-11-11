@@ -44,7 +44,7 @@ public class LogUtils {
 
     public static void LOGE(String message) {
         if (BuildConfig.DEBUG) {
-            Log.e(TAG, message);
+            Log.d(TAG, message);
         }
     }
     public static void LOG(String message) {

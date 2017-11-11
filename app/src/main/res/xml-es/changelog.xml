@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+
     <release
-        version="1.0.0"
-        versioncode="60">
+        version="1.0.253"
+        versioncode="87">
+        <change>Corregido error al cargar las mascaras de red (retornaba ipv6)</change>
+        <change>Soporte para android oreo 8.0</change>
+    </release>
+    <release
+        version="1.0.196"
+        versioncode="61">
         <change>Corregido correo de soporte</change>
     </release>
     <release
