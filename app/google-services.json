@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "905710557696-pojk6peeph1e6nfgqa1ccjii4v1fjnn9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.r.raul.tools",
+            "certificate_hash": "7d8572d6ad1289bdfae8fec50012195540d04316"
+          }
+        },
+        {
           "client_id": "905710557696-c82qt4mjm2144ad08qjikn2g7bnsmi93.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -35,7 +43,8 @@
         "ads_service": {
           "status": 2
         }
-      }
+      },
+      "admob_app_id": "ca-app-pub-9438738341601496~5688405964"
     }
   ],
   "configuration_version": "1"
