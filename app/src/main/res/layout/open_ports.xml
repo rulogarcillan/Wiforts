@@ -9,7 +9,7 @@
         android:id="@+id/toolbar"
         layout="@layout/app_bar_main"/>
 
-    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 
                                                 android:layout_width="match_parent"
                                                 android:layout_height="match_parent"
@@ -59,7 +59,7 @@
                 android:singleLine="true"/>
 
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/botoneraRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"/>
@@ -105,9 +105,9 @@
                 android:background="@android:color/darker_gray"/>
 
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_marginBottom="16sp"
         android:id="@+id/btnAceptar"
         android:layout_width="wrap_content"

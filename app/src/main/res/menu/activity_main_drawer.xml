@@ -49,7 +49,11 @@
                 android:icon="@drawable/ic_changelog"
                 android:title="@string/changelog"/>
 
-
+            <item
+                android:id="@+id/privacy_policy"
+                android:icon="@drawable/ic_privacy"
+                android:title="@string/title_privacy_policy"
+                />
         </menu>
     </item>
 

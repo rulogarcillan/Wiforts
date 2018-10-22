@@ -1,6 +1,6 @@
 package com.r.raul.tools.Utils;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 import com.r.raul.tools.R;

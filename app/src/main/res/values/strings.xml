@@ -1,4 +1,6 @@
 <resources>
+    <string name="app_written">Application Written By Raúl R.C</string>
+
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-9438738341601496/2316137167</string>
     <string name="app_name" translatable="false">myNetworks</string>
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
@@ -69,4 +71,6 @@
     <string name="p3_idiomas">Desktop Version</string>
     <string name="url1_idiomas" translatable="false">https://mynetworks.oneskyapp.com/mobile</string>
     <string name="url2_idiomas" translatable="false">https://mynetworks.oneskyapp.com</string>
+    <string name="title_privacy_policy">Privacy policy</string>
+
 </resources>

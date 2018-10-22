@@ -2,15 +2,17 @@ package com.r.raul.tools;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
+import com.google.android.material.navigation.NavigationView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.AlertDialog;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.ContextThemeWrapper;
@@ -34,9 +36,6 @@ import com.r.raul.tools.SpeedTest.MainSpeedTest;
 
 import java.io.File;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import de.cketti.library.changelog.ChangeLog;
 
@@ -152,7 +151,7 @@ public class MainActivity extends BaseActivity
 
         } else if (id == R.id.nav_info) {
 
-            lanzaInfo();
+            startLicense();
 
         } else if (id == R.id.nav_changelog) {
 
@@ -160,12 +159,19 @@ public class MainActivity extends BaseActivity
 
         } else if (id == R.id.nav_lang) {
             msgTraductor();
+        }else if (id == R.id.privacy_policy){
+            openPrivacy();
         }
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void openPrivacy(){
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://info.tuppersoft.com/privacy/privacy_policy_mynetworks.html"));
+        startActivity(browserIntent);
     }
 
 
@@ -211,28 +217,23 @@ public class MainActivity extends BaseActivity
 
     }
 
-    protected void lanzaInfo() {
+    /**
+     * Start licenses
+     */
+    private void startLicense() {
 
-        String fechaCompilacion = getAppTimeStamp(getApplicationContext());
+        String dateCompilation = getAppTimeStamp(getApplicationContext());
         new LibsBuilder()
-                //Pass the fields of your application to the lib so it can find all external lib information
                 .withFields(R.string.class.getFields())
+                .withAutoDetect(true)
                 .withVersionShown(true)
                 .withLicenseShown(true)
                 .withAboutIconShown(true)
                 .withAboutVersionShown(true)
-                .withAutoDetect(true)
-                //  .withLibraries("DiscreteSeekBar", "CircleIndicator")
-                .withLibraries("jcifs", "sqliteassethelper", "commonsNet", "commonsValidator")
-                //.withActivityTitle(getResources().getString(R.string.license))
-                .withActivityTitle("Licencia")
-                .withAboutAppName(getResources().getString(R.string.app_name))
+                .withAboutDescription(getResources().getString(R.string.app_written) + "&emsp;<a href='https://www.linkedin.com/in/raul-rodriguez-concepcion/'>Linkedin</a>" + "<br/><i>" + dateCompilation + "</i></b>" + "<br/><br/><b>License GNU GPL V3.0</b><br/><br/><a href=\"https://github.com/rulogarcillan/myNetworks\">Project in Github</a>")
+                .withAboutAppName(getString(R.string.app_name))
+                .withActivityTitle(getResources().getString(R.string.license))
                 .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
-                .withAboutDescription("<b>" + "Compilación" + ": <i>" + fechaCompilacion + "</i></b>")
-                // .withAboutDescription(getResources().getString(R.string.escrita) + "<br/><br/><b>License GNU GPL V3.0</b><br/><br/><a href=\"https://github.com/rulogarcillan/Cadence\">Project in Github</a>")
-                //     .withActivityTheme(R.style.AppTheme)
-                //start the activity
-                .withActivityTheme(R.style.AboutLibrariesTheme_Light_DarkToolbar)
                 .start(this);
     }
     public static String getAppTimeStamp(Context context) {

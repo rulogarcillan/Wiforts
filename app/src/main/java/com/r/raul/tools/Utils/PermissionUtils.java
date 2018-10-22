@@ -2,7 +2,7 @@ package com.r.raul.tools.Utils;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 
 public final class PermissionUtils {
     private PermissionUtils() {

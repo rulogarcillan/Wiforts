@@ -1,297 +1,300 @@
 package com.r.raul.tools.Device;
 
 import com.r.raul.tools.R;
+import com.r.raul.tools.Utils.LogUtils;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.logging.Logger;
 
 public class DataDeviceInfo {
 
 
+    private String txtNombreRed = "";
+    private String txtTipoRed = "";
+    private String txtModelo = "";
+    private String txtVersion = "";
+    private String txtIpPublic = "";
+    private String txtIpLocal = "";
+    private String txtSeñal = "";
+    private String txtGateway = "";
+    private String txtMasSubred = "";
+    private String txtDns1 = "";
+    private String txtDns2 = "";
 
-	private String txtNombreRed = "";
-	private String txtTipoRed= "";
-	private String txtModelo= "";
-	private String txtVersion= "";
-	private String txtIpPublic= "";
-	private String txtIpLocal= "";
-	private String txtSeñal= "";
-	private String txtGateway= "";
-	private String txtMasSubred= "";
-	private String txtDns1= "";
-	private String txtDns2= "";
+    public String getTxtHost() {
+        return txtHost;
+    }
 
-	public String getTxtHost() {
-		return txtHost;
-	}
+    public void setTxtHost(String txtHost) {
+        this.txtHost = txtHost;
+    }
 
-	public void setTxtHost(String txtHost) {
-		this.txtHost = txtHost;
-	}
-
-	private String txtHost= "";
-	private int tipoIcono;
-	private int dBm = -200;
-
-
-	private String txtIsp= "";
-	private String txtCountry= "";
-	private String txtCountryCode= "";
-	private String txtCity= "";
-	private String txtRegion= "";
-	private String txtRegionName= "";
-	private String txtZip= "";
-	private String txtLat= "";
-	private String txtLon= "";
-	private int iconSubeBaja;
+    private String txtHost = "";
+    private int tipoIcono;
+    private int dBm = -200;
 
 
+    private String txtIsp = "";
+    private String txtCountry = "";
+    private String txtCountryCode = "";
+    private String txtCity = "";
+    private String txtRegion = "";
+    private String txtRegionName = "";
+    private String txtZip = "";
+    private String txtLat = "";
+    private String txtLon = "";
+    private int iconSubeBaja;
 
-	public int getIconSubeBaja() {
-		return iconSubeBaja;
-	}
 
-	public void setIconSubeBaja(int iconSubeBaja) {
-		this.iconSubeBaja = iconSubeBaja;
-	}
+    public int getIconSubeBaja() {
+        return iconSubeBaja;
+    }
+
+    public void setIconSubeBaja(int iconSubeBaja) {
+        this.iconSubeBaja = iconSubeBaja;
+    }
 
 
-	public String getTxtIsp() {
-		return txtIsp;
-	}
+    public String getTxtIsp() {
+        return txtIsp;
+    }
 
-	public void setTxtIsp(String txtIsp) {
-		this.txtIsp = txtIsp;
-	}
+    public void setTxtIsp(String txtIsp) {
+        this.txtIsp = txtIsp;
+    }
 
-	public String getTxtCountry() {
-		return txtCountry;
-	}
+    public String getTxtCountry() {
+        return txtCountry;
+    }
 
-	public void setTxtCountry(String txtCountry) {
-		this.txtCountry = txtCountry;
-	}
+    public void setTxtCountry(String txtCountry) {
+        this.txtCountry = txtCountry;
+    }
 
-	public String getTxtCountryCode() {
-		return txtCountryCode;
-	}
+    public String getTxtCountryCode() {
+        return txtCountryCode;
+    }
 
-	public void setTxtCountryCode(String txtCountryCode) {
-		this.txtCountryCode = txtCountryCode;
-	}
+    public void setTxtCountryCode(String txtCountryCode) {
+        this.txtCountryCode = txtCountryCode;
+    }
 
-	public String getTxtCity() {
-		return txtCity;
-	}
+    public String getTxtCity() {
+        return txtCity;
+    }
 
-	public void setTxtCity(String txtCity) {
-		this.txtCity = txtCity;
-	}
+    public void setTxtCity(String txtCity) {
+        this.txtCity = txtCity;
+    }
 
-	public String getTxtRegion() {
-		return txtRegion;
-	}
+    public String getTxtRegion() {
+        return txtRegion;
+    }
 
-	public void setTxtRegion(String txtRegion) {
-		this.txtRegion = txtRegion;
-	}
+    public void setTxtRegion(String txtRegion) {
+        this.txtRegion = txtRegion;
+    }
 
-	public String getTxtRegionName() {
-		return txtRegionName;
-	}
+    public String getTxtRegionName() {
+        return txtRegionName;
+    }
 
-	public void setTxtRegionName(String txtRegionName) {
-		this.txtRegionName = txtRegionName;
-	}
+    public void setTxtRegionName(String txtRegionName) {
+        this.txtRegionName = txtRegionName;
+    }
 
-	public String getTxtZip() {
-		return txtZip;
-	}
+    public String getTxtZip() {
+        return txtZip;
+    }
 
-	public void setTxtZip(String txtZip) {
-		this.txtZip = txtZip;
-	}
+    public void setTxtZip(String txtZip) {
+        this.txtZip = txtZip;
+    }
 
-	public String getTxtLat() {
-		return txtLat;
-	}
+    public String getTxtLat() {
+        return txtLat;
+    }
 
-	public void setTxtLat(String txtLat) {
-		this.txtLat = txtLat;
-	}
+    public void setTxtLat(String txtLat) {
+        this.txtLat = txtLat;
+    }
 
-	public String getTxtLon() {
-		return txtLon;
-	}
+    public String getTxtLon() {
+        return txtLon;
+    }
 
-	public void setTxtLon(String txtLon) {
-		this.txtLon = txtLon;
-	}
+    public void setTxtLon(String txtLon) {
+        this.txtLon = txtLon;
+    }
 
-	/* Constructor */
-	public DataDeviceInfo() {
+    /* Constructor */
+    public DataDeviceInfo() {
 
-	}
+    }
 
-	/* Gets y sets */
-	public String getTxtNombreRed() {
-		return txtNombreRed;
-	}
+    /* Gets y sets */
+    public String getTxtNombreRed() {
+        return txtNombreRed;
+    }
 
-	public void setTxtNombreRed(String txtNombreRed) {
-		this.txtNombreRed = txtNombreRed;
-	}
+    public void setTxtNombreRed(String txtNombreRed) {
+        this.txtNombreRed = txtNombreRed;
+    }
 
-	public String getTxtTipoRed() {
-		return txtTipoRed;
-	}
+    public String getTxtTipoRed() {
+        return txtTipoRed;
+    }
 
-	public void setTxtTipoRed(String txtTipoRed) {
-		this.txtTipoRed = txtTipoRed;
-	}
+    public void setTxtTipoRed(String txtTipoRed) {
+        this.txtTipoRed = txtTipoRed;
+    }
 
-	public String getTxtModelo() {
-		return txtModelo;
-	}
+    public String getTxtModelo() {
+        return txtModelo;
+    }
 
-	public void setTxtModelo(String txtModelo) {
-		this.txtModelo = txtModelo;
-	}
+    public void setTxtModelo(String txtModelo) {
+        this.txtModelo = txtModelo;
+    }
 
-	public String getTxtVersion() {
-		return txtVersion;
-	}
+    public String getTxtVersion() {
+        return txtVersion;
+    }
 
-	public void setTxtVersion(String txtVersion) {
-		this.txtVersion = txtVersion;
-	}
+    public void setTxtVersion(String txtVersion) {
+        this.txtVersion = txtVersion;
+    }
 
-	public String getTxtIpPublic() {
-		return txtIpPublic;
-	}
+    public String getTxtIpPublic() {
+        return txtIpPublic;
+    }
 
-	public void setTxtIpPublic(String txtIpPublic) {
-		this.txtIpPublic = txtIpPublic;
-	}
+    public void setTxtIpPublic(String txtIpPublic) {
+        this.txtIpPublic = txtIpPublic;
+    }
 
-	public String getTxtIpLocal() {
-		return txtIpLocal;
-	}
+    public String getTxtIpLocal() {
+        return txtIpLocal;
+    }
 
-	public void setTxtIpLocal(String txtIpLocal) {
-		this.txtIpLocal = txtIpLocal;
-	}
+    public void setTxtIpLocal(String txtIpLocal) {
+        this.txtIpLocal = txtIpLocal;
+    }
 
-	public String getTxtSeñal() {
-		return txtSeñal;
-	}
+    public String getTxtSeñal() {
+        return txtSeñal;
+    }
 
-	public void setTxtSeñal(String txtSeñal) {
-		this.txtSeñal = txtSeñal;
-	}
+    public void setTxtSeñal(String txtSeñal) {
+        this.txtSeñal = txtSeñal;
+    }
 
-	public String getTxtGateway() {
-		return txtGateway;
-	}
+    public String getTxtGateway() {
+        return txtGateway;
+    }
 
-	public void setTxtGateway(String txtGateway) {
-		this.txtGateway = txtGateway;
-	}
+    public void setTxtGateway(String txtGateway) {
+        this.txtGateway = txtGateway;
+    }
 
-	public String getTxtMasSubred() {
-		return txtMasSubred;
-	}
+    public String getTxtMasSubred() {
+        return txtMasSubred;
+    }
 
-	public void setTxtMasSubred(String txtMasSubred) {
-		this.txtMasSubred = txtMasSubred;
-	}
+    public void setTxtMasSubred(String txtMasSubred) {
+        this.txtMasSubred = txtMasSubred;
+    }
 
-	public String getTxtDns1() {
-		return txtDns1;
-	}
+    public String getTxtDns1() {
+        return txtDns1;
+    }
 
-	public void setTxtDns1(String txtDns1) {
-		this.txtDns1 = txtDns1;
-	}
+    public void setTxtDns1(String txtDns1) {
+        this.txtDns1 = txtDns1;
+    }
 
-	public String getTxtDns2() {
-		return txtDns2;
-	}
+    public String getTxtDns2() {
+        return txtDns2;
+    }
 
-	public void setTxtDns2(String txtDns2) {
-		this.txtDns2 = txtDns2;
-	}
+    public void setTxtDns2(String txtDns2) {
+        this.txtDns2 = txtDns2;
+    }
 
-	public int getTipoIcono() {
-		return tipoIcono;
-	}
+    public int getTipoIcono() {
+        return tipoIcono;
+    }
 
-	public void setTipoIcono(int tipoIcono) {
-		this.tipoIcono = tipoIcono;
-	}
+    public void setTipoIcono(int tipoIcono) {
+        this.tipoIcono = tipoIcono;
+    }
 
-	public int getdBm() {
-		return dBm;
-	}
+    public int getdBm() {
+        return dBm;
+    }
 
-	public void setdBm(int dBm) {
-	
-		if (dBm > this.iconSubeBaja)
-			this.iconSubeBaja=0; //up
-		else if (dBm <this.iconSubeBaja)
-			this.iconSubeBaja=0; //down
-		else
-			this.iconSubeBaja=0; //equals
-	
-		this.txtSeñal =  dBm + " dBm";
-		this.dBm = dBm;
-	
-	}
-	
-	
-	public void iconoDataMovil(int level) {
+    public void setdBm(int dBm) {
 
-		switch (level) {
-		case -1:
-			tipoIcono = R.drawable.ic_sigmobile0;
-			break;
-		case 0:
-			tipoIcono = R.drawable.ic_sigmobile1;
-			break;
-		case 1:
-			tipoIcono = R.drawable.ic_sigmobile2;
-			break;
-		case 2:
-			tipoIcono = R.drawable.ic_sigmobile3;
-			break;
-		case 3:
-			tipoIcono = R.drawable.ic_sigmobile4;
-			break;
-		case 4:
-			tipoIcono = R.drawable.ic_sigmobile5;
-			break;
+        if (dBm > this.iconSubeBaja)
+            this.iconSubeBaja = 0; //up
+        else if (dBm < this.iconSubeBaja)
+            this.iconSubeBaja = 0; //down
+        else
+            this.iconSubeBaja = 0; //equals
 
-		}
-	}
+        this.txtSeñal = dBm + " dBm";
+        this.dBm = dBm;
 
-	public void iconoDataWifi(int level) {
+    }
 
-		switch (level) {
-		case 0:
-			tipoIcono = R.drawable.ic_wifi1;
-			break;
-		case 1:
-			tipoIcono = R.drawable.ic_wifi2;
-			break;
-		case 2:
-			tipoIcono = R.drawable.ic_wifi3;
-			break;
-		case 3:
-			tipoIcono = R.drawable.ic_wifi4;
-			break;
-		case 4:
-			tipoIcono = R.drawable.ic_wifi5;
-			break;
-		}
-	}
+
+    public void iconoDataMovil(int level) {
+
+        switch (level) {
+            case -1:
+                tipoIcono = R.drawable.ic_sigmobile0;
+                break;
+            case 0:
+                tipoIcono = R.drawable.ic_sigmobile1;
+                break;
+            case 1:
+                tipoIcono = R.drawable.ic_sigmobile2;
+                break;
+            case 2:
+                tipoIcono = R.drawable.ic_sigmobile3;
+                break;
+            case 3:
+                tipoIcono = R.drawable.ic_sigmobile4;
+                break;
+            case 4:
+                tipoIcono = R.drawable.ic_sigmobile5;
+                break;
+
+
+        }
+    }
+
+    public void iconoDataWifi(int level) {
+
+        switch (level) {
+            case 0:
+                setTipoIcono( R.drawable.ic_wifi1);
+                 break;
+            case 1:
+                setTipoIcono( R.drawable.ic_wifi2);
+                break;
+            case 2:
+                setTipoIcono( R.drawable.ic_wifi3);
+                break;
+            case 3:
+                setTipoIcono( R.drawable.ic_wifi4);
+                break;
+            case 4:
+                setTipoIcono( R.drawable.ic_wifi5);
+                break;
+
+        }
+
+    }
 }
