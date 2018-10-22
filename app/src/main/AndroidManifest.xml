@@ -9,15 +9,6 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
-
-
-    <!-- <uses-permission
-            android:name="android.permission.ACCESS_NETWORK_STATE"
-            android:maxSdkVersion="22"/>
-        <uses-permission
-            android:name="android.permission.CHANGE_WIFI_STATE"
-            android:maxSdkVersion="22"/>-->
-
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="22"/>
@@ -26,8 +17,7 @@
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="22"/>
 
-    <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
-    <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+
 
 
     <application

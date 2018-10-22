@@ -2,107 +2,70 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "27.0.1"
-
-
-    def Properties versionProps = new Properties()
-    def versionPropsFile = file('version.properties')
-
-    //Creates the version file if it doesn't exist
-    if (versionPropsFile.exists())
-        versionProps.load(new FileInputStream(versionPropsFile))
-
-    def name1 = (versionProps['NAME1_CODE']).toInteger()
-    def name2 = (versionProps['NAME2_CODE']).toInteger()
-    def name3 = (versionProps['NAME3_CODE']).toInteger()
-    def contador = (versionProps['VERSION_CODETOT']).toInteger()
-    def code = (versionProps['VERSION_CODE']).toInteger()
-
-
-    if (contador >= 9) {
-        versionProps['VERSION_CODE'] = (code + 1).toString()
-        versionProps['VERSION_CODETOT'] = 0.toString()
-
-    } else {
-        versionProps['VERSION_CODE'] = (code).toString()
-        versionProps['VERSION_CODETOT'] = (contador + 1).toString()
-    }
-
-    if (name3 >= 500) {
-        versionProps['NAME3_CODE'] = 0.toString()
-        if (name2 >= 9) {
-            versionProps['NAME1_CODE'] = (name1 + 1).toString()
-            versionProps['NAME2_CODE'] = 0.toString()
-        } else {
-            versionProps['NAME1_CODE'] = (name1).toString()
-            versionProps['NAME2_CODE'] = (name2 + 1).toString()
-        }
-    } else {
-        versionProps['NAME3_CODE'] = (name3 + 1).toString()
-        versionProps['NAME1_CODE'] = (name1).toString()
-        versionProps['NAME2_CODE'] = (name2).toString()
-    }
-
-    versionProps.store(versionPropsFile.newWriter(), null)
 
     defaultConfig {
         applicationId "com.r.raul.tools"
         minSdkVersion 17
         targetSdkVersion 27
-        versionCode code
-        versionName name1 + "." + name2 + "." + name3
-        // Enabling multidex support.
+        versionCode 90
+        versionName "1.0.270"
         multiDexEnabled true
     }
     buildTypes {
+
+        /*debug {
+               debuggable true
+               applicationIdSuffix ".debug"
+           }
+           pre {
+               debuggable true
+               applicationIdSuffix ".test"
+               //resValue "string", "title_app", "Signature Maker test"
+               //buildConfigField "String", "fooVar", '"blablabla"'
+           }*/
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-}
-
-repositories {
-    maven { url "https://jitpack.io" }
+    lintOptions {
+        checkReleaseBuilds false
+    }
 }
 
 dependencies {
 
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation 'junit:junit:4.12'
 
     //publi
     //
-    compile 'com.android.support:multidex:1.0.1'
-    compile 'com.google.android.gms:play-services-ads:11.6.0'
+    implementation 'com.android.support:multidex:1.0.1'
+    implementation 'com.google.android.gms:play-services-ads:11.6.0'
 
-    compile 'com.android.support:appcompat-v7:27.+'
-    compile 'com.android.support:design:27.+'
-    compile 'com.android.support:cardview-v7:27.+'
-    compile 'com.google.android.gms:play-services-maps:11.6.0'
+    implementation 'com.android.support:appcompat-v7:27.+'
+    implementation 'com.android.support:design:27.+'
+    implementation 'com.android.support:cardview-v7:27.+'
+    implementation 'com.google.android.gms:play-services-maps:11.6.0'
 
 
 
-    compile 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
+    implementation 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
 
-    compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
-    compile 'com.github.akinaru:speedtest:1.02'
+    implementation 'com.github.PhilJay:MPAndroidChart:v2.1.6'
+    implementation 'com.github.akinaru:speedtest:1.02'
 
-    compile files('libs/commons-validator-1.5.0.jar')
-    compile files('libs/commons-net-3.4-sources.jar')
-    compile files('libs/jcifs-1.3.17.jar')
+    implementation files('libs/commons-validator-1.5.0.jar')
+    implementation files('libs/commons-net-3.4-sources.jar')
+    implementation files('libs/jcifs-1.3.17.jar')
 
-    compile 'com.akexorcist:RoundCornerProgressBar:2.0.3'
-  //  compile 'com.github.shinelw.colorarcprogressbar:library:1.0.3'
-
+    implementation 'com.akexorcist:RoundCornerProgressBar:2.0.3'
 
     implementation('com.mikepenz:aboutlibraries:6.0.0@aar') {
         transitive = true
     }
 
-
-
-    compile 'de.cketti.library.changelog:ckchangelog:1.2.2'
+    implementation 'de.cketti.library.changelog:ckchangelog:1.2.2'
 
     android {
         packagingOptions {
@@ -110,11 +73,7 @@ dependencies {
             exclude 'META-INF/NOTICE.txt'
         }
     }
-
-
-
-
-    compile 'com.google.firebase:firebase-core:11.6.0'
+    implementation 'com.google.firebase:firebase-core:11.6.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
