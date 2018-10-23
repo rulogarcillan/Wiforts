@@ -69,4 +69,5 @@
     <string name="p3_idiomas">Desktop Version</string>
     <string name="url1_idiomas" translatable="false">https://mynetworks.oneskyapp.com/mobile</string>
     <string name="url2_idiomas" translatable="false">https://mynetworks.oneskyapp.com</string>
+    <string name="title_privacy_policy">Privacy policy</string>
 </resources>

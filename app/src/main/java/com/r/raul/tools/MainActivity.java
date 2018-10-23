@@ -2,8 +2,10 @@ package com.r.raul.tools;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -160,6 +162,8 @@ public class MainActivity extends BaseActivity
 
         } else if (id == R.id.nav_lang) {
             msgTraductor();
+        }else if (id == R.id.privacy_policy){
+            openPrivacy();
         }
 
 
@@ -168,7 +172,10 @@ public class MainActivity extends BaseActivity
         return true;
     }
 
-
+    private void openPrivacy(){
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://info.tuppersoft.com/privacy/privacy_policy_mynetworks.html"));
+        startActivity(browserIntent);
+    }
     private void LanzarDeviceInfo(int id) {
 
         ItemAnterior = id;
