@@ -1,6 +1,7 @@
 package com.r.raul.tools.Device;
 
 import android.Manifest;
+import android.animation.Animator;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -9,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.DhcpInfo;
 import android.net.NetworkInfo;
@@ -153,8 +155,6 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
                     lastConection = tipoConActual;
                     onConnectivityChanged();
                 }
-
-
             }
         };
         this.intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
@@ -186,13 +186,13 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
     public void onPause() {
         cargaIps.cancel(true);
         super.onPause();
-        if (this.reciver != null) {
-            getActivity().unregisterReceiver(this.reciver);
-        }
-        mHandler.removeCallbacksAndMessages(null);
-        tlfMan.listen(MyListener, PhoneStateListener.LISTEN_NONE);
-
-
+       if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+           if (this.reciver != null) {
+               getActivity().unregisterReceiver(this.reciver);
+           }
+           mHandler.removeCallbacksAndMessages(null);
+           tlfMan.listen(MyListener, PhoneStateListener.LISTEN_NONE);
+       }
     }
 
     @Override
@@ -241,7 +241,7 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
 
         chart = (LineChart) rootView.findViewById(R.id.chart);
 
-        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        this.fab =  rootView.findViewById(R.id.fab);
 
 
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
@@ -262,7 +262,7 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
         tlfMan.listen(MyListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
         tlfMan.listen(MyListener, PhoneStateListener.LISTEN_SERVICE_STATE);
 
-        fab.setOnClickListener(new View.OnClickListener() {
+        this.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (con.isConnectedWifi(getContext())) {
@@ -521,16 +521,15 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
     }
 
     private void printData() {
-
         addEntry();
         txtVersion.setText(dataDeviceInfo.getTxtVersion());
         txtModelo.setText(dataDeviceInfo.getTxtModelo());
         txtNombreRed.setText(dataDeviceInfo.getTxtNombreRed());
         txtTipoRed.setText(dataDeviceInfo.getTxtTipoRed());
-        fab.setImageResource(dataDeviceInfo.getTipoIcono());
-        txtSeñal.setText(dataDeviceInfo.getTxtSeñal());
-        LogUtils.LOG("RULO " + fab);
-
+        this.fab.setImageResource(dataDeviceInfo.getTipoIcono());
+       // this.fab.setImageResource(dataDeviceInfo.getTipoIcono());
+        //        txtSeñal.setText(dataDeviceInfo.getTxtSeñal());
+      //  LogUtils.LOG("RULO " + fab);
 
     }
 
