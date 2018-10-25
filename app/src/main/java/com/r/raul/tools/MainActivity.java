@@ -42,6 +42,7 @@ import java.util.zip.ZipFile;
 
 import de.cketti.library.changelog.ChangeLog;
 
+import static com.r.raul.tools.Utils.LogUtils.LOG;
 import static com.r.raul.tools.Utils.LogUtils.copybd;
 
 public class MainActivity extends BaseActivity

@@ -134,7 +134,6 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
         this.reciver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-
                 String tipoConActual = "";
 
                 if (con.isConnectedWifi(getContext())) {
@@ -153,19 +152,19 @@ public class MainDeviceInfo extends Fragment implements OnMapReadyCallback {
                     lastConection = tipoConActual;
                     onConnectivityChanged();
                 }
-
-
             }
         };
+        this.intentFilter = new IntentFilter();
         this.intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
-        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        this.intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         getActivity().registerReceiver(reciver, this.intentFilter);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().registerReceiver(reciver, this.intentFilter);
+        // getActivity().registerReceiver(reciver, this.intentFilter);
+        setupReciver();
         tlfMan.listen(MyListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
 
         if (con.isConnectedWifi(getContext())) {
